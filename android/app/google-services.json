@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "313101163471",
+    "project_id": "second-chance-thrift-apps",
+    "storage_bucket": "second-chance-thrift-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313101163471:android:8d9b9f520a67abdb53d0ba",
+        "android_client_info": {
+          "package_name": "com.sarjana_tampan.second_chance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313101163471-uvef472slioca77udjb9rbbcmucl77e2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sarjana_tampan.second_chance",
+            "certificate_hash": "d5a76180f67242ffb9ee43bee2bffa355a88e9c8"
+          }
+        },
+        {
+          "client_id": "313101163471-a857hfihjgbra7638kust3j731j3r8ad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC24J4cCEZIvTZJM3a-9MI20XyPs0Jk4Vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313101163471-a857hfihjgbra7638kust3j731j3r8ad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
