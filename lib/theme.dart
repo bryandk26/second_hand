@@ -12,7 +12,7 @@ TextStyle titleText =
 TextStyle subTitle =
     TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w500);
 TextStyle textButton = TextStyle(
-  color: primaryColor,
+  color: whiteColor,
   fontSize: 18,
   fontWeight: FontWeight.w700,
 );

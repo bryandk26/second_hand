@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:second_chance/theme.dart';
 
 class ButtonGlobal extends StatelessWidget {
-  const ButtonGlobal({super.key});
+  const ButtonGlobal({super.key, required this.isLoading, required this.text});
+
+  final String text;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class ButtonGlobal extends StatelessWidget {
       alignment: Alignment.center,
       height: 55,
       decoration: BoxDecoration(
-        color: primaryColor,
+        color: blackColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -21,13 +22,14 @@ class ButtonGlobal extends StatelessWidget {
           ),
         ],
       ),
-      child: Text(
-        'Login',
-        style: TextStyle(
-          color: whiteColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child: isLoading
+          ? CircularProgressIndicator(
+              color: Colors.white,
+            )
+          : Text(
+              '${text}',
+              style: textButton,
+            ),
     );
   }
 }

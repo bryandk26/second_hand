@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/controllers/auth_controller.dart';
 import 'package:second_chance/buyers/views/auth/register_view.dart';
@@ -7,7 +5,7 @@ import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
-import 'package:second_chance/utils/show_snack.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -43,13 +41,29 @@ class _LoginViewState extends State<LoginView> {
         setState(() {
           _isLoading = false;
         });
-        return showSnack(context, res);
+        displayDialog(
+          context,
+          res,
+          Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 60,
+          ),
+        );
       }
     } else {
       setState(() {
         _isLoading = false;
       });
-      return showSnack(context, 'Please fields must not be empty');
+      displayDialog(
+        context,
+        'Please fields must not be empty',
+        Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 60,
+        ),
+      );
     }
   }
 
@@ -98,6 +112,7 @@ class _LoginViewState extends State<LoginView> {
                     },
                     onChanged: (value) {
                       email = value;
+                      return null;
                     },
                   ),
                   SizedBox(
@@ -116,6 +131,7 @@ class _LoginViewState extends State<LoginView> {
                     },
                     onChanged: (value) {
                       password = value;
+                      return null;
                     },
                   ),
                   SizedBox(
@@ -125,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
                     onTap: () {
                       _loginUsers();
                     },
-                    child: ButtonGlobal(),
+                    child: ButtonGlobal(isLoading: _isLoading, text: 'Login'),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +154,13 @@ class _LoginViewState extends State<LoginView> {
                             return RegisterView();
                           }));
                         },
-                        child: Text('Register'),
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ],
                   ),

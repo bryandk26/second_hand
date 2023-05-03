@@ -1,8 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/theme.dart';
 
@@ -14,25 +11,48 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  double opacityLevel = 0.0;
+
   @override
-  Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(seconds: 3),
+      () {
+        setState(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return LoginView();
+              },
+            ),
+          );
+        });
+      },
+    );
+    Future.delayed(Duration.zero, () {
       setState(() {
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) {
-            return LoginView();
-          },
-        ));
+        opacityLevel = 1.0;
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
       body: Center(
+        child: AnimatedOpacity(
+          opacity: opacityLevel,
+          duration: Duration(seconds: 2),
           child: Image.asset(
-        'assets/images/logo.png',
-        width: 150,
-        height: 150,
-      )),
+            'assets/images/logo.png',
+            width: 150,
+            height: 150,
+          ),
+        ),
+      ),
     );
   }
 }

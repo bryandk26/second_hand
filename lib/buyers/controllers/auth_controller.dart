@@ -85,10 +85,17 @@ class AuthController {
       if (email.isNotEmpty && password.isNotEmpty) {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-
         res = 'success';
       } else {
         res = 'Please fields must not be empty';
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        res = 'No user found';
+      } else if (e.code == 'wrong-password') {
+        res = 'Wrong password';
+      } else {
+        res = e.message ?? 'Something went wrong';
       }
     } catch (e) {
       res = e.toString();

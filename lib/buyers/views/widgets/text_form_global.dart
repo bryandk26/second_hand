@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:second_chance/theme.dart';
 
 class TextFormGlobal extends StatelessWidget {
@@ -22,32 +20,33 @@ class TextFormGlobal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: blackColor.withOpacity(0.1),
-            blurRadius: 7,
-          ),
-        ],
+    return TextFormField(
+      controller: controller ?? null,
+      keyboardType: textInputType,
+      obscureText: obsecure,
+      style: TextStyle(
+        color: blackColor,
+        fontSize: 16,
       ),
-      child: TextFormField(
-        controller: controller ?? null,
-        keyboardType: textInputType,
-        obscureText: obsecure,
-        decoration: InputDecoration(
-          hintText: text,
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.all(0),
-          hintStyle: TextStyle(height: 1),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: whiteColor,
+        hintText: 'Enter ${text}',
+        hintStyle: TextStyle(
+          color: greyColor,
+          fontSize: 16,
         ),
-        onChanged: onChanged,
-        validator: validator,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
+      onChanged: onChanged,
+      validator: validator,
     );
   }
 }
