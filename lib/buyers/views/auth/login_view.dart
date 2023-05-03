@@ -1,106 +1,150 @@
-import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/auth/register_view.dart';
-import 'package:second_chance/buyers/views/auth/reset_password.dart';
-import 'package:second_chance/buyers/views/widgets/login_form.dart';
-import 'package:second_chance/buyers/views/widgets/login_option.dart';
-import 'package:second_chance/buyers/views/widgets/primary_button.dart';
-import 'package:second_chance/theme.dart';
+import 'dart:isolate';
 
-class LogInView extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:second_chance/buyers/controllers/auth_controller.dart';
+import 'package:second_chance/buyers/views/auth/register_view.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
+import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_snack.dart';
+
+class LoginView extends StatefulWidget {
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _authController = AuthController();
+  late String email;
+
+  late String password;
+
+  bool _isLoading = false;
+
+  _loginUsers() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      String res = await _authController.loginUsers(email, password);
+
+      if (res == 'success') {
+        return Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return MainScreen();
+            },
+          ),
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        return showSnack(context, res);
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      return showSnack(context, 'Please fields must not be empty');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: kDefaultPadding,
+      body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 120,
-              ),
-              Text(
-                'Welcome Back',
-                style: titleText,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(15.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'New to this app?',
-                    style: subTitle,
+                  Image.asset(
+                    'assets/images/Text Only Without Background.png',
+                    width: 125,
+                    height: 125,
                   ),
                   SizedBox(
-                    width: 5,
+                    height: 50,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterView(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Register',
-                      style: textButton.copyWith(
-                        decoration: TextDecoration.underline,
-                        decorationThickness: 1,
-                      ),
+                  Text(
+                    'Login to your account',
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormGlobal(
+                    text: 'Email',
+                    textInputType: TextInputType.emailAddress,
+                    obsecure: false,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Email fields must not be empty';
+                      } else {
+                        return null;
+                      }
+                    },
+                    onChanged: (value) {
+                      email = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormGlobal(
+                    text: 'Password',
+                    textInputType: TextInputType.text,
+                    obsecure: true,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Password fields must not be empty';
+                      } else {
+                        return null;
+                      }
+                    },
+                    onChanged: (value) {
+                      password = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _loginUsers();
+                    },
+                    child: ButtonGlobal(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Need An Account?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return RegisterView();
+                          }));
+                        },
+                        child: Text('Register'),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              LogInForm(),
-              SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ResetPasswordScreen()));
-                },
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    color: kZambeziColor,
-                    fontSize: 14,
-                    decoration: TextDecoration.underline,
-                    decorationThickness: 1,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  print('Logged In');
-                },
-                child: PrimaryButton(
-                  buttonText: 'Log In',
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Or log in with:',
-                style: subTitle.copyWith(color: kBlackColor),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              LoginOption(),
-            ],
+            ),
           ),
         ),
       ),

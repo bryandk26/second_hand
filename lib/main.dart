@@ -1,8 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
+import 'package:second_chance/buyers/views/splash_View.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -21,7 +28,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         // primarySwatch: Colors.blue,
       ),
-      home: LogInView(),
+      home: SplashView(),
+      builder: EasyLoading.init(),
     );
   }
 }
