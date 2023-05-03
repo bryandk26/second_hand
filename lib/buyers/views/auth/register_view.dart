@@ -38,12 +38,14 @@ class _RegisterViewState extends State<RegisterView> {
           .signUpUsers(email, fullName, phoneNumber, password, _image)
           .whenComplete(() {
         setState(() {
-          _formKey.currentState!.reset();
           _isLoading = false;
         });
       });
 
       if (res == 'success') {
+        setState(() {
+          _formKey.currentState!.reset();
+        });
         return displayDialog(
           context,
           'Congratulations your account has been created!',
