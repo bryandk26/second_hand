@@ -48,7 +48,6 @@ class AuthController {
           fullName.isNotEmpty &&
           phoneNumber.isNotEmpty &&
           password.isNotEmpty) {
-        //Create the users
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
@@ -72,9 +71,24 @@ class AuthController {
 
         res = 'success';
       } else {
-        res = 'Please Fields must not be empty';
+        res = 'Please fields must not be empty';
       }
-    } catch (e) {}
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        res = 'The password is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        res = 'The account already exists for that email.';
+      } else if (e.code == 'invalid-email') {
+        res = 'The email address is badly formatted';
+      } else if (e.code == 'invalid-input') {
+        res = 'Please fill all fields';
+      } else {
+        res = e.message ?? 'An error occurred while signing up';
+      }
+    } catch (e) {
+      res = e.toString();
+    }
+
     return res;
   }
 

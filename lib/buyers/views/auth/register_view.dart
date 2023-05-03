@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:second_chance/buyers/controllers/auth_controller.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
-import 'package:second_chance/utils/show_snack.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
+import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _RegisterViewState extends State<RegisterView> {
       _isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      await _authController
+      String res = await _authController
           .signUpUsers(email, fullName, phoneNumber, password, _image)
           .whenComplete(() {
         setState(() {
@@ -42,13 +43,43 @@ class _RegisterViewState extends State<RegisterView> {
         });
       });
 
-      return showSnack(
-          context, 'Congratulations an account has been created for you');
+      if (res == 'success') {
+        return displayDialog(
+          context,
+          'Congratulations your account has been created!',
+          Icon(
+            Icons.check_circle_rounded,
+            color: Colors.green.shade600,
+            size: 60,
+          ),
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        displayDialog(
+          context,
+          res,
+          Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 60,
+          ),
+        );
+      }
     } else {
       setState(() {
         _isLoading = false;
       });
-      return showSnack(context, 'Please fields must not be empty');
+      displayDialog(
+        context,
+        'Please fields must not be empty',
+        Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 60,
+        ),
+      );
     }
   }
 
@@ -57,36 +88,37 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Create Customer's Account",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Email must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onChanged: (value) {
-                      email = value;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Enter Email',
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(15.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/Text Only Without Background.png',
+                    width: 125,
+                    height: 125,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Text(
+                    "Create Customer's Account",
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: TextFormField(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormGlobal(
+                    text: 'Full Name',
+                    textInputType: TextInputType.text,
+                    obsecure: false,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please Full Name must not be empty';
@@ -96,15 +128,35 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                     onChanged: (value) {
                       fullName = value;
+                      return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: 'Enter Full Name',
-                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: TextFormField(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormGlobal(
+                    text: 'Email',
+                    textInputType: TextInputType.emailAddress,
+                    obsecure: false,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Email must not be empty';
+                      } else {
+                        return null;
+                      }
+                    },
+                    onChanged: (value) {
+                      email = value;
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormGlobal(
+                    text: 'Phone Number',
+                    textInputType: TextInputType.phone,
+                    obsecure: false,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please Phone Number must not be empty';
@@ -114,16 +166,16 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                     onChanged: (value) {
                       phoneNumber = value;
+                      return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: 'Enter Phone Number',
-                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: TextFormField(
-                    obscureText: true,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormGlobal(
+                    text: 'Password',
+                    textInputType: TextInputType.text,
+                    obsecure: true,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please Password must not be empty';
@@ -133,63 +185,44 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                     onChanged: (value) {
                       password = value;
+                      return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    _signUpUser();
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow.shade900,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: _isLoading
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : Text(
-                              'Register',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 4,
-                              ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () => _signUpUser(),
+                    child:
+                        ButtonGlobal(isLoading: _isLoading, text: 'Register'),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Already Have An Account?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return LoginView();
+                              },
                             ),
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Already Have An Account?'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return LoginView();
-                            },
+                          );
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w800,
                           ),
-                        );
-                      },
-                      child: Text('Login'),
-                    ),
-                  ],
-                )
-              ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
