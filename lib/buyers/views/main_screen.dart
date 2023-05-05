@@ -5,10 +5,9 @@ import 'package:second_chance/buyers/views/auth/login_view.dart';
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
     return Scaffold(
       body: Center(
           child: TextButton(
