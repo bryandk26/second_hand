@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
+import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -153,15 +154,15 @@ class AccountScreen extends StatelessWidget {
                           ),
                         ),
                         InkWell(
-                          // onTap: () {
-                          //   Navigator.push(context, MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return EditProfileScreen(
-                          //         userData: data,
-                          //       );
-                          //     },
-                          //   ));
-                          // },
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return EditProfileScreen(
+                                  userData: data,
+                                );
+                              },
+                            ));
+                          },
                           child: Container(
                             height: 40,
                             width: MediaQuery.of(context).size.width - 200,
