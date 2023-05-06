@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/theme.dart';
 
 class SplashView extends StatefulWidget {
@@ -24,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return LoginView();
+                return MainScreen();
               },
             ),
           );

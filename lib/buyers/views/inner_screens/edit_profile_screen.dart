@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final dynamic userData;
@@ -188,7 +189,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               () {
                 EasyLoading.dismiss();
 
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => MainScreen()),
+                  (route) => false,
+                );
               },
             );
           },
