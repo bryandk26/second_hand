@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
+import 'package:second_chance/buyers/views/nav_screens/widget_screen/account_without_login_screen.dart';
+import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
+import 'package:second_chance/theme.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -13,75 +17,7 @@ class AccountScreen extends StatelessWidget {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
     return _auth.currentUser == null
-        ? Scaffold(
-            appBar: AppBar(
-              // elevation: 2,
-              backgroundColor: Colors.yellow.shade900,
-              title: Text(
-                'Profile',
-                style: TextStyle(letterSpacing: 4),
-              ),
-              centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Icon(Icons.brightness_2_outlined),
-                ),
-              ],
-            ),
-            body: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      'You Are Currently Not Logged In',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) {
-                            return LoginView();
-                          },
-                        ));
-                      },
-                      child: Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width - 200,
-                        decoration: BoxDecoration(
-                          color: Colors.yellow.shade900,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'LOGIN HERE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 5,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
+        ? LoggedOutUserAccountScreen()
         : FutureBuilder<DocumentSnapshot>(
             future: users.doc(_auth.currentUser!.uid).get(),
             builder: (BuildContext context,
@@ -106,132 +42,125 @@ class AccountScreen extends StatelessWidget {
 
                 return Scaffold(
                   appBar: AppBar(
-                    // elevation: 2,
-                    backgroundColor: Colors.yellow.shade900,
+                    backgroundColor: whiteColor,
+                    elevation: 0,
+                    centerTitle: true,
                     title: Text(
                       'Profile',
-                      style: TextStyle(letterSpacing: 4),
+                      style: subTitle,
                     ),
-                    centerTitle: true,
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Icon(Icons.brightness_2_outlined),
-                      ),
-                    ],
                   ),
                   body: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Center(
-                          child: CircleAvatar(
-                            radius: 64,
-                            backgroundColor: Colors.yellow.shade900,
-                            backgroundImage: NetworkImage(profileImage),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            data['fullName'],
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            data['email'],
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                return EditProfileScreen(
-                                  userData: data,
-                                );
-                              },
-                            ));
-                          },
-                          child: Container(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width - 200,
-                            decoration: BoxDecoration(
-                              color: Colors.yellow.shade900,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  letterSpacing: 5,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(28.0),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(
+                                profileImage,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Divider(
-                            thickness: 2,
-                            color: Colors.grey,
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text('Settings'),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.phone),
-                          title: Text('Phone'),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.add_shopping_cart),
-                          title: Text('Cart'),
-                        ),
-                        ListTile(
-                          // onTap: () async {
-                          //   await Navigator.push(context, MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return OrdersScreen();
-                          //     },
-                          //   ));
-                          // },
-                          leading: Icon(Icons.shopping_cart),
-                          title: Text('Orders'),
-                        ),
-                        ListTile(
-                          onTap: () async {
-                            await _auth.signOut().whenComplete(
-                              () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return LoginView();
-                                    },
-                                  ),
-                                );
+                          Text(
+                            data['fullName'],
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            data['email'],
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: 200,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) {
+                                    return EditProfileScreen(userData: data);
+                                  },
+                                ));
                               },
-                            );
-                          },
-                          leading: Icon(Icons.logout),
-                          title: Text('Logout'),
-                        ),
-                      ],
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: blackColor,
+                                side: BorderSide.none,
+                                shape: StadiumBorder(),
+                              ),
+                              child: Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          Divider(),
+                          SizedBox(height: 10),
+                          ProfileMenuWidget(
+                            title: 'Settings',
+                            icon: Icons.settings_outlined,
+                            onPress: () {},
+                          ),
+                          ProfileMenuWidget(
+                            title: 'Cart',
+                            icon: Icons.add_shopping_cart,
+                            onPress: () {},
+                          ),
+                          ProfileMenuWidget(
+                            title: 'Orders',
+                            icon: Icons.shopping_cart,
+                            onPress: () {},
+                          ),
+                          Divider(),
+                          ProfileMenuWidget(
+                            title: 'Information',
+                            icon: Icons.info_outline,
+                            onPress: () {},
+                          ),
+                          ProfileMenuWidget(
+                            title: 'Logout',
+                            icon: Icons.logout_rounded,
+                            textColor: primaryColor,
+                            endIcon: false,
+                            onPress: () async {
+                              EasyLoading.show(status: 'Logging out');
+
+                              await _auth.signOut().whenComplete(
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return LoginView();
+                                      },
+                                    ),
+                                  );
+
+                                  EasyLoading.dismiss();
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

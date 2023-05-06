@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
+import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final dynamic userData;
@@ -18,16 +22,14 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  //will give use access to the user input
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _fullNamecontroller = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _phoneController = TextEditingController();
-
   final TextEditingController _addressController = TextEditingController();
 
-  // String? address;
+  bool _isLoading = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -83,25 +85,92 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _updateBuyerProfile(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _firestore
+            .collection('buyers')
+            .doc(_auth.currentUser!.uid)
+            .update({
+          'fullName': _fullNamecontroller.text,
+          'email': _emailController.text,
+          'phoneNumber': _phoneController.text,
+          'address': _addressController.text,
+        });
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => MainScreen()),
+          (route) => false,
+        );
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Error'),
+            content: Text(error.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      displayDialog(
+        context,
+        'Please fields must not be empty',
+        Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 60,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black), // buat arrownya
+        backgroundColor: whiteColor,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        iconTheme: IconThemeData(color: blackColor),
         title: Text(
           'Edit Profile',
-          style: TextStyle(
-            color: Colors.black,
-            letterSpacing: 3,
-            fontSize: 17,
-          ),
+          style: subTitle,
         ),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(28.0),
+          child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 SizedBox(
@@ -109,112 +178,100 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: widget.userData['profileImage'] != null
-                          ? NetworkImage(widget.userData['profileImage'])
-                          : null,
-                      backgroundColor: Colors.yellow.shade900,
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: widget.userData['profileImage'] != null
+                                ? Image.network(
+                                    widget.userData['profileImage'],
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: blackColor,
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.pencil,
+                                color: whiteColor,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                _updateProfileImage();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      right: 0,
-                      child: IconButton(
-                        onPressed: () {
-                          _updateProfileImage();
-                        },
-                        icon: Icon(CupertinoIcons.photo),
-                      ),
-                    )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _fullNamecontroller,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Full Name',
-                    ),
-                  ),
+                SizedBox(height: 30),
+                Divider(),
+                SizedBox(height: 10),
+                TextFormGlobal(
+                  text: 'Full Name',
+                  textInputType: TextInputType.text,
+                  context: context,
+                  controller: _fullNamecontroller,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Email',
-                    ),
-                  ),
+                SizedBox(
+                  height: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _phoneController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Phone Number',
-                    ),
-                  ),
+                TextFormGlobal(
+                  text: 'Email',
+                  textInputType: TextInputType.emailAddress,
+                  context: context,
+                  controller: _emailController,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    // onChanged: (value) {
-                    //   address = value;
-                    // },
-                    controller: _addressController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Address',
-                    ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormGlobal(
+                  text: 'Phone Number',
+                  textInputType: TextInputType.phone,
+                  context: context,
+                  controller: _phoneController,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormGlobal(
+                  text: 'Address',
+                  textInputType: TextInputType.phone,
+                  context: context,
+                  controller: _addressController,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                InkWell(
+                  onTap: () async {
+                    await _updateBuyerProfile(context);
+                  },
+                  child: ButtonGlobal(
+                    isLoading: _isLoading,
+                    text: 'Update Profile',
                   ),
                 )
               ],
             ),
-          ),
-        ),
-      ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: InkWell(
-          onTap: () async {
-            EasyLoading.show(status: 'Updating');
-            await _firestore
-                .collection('buyers')
-                .doc(_auth.currentUser!.uid)
-                .update({
-              'fullName': _fullNamecontroller.text,
-              //Sebenarnya jika emailnya diganti, yg terganti hanya yg di Firestore, tetapi currentUser masih melakukan login dengan akunnya menggunakan email yang terdaftar di FirebaseAuth
-              'email': _emailController.text,
-              'phoneNumber': _phoneController.text,
-              'address': _addressController.text,
-            }).whenComplete(
-              () {
-                EasyLoading.dismiss();
-
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => MainScreen()),
-                  (route) => false,
-                );
-              },
-            );
-          },
-          child: Container(
-            height: 40,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.yellow.shade900,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-                child: Text(
-              'UPDATE PROFILE',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 3,
-              ),
-            )),
           ),
         ),
       ),

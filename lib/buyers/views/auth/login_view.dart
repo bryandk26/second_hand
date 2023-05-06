@@ -102,7 +102,6 @@ class _LoginViewState extends State<LoginView> {
                   TextFormGlobal(
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
-                    obsecure: false,
                     context: context,
                     onChanged: (value) {
                       email = value;

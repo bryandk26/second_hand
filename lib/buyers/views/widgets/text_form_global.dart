@@ -7,7 +7,7 @@ class TextFormGlobal extends StatelessWidget {
     this.controller,
     required this.text,
     required this.textInputType,
-    required this.obsecure,
+    this.obsecure = false,
     this.onChanged,
     required this.context,
   });

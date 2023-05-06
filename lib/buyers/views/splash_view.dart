@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/theme.dart';
 

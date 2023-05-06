@@ -120,7 +120,6 @@ class _RegisterViewState extends State<RegisterView> {
                   TextFormGlobal(
                     text: 'Full Name',
                     textInputType: TextInputType.text,
-                    obsecure: false,
                     context: context,
                     onChanged: (value) {
                       fullName = value;
@@ -133,7 +132,6 @@ class _RegisterViewState extends State<RegisterView> {
                   TextFormGlobal(
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
-                    obsecure: false,
                     context: context,
                     onChanged: (value) {
                       email = value;
@@ -146,7 +144,6 @@ class _RegisterViewState extends State<RegisterView> {
                   TextFormGlobal(
                     text: 'Phone Number',
                     textInputType: TextInputType.phone,
-                    obsecure: false,
                     context: context,
                     onChanged: (value) {
                       phoneNumber = value;
