@@ -8,15 +8,15 @@ class TextFormGlobal extends StatelessWidget {
     required this.text,
     required this.textInputType,
     required this.obsecure,
-    this.validator,
     this.onChanged,
+    required this.context,
   });
   final TextEditingController? controller;
   final String text;
   final TextInputType textInputType;
   final bool obsecure;
-  final String? Function(String?)? validator;
   final String? Function(String)? onChanged;
+  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,13 @@ class TextFormGlobal extends StatelessWidget {
         ),
       ),
       onChanged: onChanged,
-      validator: validator,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please ${text} fields must not be empty';
+        } else {
+          return null;
+        }
+      },
     );
   }
 }

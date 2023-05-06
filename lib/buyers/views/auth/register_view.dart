@@ -121,13 +121,7 @@ class _RegisterViewState extends State<RegisterView> {
                     text: 'Full Name',
                     textInputType: TextInputType.text,
                     obsecure: false,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Full Name must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       fullName = value;
                       return null;
@@ -140,13 +134,7 @@ class _RegisterViewState extends State<RegisterView> {
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
                     obsecure: false,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Email must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       email = value;
                       return null;
@@ -159,13 +147,7 @@ class _RegisterViewState extends State<RegisterView> {
                     text: 'Phone Number',
                     textInputType: TextInputType.phone,
                     obsecure: false,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Phone Number must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       phoneNumber = value;
                       return null;
@@ -178,13 +160,7 @@ class _RegisterViewState extends State<RegisterView> {
                     text: 'Password',
                     textInputType: TextInputType.text,
                     obsecure: true,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Password must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       password = value;
                       return null;

@@ -103,13 +103,7 @@ class _LoginViewState extends State<LoginView> {
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
                     obsecure: false,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Email fields must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       email = value;
                       return null;
@@ -122,13 +116,7 @@ class _LoginViewState extends State<LoginView> {
                     text: 'Password',
                     textInputType: TextInputType.text,
                     obsecure: true,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Password fields must not be empty';
-                      } else {
-                        return null;
-                      }
-                    },
+                    context: context,
                     onChanged: (value) {
                       password = value;
                       return null;
