@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/main_screen.dart';
+import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/theme.dart';
 
 class SplashView extends StatefulWidget {
@@ -24,7 +24,7 @@ class _SplashViewState extends State<SplashView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return MainScreen();
+                return AuthenticationWrapper();
               },
             ),
           );

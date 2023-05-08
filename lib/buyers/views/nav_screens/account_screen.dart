@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:second_chance/buyers/views/auth/login_view.dart';
+import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/widget_screen/account_without_login_screen.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
+import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -131,9 +132,16 @@ class AccountScreen extends StatelessWidget {
                           ),
                           Divider(),
                           ProfileMenuWidget(
-                            title: 'Information',
+                            title: 'Switch App',
                             icon: Icons.info_outline,
-                            onPress: () {},
+                            onPress: () {
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                builder: (context) {
+                                  return RoleView();
+                                },
+                              ));
+                            },
                           ),
                           ProfileMenuWidget(
                             title: 'Logout',
@@ -149,7 +157,7 @@ class AccountScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        return LoginView();
+                                        return AuthenticationWrapper();
                                       },
                                     ),
                                   );
