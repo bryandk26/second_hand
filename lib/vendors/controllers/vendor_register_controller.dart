@@ -52,14 +52,17 @@ class VendorController {
     String countryValue,
     String stateValue,
     String cityValue,
-    String taxRegistered,
-    String taxNumber,
     Uint8List? image,
   ) async {
     String res = 'some error occured';
 
     try {
-      String storeImage = await _uploadVendorImageToStorage(image);
+      String? storeImage;
+
+      if (image != null) {
+        storeImage = await _uploadVendorImageToStorage(image);
+      }
+
       // Save data to cloud Firestore
       await _firestore.collection('vendors').doc(_auth.currentUser!.uid).set({
         'businessName': businessName,
@@ -68,9 +71,7 @@ class VendorController {
         'countryValue': countryValue,
         'stateValue': stateValue,
         'cityValue': cityValue,
-        'taxRegistered': taxRegistered,
-        'taxNumber': taxNumber,
-        'storeImage': storeImage,
+        'storeImage': storeImage ?? '',
         'approved': false,
         'vendorId': _auth.currentUser!.uid,
       });

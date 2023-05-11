@@ -44,6 +44,12 @@ class LandingScreen extends StatelessWidget {
             return VendorMainScreen();
           }
 
+          String storeImage = vendorUserModel.storeImage.toString();
+          if (storeImage.isEmpty) {
+            storeImage =
+                'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';
+          }
+
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +57,7 @@ class LandingScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.network(
-                    vendorUserModel.storeImage.toString(),
+                    storeImage,
                     width: 90,
                     fit: BoxFit.cover,
                   ),

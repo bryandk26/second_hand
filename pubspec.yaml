@@ -50,6 +50,7 @@ dependencies:
   date_time_picker: ^2.1.0
   photo_view: ^0.14.0
   flutter_slidable: ^2.0.0
+  csc_picker: ^0.2.7
 
 dev_dependencies:
   flutter_test:

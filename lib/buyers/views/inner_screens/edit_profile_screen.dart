@@ -46,6 +46,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _fullNamecontroller.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+
+    super.dispose();
+  }
+
   Future<Uint8List?> pickImage() async {
     final ImagePicker _imagePicker = ImagePicker();
     final pickedImage =
@@ -148,6 +158,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String profileImage = widget.userData['profileImage'];
+    if (profileImage.isEmpty) {
+      profileImage =
+          'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: whiteColor,
@@ -185,15 +201,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 120,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: widget.userData['profileImage'] != null
-                                ? Image.network(
-                                    widget.userData['profileImage'],
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.network(
-                                    'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg',
-                                    fit: BoxFit.cover,
-                                  ),
+                            child: Image.network(
+                              profileImage,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Positioned(
@@ -235,6 +246,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   height: 20,
                 ),
                 TextFormGlobal(
+                  enabled: false,
                   text: 'Email',
                   textInputType: TextInputType.emailAddress,
                   context: context,

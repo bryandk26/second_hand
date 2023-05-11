@@ -7,9 +7,7 @@ class VendorUserModel {
   final String? email;
   final String? phoneNumber;
   final String? stateValue;
-  final String? storeImage;
-  final String? taxNumber;
-  final String? taxRegistered;
+  String? _storeImage;
 
   VendorUserModel({
     required this.approved,
@@ -20,10 +18,8 @@ class VendorUserModel {
     required this.email,
     required this.phoneNumber,
     required this.stateValue,
-    required this.storeImage,
-    required this.taxNumber,
-    required this.taxRegistered,
-  });
+    required String? storeImage,
+  }) : _storeImage = storeImage;
 
   VendorUserModel.fromJson(Map<String, Object?> json)
       : this(
@@ -36,8 +32,6 @@ class VendorUserModel {
           phoneNumber: json['phoneNumber']! as String,
           stateValue: json['stateValue']! as String,
           storeImage: json['storeImage']! as String,
-          taxNumber: json['taxNumber']! as String,
-          taxRegistered: json['taxRegistered']! as String,
         );
 
   Map<String, Object?> toJson() {
@@ -51,8 +45,12 @@ class VendorUserModel {
       'phoneNumber': phoneNumber,
       'stateValue': stateValue,
       'storeImage': storeImage,
-      'taxNumber': taxNumber,
-      'taxRegistered': taxRegistered,
     };
+  }
+
+  String? get storeImage => _storeImage;
+
+  set storeImage(String? value) {
+    _storeImage = value;
   }
 }

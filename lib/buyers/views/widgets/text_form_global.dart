@@ -10,6 +10,7 @@ class TextFormGlobal extends StatelessWidget {
     this.obsecure = false,
     this.onChanged,
     required this.context,
+    this.enabled = true,
   });
   final TextEditingController? controller;
   final String text;
@@ -17,10 +18,12 @@ class TextFormGlobal extends StatelessWidget {
   final bool obsecure;
   final String? Function(String)? onChanged;
   final BuildContext context;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
       controller: controller ?? null,
       keyboardType: textInputType,
       obscureText: obsecure,
@@ -30,7 +33,7 @@ class TextFormGlobal extends StatelessWidget {
       ),
       decoration: InputDecoration(
         filled: true,
-        fillColor: whiteColor,
+        fillColor: enabled ? whiteColor : lightGreyColor,
         hintText: 'Enter ${text}',
         hintStyle: TextStyle(
           color: greyColor,

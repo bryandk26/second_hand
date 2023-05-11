@@ -1,9 +1,11 @@
-import 'package:country_state_city_picker/country_state_city_picker.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/controllers/vendor_register_controller.dart';
 
 class VendorRegistrationScreen extends StatefulWidget {
@@ -19,13 +21,12 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   late String businessName;
   late String email;
   late String phoneNumber;
-  late String taxNumber;
-  late String countryValue;
-  late String stateValue;
-  late String cityValue;
+  String countryValue = '';
+  String stateValue = '';
+  String cityValue = '';
+  Uint8List? _image;
 
-  Uint8List?
-      _image; //create the global variable to store the im from the function below
+  bool _isLoading = false;
 
   selectGalleryImage() async {
     Uint8List im = await _vendorController.pickStoreImage(ImageSource.gallery);
@@ -34,18 +35,6 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
       _image = im;
     });
   }
-
-  selectCameraImage() async {
-    Uint8List im = await _vendorController.pickStoreImage(ImageSource.camera);
-
-    setState(() {
-      _image = im;
-    });
-  }
-
-  String? _taxStatus;
-
-  List<String> _taxOptions = ['YES', 'NO'];
 
   _saveVendorDetail() async {
     EasyLoading.show(status: 'Please Wait');
@@ -58,8 +47,6 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
         countryValue,
         stateValue,
         cityValue,
-        _taxStatus!,
-        taxNumber,
         _image,
       )
           .whenComplete(() {
@@ -71,8 +58,6 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
         });
       });
     } else {
-      print('Bad');
-
       EasyLoading.dismiss();
     }
   }
@@ -91,7 +76,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                   background: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.yellow.shade900, Colors.yellow],
+                        colors: [primaryColor, blackColor],
                       ),
                     ),
                     child: Center(
@@ -99,8 +84,8 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            height: 90,
-                            width: 90,
+                            height: 100,
+                            width: 100,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
@@ -186,102 +171,61 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                         labelText: 'Phone Number',
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: SelectState(
-                        onCountryChanged: (value) {
-                          setState(() {
-                            countryValue = value;
-                          });
-                        },
-                        onStateChanged: (value) {
-                          setState(() {
-                            stateValue = value;
-                          });
-                        },
-                        onCityChanged: (value) {
-                          setState(() {
-                            cityValue = value;
-                          });
-                        },
-                      ),
+                    SizedBox(
+                      height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'TAX Registered?',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Flexible(
-                            child: Container(
-                              width: 100,
-                              child: DropdownButtonFormField(
-                                hint: Text('Select'),
-                                items:
-                                    _taxOptions.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value, child: Text(value));
-                                  },
-                                ).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _taxStatus = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          )
-                        ],
+                    CSCPicker(
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 3),
                       ),
+                      disabledDropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.grey.shade300,
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 3),
+                      ),
+                      onCountryChanged: (value) {
+                        setState(() {
+                          countryValue = value.toString();
+                        });
+                      },
+                      onStateChanged: (value) {
+                        setState(() {
+                          stateValue = value.toString();
+                        });
+                      },
+                      onCityChanged: (value) {
+                        setState(() {
+                          cityValue = value.toString();
+                        });
+                      },
                     ),
-                    if (_taxStatus == 'YES')
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextFormField(
-                          onChanged: (value) {
-                            taxNumber = value;
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please Tax Number must not be empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Tax Number',
-                          ),
-                        ),
-                      ),
+                    // SelectState(
+                    //   onCountryChanged: (value) {
+                    //     setState(() {
+                    //       countryValue = value;
+                    //     });
+                    //   },
+                    //   onStateChanged: (value) {
+                    //     setState(() {
+                    //       stateValue = value;
+                    //     });
+                    //   },
+                    //   onCityChanged: (value) {
+                    //     setState(() {
+                    //       cityValue = value;
+                    //     });
+                    //   },
+                    // ),
+                    SizedBox(height: 20),
                     InkWell(
                       onTap: () {
                         _saveVendorDetail();
                       },
-                      child: Container(
-                        height: 30,
-                        width: MediaQuery.of(context).size.width - 40,
-                        decoration: BoxDecoration(
-                          color: Colors.yellow.shade900,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: ButtonGlobal(isLoading: _isLoading, text: 'Save'),
                     ),
                   ],
                 ),

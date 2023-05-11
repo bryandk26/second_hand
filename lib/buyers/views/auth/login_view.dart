@@ -22,6 +22,11 @@ class _LoginViewState extends State<LoginView> {
   bool _isLoading = false;
 
   _loginUsers() async {
+    // if (mounted) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // }
     setState(() {
       _isLoading = true;
     });
