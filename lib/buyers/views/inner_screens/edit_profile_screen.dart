@@ -38,10 +38,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     setState(() {
-      _fullNamecontroller.text = widget.userData['fullName'];
-      _emailController.text = widget.userData['email'];
-      _phoneController.text = widget.userData['phoneNumber'];
-      _addressController.text = widget.userData['address'];
+      _fullNamecontroller.text = widget.userData['fullName'] ?? '';
+      _emailController.text = widget.userData['email'] ?? '';
+      _phoneController.text = widget.userData['phoneNumber'] ?? '';
+      _addressController.text = widget.userData['address'] ?? '';
     });
     super.initState();
   }
