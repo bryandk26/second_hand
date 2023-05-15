@@ -13,14 +13,6 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
   @override
   bool get wantKeepAlive => true;
 
-  String? validatorFormField(String? value, String fieldName) {
-    if (value == null || value.isEmpty) {
-      return 'This $fieldName is required';
-    } else {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);

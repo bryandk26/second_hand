@@ -18,18 +18,6 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final List<String> _categoryList = [];
 
-  String? validatorFormField(String? value, String fieldName) {
-    if (value == null || value.isEmpty) {
-      return 'This $fieldName is required';
-    }
-
-    if ((fieldName == 'Product Quantity' || fieldName == 'Product Price') &&
-        double.tryParse(value) == null) {
-      return 'Please enter a valid number for $fieldName';
-    }
-    return null;
-  }
-
   _getCategories() {
     _firestore
         .collection('categories')
