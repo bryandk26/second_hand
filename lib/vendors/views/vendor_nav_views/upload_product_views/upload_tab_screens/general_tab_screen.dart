@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:second_chance/buyers/views/widgets/dropdown_form_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/provider/product_provider.dart';
 import 'package:intl/intl.dart';
 
@@ -19,9 +21,13 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
   String? validatorFormField(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
       return 'This $fieldName is required';
-    } else {
-      return null;
     }
+
+    if ((fieldName == 'Product Quantity' || fieldName == 'Product Price') &&
+        double.tryParse(value) == null) {
+      return 'Please enter a valid number for $fieldName';
+    }
+    return null;
   }
 
   _getCategories() {
@@ -63,110 +69,54 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextFormField(
-                validator: (value) => validatorFormField(value, 'Product Name'),
+              TextFormGlobal(
+                text: 'Product Name',
+                textInputType: TextInputType.text,
+                context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(productName: value);
+                  return null;
                 },
-                decoration: InputDecoration(
-                  labelText: 'Enter Product Name',
-                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                validator: (value) =>
-                    validatorFormField(value, 'Product Price'),
+              TextFormGlobal(
+                text: 'Product Price',
+                textInputType: TextInputType.number,
+                context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(
                       productPrice: double.parse(value));
+                  return null;
                 },
-                decoration: InputDecoration(
-                  labelText: 'Enter Product Price',
-                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                validator: (value) =>
-                    validatorFormField(value, 'Product Quantity'),
-                onChanged: (value) {
-                  _product_provider.getFormData(quantity: int.parse(value));
-                },
-                decoration: InputDecoration(
-                  labelText: 'Enter Product Quantity',
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              DropdownButtonFormField(
-                validator: (value) => validatorFormField(value, 'Category'),
-                hint: Text('Select Category'),
-                items: _categoryList.map<DropdownMenuItem<String>>(
-                  (e) {
-                    return DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    );
+              DropdownFormGlobal(
+                  text: 'Category',
+                  onChanged: (value) {
+                    setState(() {
+                      _product_provider.getFormData(category: value.toString());
+                    });
+                    return null;
                   },
-                ).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _product_provider.getFormData(category: value);
-                  });
-                },
-              ),
+                  context: context,
+                  listData: _categoryList),
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                validator: (value) =>
-                    validatorFormField(value, 'Product Description'),
-                maxLines: 6,
-                maxLength: 800,
+              TextFormGlobal(
+                text: 'Product Description',
+                textInputType: TextInputType.text,
+                context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(productDescription: value);
+                  return null;
                 },
-                decoration: InputDecoration(
-                  labelText: 'Enter Product Description',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(5000),
-                      ).then(
-                        (value) {
-                          setState(() {
-                            _product_provider.getFormData(scheduleDate: value);
-                          });
-                        },
-                      );
-                    },
-                    child: Text('Schedule'),
-                  ),
-                  if (_product_provider.productData['scheduleDate'] != null)
-                    Text(
-                      formatedDate(
-                        _product_provider.productData['scheduleDate'],
-                      ),
-                    ),
-                ],
+                maxLines: 6,
+                maxLength: 800,
               ),
             ],
           ),

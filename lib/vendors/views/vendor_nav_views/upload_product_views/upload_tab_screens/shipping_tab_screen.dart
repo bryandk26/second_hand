@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/provider/product_provider.dart';
 
 class ShippingTabScreen extends StatefulWidget {
@@ -9,11 +10,9 @@ class ShippingTabScreen extends StatefulWidget {
 
 class _ShippingTabScreenState extends State<ShippingTabScreen>
     with AutomaticKeepAliveClientMixin {
-  // change the line here to
   bool? _chargeShipping = false;
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
@@ -22,23 +21,14 @@ class _ShippingTabScreenState extends State<ShippingTabScreen>
     final ProductProvider _product_provider =
         Provider.of<ProductProvider>(context);
 
-    String? validatorFormField(String? value, String fieldName) {
-      if (value == null || value.isEmpty) {
-        return 'This $fieldName is required';
-      } else {
-        return null;
-      }
-    }
-
     return Column(
       children: [
         CheckboxListTile(
           title: Text(
             'Charge Shipping',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              letterSpacing: 4,
             ),
           ),
           value: _chargeShipping,
@@ -51,15 +41,15 @@ class _ShippingTabScreenState extends State<ShippingTabScreen>
         ),
         if (_chargeShipping == true)
           Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TextFormField(
-              validator: (value) =>
-                  validatorFormField(value, 'Shipping charge'),
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormGlobal(
+              text: 'Shipping charge',
+              textInputType: TextInputType.number,
+              context: context,
               onChanged: (value) {
                 _product_provider.getFormData(shippingCharge: int.parse(value));
+                return null;
               },
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Shipping charge'),
             ),
           )
       ],

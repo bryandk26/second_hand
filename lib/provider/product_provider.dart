@@ -6,15 +6,13 @@ class ProductProvider with ChangeNotifier {
   getFormData({
     String? productName,
     double? productPrice,
-    int? quantity,
     String? category,
     String? productDescription,
-    DateTime? scheduleDate,
     List<String>? imageUrlList,
     bool? chargeShipping,
     int? shippingCharge,
     String? brandName,
-    List<String>? sizeList,
+    String? size,
   }) {
     if (productName != null) {
       productData['productName'] = productName;
@@ -22,17 +20,11 @@ class ProductProvider with ChangeNotifier {
     if (productPrice != null) {
       productData['productPrice'] = productPrice;
     }
-    if (quantity != null) {
-      productData['quantity'] = quantity;
-    }
     if (category != null) {
       productData['category'] = category;
     }
     if (productDescription != null) {
       productData['productDescription'] = productDescription;
-    }
-    if (scheduleDate != null) {
-      productData['scheduleDate'] = scheduleDate;
     }
     if (imageUrlList != null) {
       productData['imageUrlList'] = imageUrlList;
@@ -46,8 +38,8 @@ class ProductProvider with ChangeNotifier {
     if (brandName != null) {
       productData['brandName'] = brandName;
     }
-    if (sizeList != null) {
-      productData['sizeList'] = sizeList;
+    if (size != null) {
+      productData['size'] = size;
     }
 
     notifyListeners();

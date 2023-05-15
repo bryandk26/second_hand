@@ -28,17 +28,16 @@ class UploadProductsView extends StatelessWidget {
         'productId': productId,
         'productName': productProvider.productData['productName'],
         'productPrice': productProvider.productData['productPrice'],
-        'quantity': productProvider.productData['quantity'],
         'productDescription': productProvider.productData['productDescription'],
         'category': productProvider.productData['category'],
-        'scheduleDate': productProvider.productData['scheduleDate'],
         'imageUrlList': productProvider.productData['imageUrlList'],
         'chargeShipping': productProvider.productData['chargeShipping'],
         'shippingCharge': productProvider.productData['shippingCharge'],
         'brandName': productProvider.productData['brandName'],
-        'sizeList': productProvider.productData['sizeList'],
+        'size': productProvider.productData['size'],
         'vendorId': FirebaseAuth.instance.currentUser!.uid,
         'approved': false,
+        'productAddedDate': DateTime.now(),
       }).whenComplete(() {
         productProvider.clearData();
         _formKey.currentState!.reset();
@@ -72,31 +71,30 @@ class UploadProductsView extends StatelessWidget {
               'Upload Products',
               style: subTitle,
             ),
-            // elevation: 1, buat ngatur shadow dibawah appBar
             bottom: TabBar(
               tabs: [
                 Tab(
                   child: Text(
                     'General',
-                    style: TextStyle(color: blackColor),
+                    style: TextStyle(color: blackColor, fontSize: 12),
                   ),
                 ),
                 Tab(
                   child: Text(
                     'Shipping',
-                    style: TextStyle(color: blackColor),
+                    style: TextStyle(color: blackColor, fontSize: 12),
                   ),
                 ),
                 Tab(
                   child: Text(
                     'Attributes',
-                    style: TextStyle(color: blackColor),
+                    style: TextStyle(color: blackColor, fontSize: 12),
                   ),
                 ),
                 Tab(
                   child: Text(
                     'Images',
-                    style: TextStyle(color: blackColor),
+                    style: TextStyle(color: blackColor, fontSize: 12),
                   ),
                 ),
               ],
