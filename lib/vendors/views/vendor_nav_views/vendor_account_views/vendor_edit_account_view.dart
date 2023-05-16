@@ -30,7 +30,6 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  // final TextEditingController _addressController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -47,17 +46,18 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
       _countryController.text = widget.vendorData.countryValue;
       _stateController.text = widget.vendorData.stateValue;
       _cityController.text = widget.vendorData.cityValue;
-      // _addressController.text = widget.vendorData['address'];
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    // dispose controller saat tidak digunakan lagi
     _businessNamecontroller.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _countryController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
 
     super.dispose();
   }
@@ -115,7 +115,6 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           'businessName': _businessNamecontroller.text,
           'email': _emailController.text,
           'phoneNumber': _phoneController.text,
-          // 'address': _addressController.text,
         });
 
         setState(() {
@@ -188,12 +187,12 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           style: subTitle,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(28.0),
-          child: Form(
-            key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(28.0),
             child: Column(
               children: [
                 SizedBox(
@@ -298,30 +297,21 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                   context: context,
                   controller: _cityController,
                 ),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // TextFormGlobal(
-                //   text: 'Address',
-                //   textInputType: TextInputType.phone,
-                //   context: context,
-                //   controller: _addressController,
-                // ),
                 SizedBox(
                   height: 50,
                 ),
-                InkWell(
-                  onTap: () async {
-                    await _updateBuyerProfile(context);
-                  },
-                  child: ButtonGlobal(
-                    isLoading: _isLoading,
-                    text: 'Update Profile',
-                  ),
-                )
               ],
             ),
           ),
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          onTap: () async {
+            await _updateBuyerProfile(context);
+          },
+          child: ButtonGlobal(isLoading: _isLoading, text: 'Update Profile'),
         ),
       ),
     );

@@ -181,12 +181,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           style: subTitle,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(28.0),
-          child: Form(
-            key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(28.0),
             child: Column(
               children: [
                 SizedBox(
@@ -273,18 +273,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(
                   height: 50,
                 ),
-                InkWell(
-                  onTap: () async {
-                    await _updateBuyerProfile(context);
-                  },
-                  child: ButtonGlobal(
-                    isLoading: _isLoading,
-                    text: 'Update Profile',
-                  ),
-                )
               ],
             ),
           ),
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          onTap: () async {
+            await _updateBuyerProfile(context);
+          },
+          child: ButtonGlobal(isLoading: _isLoading, text: 'Update Profile'),
         ),
       ),
     );
