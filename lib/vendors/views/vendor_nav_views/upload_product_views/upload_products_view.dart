@@ -21,6 +21,11 @@ class UploadProductsView extends StatelessWidget {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
+    if (productProvider.productData['imageUrlList'].isEmpty) {
+      return;
+    }
+
     EasyLoading.show(status: 'On Progress...');
     if (_formKey.currentState!.validate()) {
       final productId = Uuid().v4();

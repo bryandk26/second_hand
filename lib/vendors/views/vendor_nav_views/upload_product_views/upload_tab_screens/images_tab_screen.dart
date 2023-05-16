@@ -23,6 +23,7 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
   final ImagePicker picker = ImagePicker();
 
   List<File> _image = [];
+  List<String> _imageUrlList = [];
 
   chooseImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -33,18 +34,31 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
       setState(() {
         _image.add(File(pickedFile.path));
       });
+      await uploadImage(
+          _image.last); // Panggil uploadImage() dengan gambar terakhir
     }
-    ;
+  }
+
+  Future<void> uploadImage(File image) async {
+    final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+    final Reference ref =
+        _firebaseStorage.ref().child('productImage').child(Uuid().v4());
+
+    await ref.putFile(image).whenComplete(() async {
+      await ref.getDownloadURL().then((value) {
+        setState(() {
+          _imageUrlList.add(value);
+        });
+        Provider.of<ProductProvider>(context, listen: false)
+            .getFormData(imageUrlList: _imageUrlList);
+        EasyLoading.dismiss();
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-    final ProductProvider _product_provider =
-        Provider.of<ProductProvider>(context);
-
-    List<String> _imageUrlList = [];
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -100,34 +114,6 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
                       );
               }),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          TextButton(
-            onPressed: () async {
-              EasyLoading.show(status: 'Saving Images');
-              for (var img in _image) {
-                Reference ref = _firebaseStorage
-                    .ref()
-                    .child('productImage')
-                    .child(Uuid().v4());
-
-                await ref.putFile(img).whenComplete(() async {
-                  await ref.getDownloadURL().then((value) {
-                    setState(() {
-                      _imageUrlList.add(value);
-                    });
-                  });
-                });
-              }
-              setState(() {
-                _product_provider.getFormData(imageUrlList: _imageUrlList);
-
-                EasyLoading.dismiss();
-              });
-            },
-            child: _image.isNotEmpty ? Text('Upload') : Text(''),
           ),
         ],
       ),
