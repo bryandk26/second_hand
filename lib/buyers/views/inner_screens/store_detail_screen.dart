@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:second_chance/buyers/views/inner_screens/product_detail_screen.dart';
 import 'package:second_chance/theme.dart';
 
 class StoreDetailScreen extends StatelessWidget {
@@ -14,6 +15,7 @@ class StoreDetailScreen extends StatelessWidget {
     final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
         .where('vendorId', isEqualTo: storeData['vendorId'])
+        .where('approved', isEqualTo: true)
         .snapshots();
 
     return Scaffold(
@@ -73,13 +75,13 @@ class StoreDetailScreen extends StatelessWidget {
               final productImage = productData['imageUrlList'][0];
               return GestureDetector(
                 onTap: () {
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) {
-                  //     return ProductDetailScreen(
-                  //       productData: productData,
-                  //     );
-                  //   },
-                  // ));
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return ProductDetailScreen(
+                        productData: productData,
+                      );
+                    },
+                  ));
                 },
                 child: Card(
                   child: Column(

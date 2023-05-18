@@ -5,6 +5,7 @@ import 'package:second_chance/buyers/views/nav_screens/account_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/cart_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/categories_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/home_screen.dart';
+import 'package:second_chance/buyers/views/nav_screens/products_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/store_screen.dart';
 import 'package:second_chance/theme.dart';
 
@@ -21,9 +22,10 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _pages = [
     HomeScreen(),
     CategoriesScreen(),
+    ProductsScreen(),
     StoreScreen(),
     CartScreen(),
-    AccountScreen()
+    AccountScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,12 @@ class _MainScreenState extends State<MainScreen> {
                   text: 'HOME',
                 ),
                 GButton(
-                  icon: CupertinoIcons.square_grid_2x2,
+                  icon: CupertinoIcons.collections,
                   text: 'CATEGORIES',
+                ),
+                GButton(
+                  icon: CupertinoIcons.square_grid_2x2,
+                  text: 'PRODUCTS',
                 ),
                 GButton(
                   icon: CupertinoIcons.bag,

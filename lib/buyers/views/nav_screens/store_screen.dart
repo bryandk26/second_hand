@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/nav_screens/widget_screen/store_detail_screen.dart';
+import 'package:second_chance/buyers/views/inner_screens/store_detail_screen.dart';
 import 'package:second_chance/theme.dart';
 
 class StoreScreen extends StatefulWidget {

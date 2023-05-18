@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:second_chance/theme.dart';
 
 class ButtonGlobal extends StatelessWidget {
-  const ButtonGlobal({super.key, required this.isLoading, required this.text});
+  const ButtonGlobal({
+    super.key,
+    required this.isLoading,
+    required this.text,
+    this.color = blackColor,
+  });
 
   final String text;
   final bool isLoading;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +19,7 @@ class ButtonGlobal extends StatelessWidget {
       alignment: Alignment.center,
       height: 55,
       decoration: BoxDecoration(
-        color: blackColor,
+        color: color,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
