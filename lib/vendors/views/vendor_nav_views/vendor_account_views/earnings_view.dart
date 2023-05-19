@@ -34,6 +34,7 @@ class EarningsView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
+
           return Scaffold(
               appBar: AppBar(
                 backgroundColor: whiteColor,
@@ -63,11 +64,15 @@ class EarningsView extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return Text('Something went wrong');
+                    return Center(child: Text('Something went wrong'));
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: blackColor,
+                      ),
+                    );
                   }
 
                   double totalOrder = 0.0;
@@ -77,7 +82,7 @@ class EarningsView extends StatelessWidget {
 
                   return Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(14.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -86,9 +91,7 @@ class EarningsView extends StatelessWidget {
                             width: MediaQuery.of(context).size.width * 0.5,
                             decoration: BoxDecoration(
                               color: Colors.yellow.shade900,
-                              borderRadius: BorderRadius.circular(
-                                32,
-                              ),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -99,7 +102,8 @@ class EarningsView extends StatelessWidget {
                                     'TOTAL EARNINGS',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 22,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -108,11 +112,12 @@ class EarningsView extends StatelessWidget {
                                   child: Text(
                                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(totalOrder)}',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
+                                      color: Colors.green,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -120,10 +125,8 @@ class EarningsView extends StatelessWidget {
                             height: 150,
                             width: MediaQuery.of(context).size.width * 0.5,
                             decoration: BoxDecoration(
-                              color: Colors.yellow.shade900,
-                              borderRadius: BorderRadius.circular(
-                                32,
-                              ),
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,7 +137,8 @@ class EarningsView extends StatelessWidget {
                                     'TOTAL ORDERS',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 22,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -143,11 +147,12 @@ class EarningsView extends StatelessWidget {
                                   child: Text(
                                     snapshot.data!.docs.length.toString(),
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
+                                      color: Colors.green,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -160,7 +165,7 @@ class EarningsView extends StatelessWidget {
         }
         return Center(
             child: CircularProgressIndicator(
-          color: Colors.yellow.shade900,
+          color: blackColor,
         ));
       },
     );
