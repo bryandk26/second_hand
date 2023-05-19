@@ -77,25 +77,27 @@ class _StoreScreenState extends State<StoreScreen> {
             itemBuilder: (context, index) {
               final storeData = searchedData[index];
               final storeImage = storeData['storeImage'];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return StoreDetailScreen(
-                        storeData: storeData,
-                      );
-                    },
-                  ));
-                },
-                child: Card(
-                  child: ListTile(
-                    title: Text(storeData['businessName']),
-                    subtitle: Text(storeData['countryValue']),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        storeImage == null || storeImage == ''
-                            ? 'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg'
-                            : storeData['storeImage'],
+              return SingleChildScrollView(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return StoreDetailScreen(
+                          storeData: storeData,
+                        );
+                      },
+                    ));
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Text(storeData['businessName']),
+                      subtitle: Text(storeData['countryValue']),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          storeImage == null || storeImage == ''
+                              ? 'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg'
+                              : storeData['storeImage'],
+                        ),
                       ),
                     ),
                   ),
