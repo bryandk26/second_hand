@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/provider/product_provider.dart';
 import 'package:second_chance/splash_view.dart';
 
@@ -15,6 +16,11 @@ void main() async {
       ChangeNotifierProvider(
         create: (_) {
           return ProductProvider();
+        },
+      ),
+      ChangeNotifierProvider(
+        create: (_) {
+          return CartProvider();
         },
       ),
     ], child: const MyApp()),

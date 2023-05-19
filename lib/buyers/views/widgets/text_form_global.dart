@@ -49,7 +49,6 @@ class TextFormGlobal extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
         ),
       ),
       maxLength: maxLength,
@@ -57,7 +56,7 @@ class TextFormGlobal extends StatelessWidget {
       onChanged: onChanged,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Please ${text} fields must not be empty';
+          return 'Please this fields must not be empty';
         } else {
           return null;
         }

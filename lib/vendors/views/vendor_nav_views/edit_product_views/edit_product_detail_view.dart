@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
 
 class EditProductDetailView extends StatefulWidget {
@@ -24,6 +24,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
   final TextEditingController _productDescriptionController =
       TextEditingController();
   final TextEditingController _categoryNameController = TextEditingController();
+  final TextEditingController _detailSizeController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -37,6 +38,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
       _productDescriptionController.text =
           widget.productData['productDescription'];
       _categoryNameController.text = widget.productData['category'];
+      _detailSizeController.text = widget.productData['size'];
     });
     super.initState();
   }
@@ -52,6 +54,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
       'brandName': _brandNameController.text,
       'productDescription': _productDescriptionController.text,
       'category': _categoryNameController.text,
+      'size': _detailSizeController.text,
     };
     if (_productPriceController.text.isNotEmpty) {
       updatedData['productPrice'] = double.parse(_productPriceController.text);
@@ -99,84 +102,62 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                 SizedBox(
                   height: 20,
                 ),
-                TextFormField(
+                TextFormGlobal(
+                  text: 'Product Name',
                   controller: _productNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Product Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
+                  textInputType: TextInputType.text,
+                  context: context,
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormField(
+                TextFormGlobal(
+                  text: 'Brand Name',
                   controller: _brandNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Brand Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
+                  textInputType: TextInputType.text,
+                  context: context,
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormField(
+                TextFormGlobal(
+                  enabled: false,
+                  text: 'Category',
+                  controller: _categoryNameController,
+                  textInputType: TextInputType.text,
+                  context: context,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormGlobal(
+                  text: 'Price',
                   controller: _productPriceController,
-                  decoration: InputDecoration(
-                    labelText: 'Price',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d+'))
-                  ],
+                  textInputType: TextInputType.number,
+                  context: context,
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormField(
+                TextFormGlobal(
+                  text:
+                      'Detail Size\n\nEx:\nChest: 39 cm\nWaist: 37 cm\nSleeves: 24 cm\nShoulder: 18 cm\nLength: 29 cm',
+                  controller: _detailSizeController,
+                  textInputType: TextInputType.multiline,
+                  context: context,
+                  maxLines: 8,
+                  maxLength: 800,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormGlobal(
+                  text: 'Product Description',
+                  controller: _productDescriptionController,
+                  textInputType: TextInputType.multiline,
+                  context: context,
                   maxLength: 800,
                   maxLines: 6,
-                  controller: _productDescriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  enabled: false,
-                  controller: _categoryNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Category',
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.lock),
-                  ),
                 ),
                 SizedBox(
                   height: 50,

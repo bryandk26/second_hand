@@ -46,13 +46,12 @@ class DropdownFormGlobal<T> extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
         ),
       ),
       onChanged: onChanged,
       validator: (value) {
         if (value == null) {
-          return 'Please ${text} fields must not be empty';
+          return 'Please this fields must not be empty';
         } else {
           return null;
         }

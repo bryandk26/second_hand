@@ -4,7 +4,9 @@ import 'package:photo_view/photo_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_snack.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final dynamic productData;
@@ -29,7 +31,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final CartProvider _cartProvider = Provider.of<CartProvider>(context);
+    final CartProvider _cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -211,7 +213,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: _cartProvider.getCartItem
+                        .containsKey(widget.productData['productId'])
+                    ? null
+                    : () {
+                        _cartProvider.addProductToCart(
+                          widget.productData['productName'],
+                          widget.productData['productId'],
+                          widget.productData['imageUrlList'],
+                          widget.productData['productPrice'],
+                          widget.productData['vendorId'],
+                          widget.productData['size'],
+                        );
+
+                        return showSnack(context,
+                            'You Added ${widget.productData['productName']} To Your Cart');
+                      },
                 child: ButtonGlobal(isLoading: _isLoading, text: 'ADD TO CART'),
               ),
             ),

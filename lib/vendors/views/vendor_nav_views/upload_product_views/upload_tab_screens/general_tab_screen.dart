@@ -97,7 +97,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
               ),
               TextFormGlobal(
                 text: 'Product Description',
-                textInputType: TextInputType.text,
+                textInputType: TextInputType.multiline,
                 context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(productDescription: value);

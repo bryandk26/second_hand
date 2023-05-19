@@ -21,30 +21,35 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          TextFormGlobal(
-            text: 'Brand',
-            textInputType: TextInputType.text,
-            context: context,
-            onChanged: (value) {
-              _product_provider.getFormData(brandName: value);
-              return null;
-            },
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormGlobal(
-            text: 'Size',
-            textInputType: TextInputType.text,
-            context: context,
-            onChanged: (value) {
-              _product_provider.getFormData(size: value);
-              return null;
-            },
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextFormGlobal(
+              text: 'Brand',
+              textInputType: TextInputType.text,
+              context: context,
+              onChanged: (value) {
+                _product_provider.getFormData(brandName: value);
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormGlobal(
+              text:
+                  'Detail Size\n\nEx:\nChest: 39 cm\nWaist: 37 cm\nSleeves: 24 cm\nShoulder: 18 cm\nLength: 29 cm',
+              textInputType: TextInputType.multiline,
+              context: context,
+              onChanged: (value) {
+                _product_provider.getFormData(size: value);
+                return null;
+              },
+              maxLines: 8,
+              maxLength: 800,
+            ),
+          ],
+        ),
       ),
     );
   }

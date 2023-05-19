@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:second_chance/theme.dart';
-import 'package:second_chance/vendors/views/vendor_nav_views/earnings_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/edit_products_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/upload_product_views/upload_products_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/vendor_account_view.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/vendor_bargain_requests_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_orders_view.dart';
 
 class VendorMainScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _VendorMainScreenState extends State<VendorMainScreen> {
   int _pageIndex = 0;
 
   List<Widget> _pages = [
-    EarningsView(),
+    VendorBargainRequestsView(),
     UploadProductsView(),
     EditProductsView(),
     VendorOrdersView(),
@@ -50,8 +50,8 @@ class _VendorMainScreenState extends State<VendorMainScreen> {
                 },
                 tabs: [
                   GButton(
-                    icon: CupertinoIcons.money_dollar,
-                    text: 'EARNINGS',
+                    icon: CupertinoIcons.money_dollar_circle,
+                    text: 'BARGAIN',
                   ),
                   GButton(
                     icon: CupertinoIcons.cloud_upload,

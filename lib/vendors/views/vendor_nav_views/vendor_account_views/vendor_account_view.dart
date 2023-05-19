@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance/auth/authentication_wrapper.dart';
@@ -7,6 +8,7 @@ import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/models/vendor_user_models.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/earnings_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/vendor_edit_account_view.dart';
 
 class VendorAccountView extends StatelessWidget {
@@ -122,9 +124,15 @@ class VendorAccountView extends StatelessWidget {
                       onPress: () {},
                     ),
                     ProfileMenuWidget(
-                      title: 'Cart',
-                      icon: Icons.add_shopping_cart,
-                      onPress: () {},
+                      title: 'Earnings',
+                      icon: CupertinoIcons.money_dollar,
+                      onPress: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return EarningsView();
+                          },
+                        ));
+                      },
                     ),
                     ProfileMenuWidget(
                       title: 'Orders',
