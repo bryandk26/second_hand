@@ -9,8 +9,10 @@ const darkGrey = Color(0xFF424242);
 
 const kDefaultPadding = EdgeInsets.symmetric(horizontal: 30);
 
-TextStyle titleText =
+TextStyle headerText =
     TextStyle(color: blackColor, fontSize: 32, fontWeight: FontWeight.w700);
+TextStyle titleText =
+    TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w700);
 TextStyle subTitle =
     TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w600);
 TextStyle textButton = TextStyle(

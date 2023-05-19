@@ -28,7 +28,7 @@ class LoggedOutUserAccountScreen extends StatelessWidget {
               Text(
                 'You are currently not logged in',
                 textAlign: TextAlign.center,
-                style: titleText,
+                style: headerText,
               ),
               SizedBox(height: 20),
               SizedBox(

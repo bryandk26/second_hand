@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:second_chance/buyers/views/nav_screens/account_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/cart_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/categories_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/home_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/products_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/store_screen.dart';
+import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/theme.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,6 +29,13 @@ class _MainScreenState extends State<MainScreen> {
     CartScreen(),
     AccountScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<CartProvider>(context, listen: false).loadCartData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

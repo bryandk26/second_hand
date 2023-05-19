@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class CartAttr with ChangeNotifier {
+class CartAttributes with ChangeNotifier {
   final String productName;
   final String productId;
   final List imageUrl;
@@ -8,7 +8,7 @@ class CartAttr with ChangeNotifier {
   final String vendorId;
   final String productSize;
 
-  CartAttr({
+  CartAttributes({
     required this.productName,
     required this.productId,
     required this.imageUrl,
@@ -16,4 +16,15 @@ class CartAttr with ChangeNotifier {
     required this.vendorId,
     required this.productSize,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'productName': productName,
+      'productId': productId,
+      'imageUrl': imageUrl,
+      'price': price,
+      'vendorId': vendorId,
+      'productSize': productSize,
+    };
+  }
 }

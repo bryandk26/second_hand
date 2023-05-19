@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/widget_screen/account_without_login_screen.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
+import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 
@@ -151,6 +153,8 @@ class AccountScreen extends StatelessWidget {
                             endIcon: false,
                             onPress: () async {
                               EasyLoading.show(status: 'Logging out');
+                              Provider.of<CartProvider>(context, listen: false)
+                                  .removeAllCartItem();
 
                               await _auth.signOut().whenComplete(
                                 () {

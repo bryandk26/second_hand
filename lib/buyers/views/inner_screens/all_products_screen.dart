@@ -6,7 +6,6 @@ import 'package:second_chance/buyers/views/inner_screens/product_detail_screen.d
 import 'package:second_chance/theme.dart';
 
 class AllProductsScreen extends StatelessWidget {
-  //change the constructor
   final dynamic categoryData;
 
   const AllProductsScreen({super.key, required this.categoryData});
@@ -15,9 +14,7 @@ class AllProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where('category',
-            isEqualTo: categoryData[
-                'categoryName']) //cek category pada collection products dengan categoryName pada collection categories
+        .where('category', isEqualTo: categoryData['categoryName'])
         .where('approved', isEqualTo: true)
         .snapshots();
 
@@ -66,7 +63,7 @@ class AllProductsScreen extends StatelessWidget {
           }
 
           return GridView.builder(
-            itemCount: snapshot.data!.size, //also the same with .docs.length
+            itemCount: snapshot.data!.size,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 8,
@@ -102,23 +99,24 @@ class AllProductsScreen extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          productData['productName'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.yellow.shade900),
+                        child: Column(
+                          children: [
+                            Text(
+                              productData['productName'],
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 4,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
+                              style: subTitle.apply(color: Colors.green),
+                            ),
+                          ],
                         ),
                       ),
                     ],
