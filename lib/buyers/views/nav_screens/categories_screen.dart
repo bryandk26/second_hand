@@ -3,8 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/inner_screens/all_products_screen.dart';
 import 'package:second_chance/theme.dart';
 
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({Key? key});
+
+  @override
+  _CategoriesScreenState createState() => _CategoriesScreenState();
+}
+
+enum SortOption { AtoZ, ZtoA }
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+  SortOption _sortOption = SortOption.AtoZ;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +30,29 @@ class CategoriesScreen extends StatelessWidget {
           'Categories',
           style: subTitle,
         ),
+        actions: [
+          PopupMenuButton<SortOption>(
+            icon: Icon(
+              Icons.sort,
+              color: blackColor,
+            ),
+            onSelected: (SortOption option) {
+              setState(() {
+                _sortOption = option;
+              });
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: SortOption.AtoZ,
+                child: Text('Sort A-Z'),
+              ),
+              PopupMenuItem(
+                value: SortOption.ZtoA,
+                child: Text('Sort Z-A'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _categoryStream,
@@ -36,7 +68,17 @@ class CategoriesScreen extends StatelessWidget {
             ));
           }
 
-          // to use ListView.builder, we have to add height with container or in the inside of the builder add the shrink wrap to true
+          List<QueryDocumentSnapshot> sortedList = snapshot.data!.docs;
+          if (_sortOption == SortOption.AtoZ) {
+            sortedList.sort((a, b) => a['categoryName']
+                .toString()
+                .compareTo(b['categoryName'].toString()));
+          } else {
+            sortedList.sort((a, b) => b['categoryName']
+                .toString()
+                .compareTo(a['categoryName'].toString()));
+          }
+
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -44,9 +86,9 @@ class CategoriesScreen extends StatelessWidget {
               crossAxisSpacing: 8,
               childAspectRatio: 200 / 300,
             ),
-            itemCount: snapshot.data!.docs.length,
+            itemCount: sortedList.length,
             itemBuilder: (BuildContext context, int index) {
-              final categoryData = snapshot.data!.docs[index];
+              final categoryData = sortedList[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
