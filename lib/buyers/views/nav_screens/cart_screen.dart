@@ -97,7 +97,6 @@ class CartScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
                     ),
                   ),
                   SizedBox(

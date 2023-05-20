@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:second_chance/auth/authentication_wrapper.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_orders_screen.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/nav_screens/widget_screen/account_without_login_screen.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
@@ -131,7 +132,13 @@ class AccountScreen extends StatelessWidget {
                           ProfileMenuWidget(
                             title: 'Orders',
                             icon: Icons.shopping_cart,
-                            onPress: () {},
+                            onPress: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return BuyerOrdersScreen();
+                                },
+                              ));
+                            },
                           ),
                           Divider(),
                           ProfileMenuWidget(
