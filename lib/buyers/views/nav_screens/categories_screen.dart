@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/inner_screens/all_products_screen.dart';
 import 'package:second_chance/theme.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key});
@@ -104,9 +106,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: Image.network(
-                          categoryData['image'],
+                        child: CachedNetworkImage(
+                          imageUrl: categoryData['image'],
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              color: whiteColor,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                         ),
                       ),
                       Padding(

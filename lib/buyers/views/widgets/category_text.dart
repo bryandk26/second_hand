@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/nav_screens/categories_screen.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/home_products.dart';
 import 'package:second_chance/buyers/views/widgets/main_products_widget.dart';
 
@@ -76,10 +76,13 @@ class _CategoryTextState extends State<CategoryText> {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return CategoriesScreen();
-                        }));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainScreen(
+                                initialIndex: 1,
+                              ),
+                            ));
                       },
                       icon: Icon(Icons.arrow_forward_ios),
                     ),

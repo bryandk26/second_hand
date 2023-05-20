@@ -77,6 +77,7 @@ class UploadProductsView extends StatelessWidget {
               style: subTitle,
             ),
             bottom: TabBar(
+              indicatorColor: blackColor,
               tabs: [
                 Tab(
                   child: Text(

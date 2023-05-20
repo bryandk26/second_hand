@@ -116,11 +116,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _isLoading = false;
         });
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => MainScreen()),
-          (route) => false,
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainScreen(
+                initialIndex: 5,
+              ),
+            ));
       } catch (error) {
         setState(() {
           _isLoading = false;

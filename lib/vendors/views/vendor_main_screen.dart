@@ -9,7 +9,8 @@ import 'package:second_chance/vendors/views/vendor_nav_views/vendor_bargain_requ
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_orders_view.dart';
 
 class VendorMainScreen extends StatefulWidget {
-  const VendorMainScreen({super.key});
+  final int initialIndex;
+  const VendorMainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   State<VendorMainScreen> createState() => _VendorMainScreenState();
@@ -25,6 +26,12 @@ class _VendorMainScreenState extends State<VendorMainScreen> {
     VendorOrdersView(),
     VendorAccountView()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageIndex = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

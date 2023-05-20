@@ -121,12 +121,13 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           _isLoading = false;
         });
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => VendorMainScreen()),
-          (route) => false,
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VendorMainScreen(
+                initialIndex: 4,
+              ),
+            ));
       } catch (error) {
         setState(() {
           _isLoading = false;

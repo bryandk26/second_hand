@@ -12,7 +12,9 @@ import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/theme.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex;
+
+  const MainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -33,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    _pageIndex = widget.initialIndex;
     Provider.of<CartProvider>(context, listen: false).loadCartData();
   }
 

@@ -124,7 +124,7 @@ class BuyerOrdersScreen extends StatelessWidget {
                                     Text('Name: ' + document['productName']),
                                     Text('Price: '
                                         '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}'),
-                                    Text('Size ' + document['productSize']),
+                                    Text('Size: ' + document['productSize']),
                                   ],
                                 ),
                               )
