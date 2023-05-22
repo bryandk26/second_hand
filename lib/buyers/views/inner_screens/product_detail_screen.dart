@@ -62,6 +62,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           },
         ),
         iconTheme: IconThemeData(color: blackColor),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye,
+                  color: blackColor,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  '${widget.productData['viewed']}',
+                  style: subTitle,
+                ),
+              ],
+            ),
+          ),
+        ],
         title: Text(
           widget.productData['productName'],
           style: TextStyle(
