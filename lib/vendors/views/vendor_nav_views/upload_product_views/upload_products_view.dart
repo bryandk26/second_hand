@@ -29,6 +29,13 @@ class UploadProductsView extends StatelessWidget {
     EasyLoading.show(status: 'On Progress...');
     if (_formKey.currentState!.validate()) {
       final productId = Uuid().v4();
+
+      final vendorSnapshot = await _firestore
+          .collection('vendors')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      final businessName = vendorSnapshot['businessName'];
+
       await _firestore.collection('products').doc(productId).set({
         'productId': productId,
         'productName': productProvider.productData['productName'],
@@ -41,6 +48,7 @@ class UploadProductsView extends StatelessWidget {
         'brandName': productProvider.productData['brandName'],
         'size': productProvider.productData['size'],
         'vendorId': FirebaseAuth.instance.currentUser!.uid,
+        'businessName': businessName,
         'approved': false,
         'viewed': 0,
         'productAddedDate': DateTime.now(),

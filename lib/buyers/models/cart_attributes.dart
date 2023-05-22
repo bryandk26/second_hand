@@ -7,6 +7,7 @@ class CartAttributes with ChangeNotifier {
   final double price;
   final String vendorId;
   final String productSize;
+  final String businessName;
 
   CartAttributes({
     required this.productName,
@@ -15,6 +16,7 @@ class CartAttributes with ChangeNotifier {
     required this.price,
     required this.vendorId,
     required this.productSize,
+    required this.businessName,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class CartAttributes with ChangeNotifier {
       'price': price,
       'vendorId': vendorId,
       'productSize': productSize,
+      'businessName': businessName,
     };
   }
 }

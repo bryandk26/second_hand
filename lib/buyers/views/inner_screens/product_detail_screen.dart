@@ -303,6 +303,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           widget.productData['productPrice'],
                           widget.productData['vendorId'],
                           widget.productData['size'],
+                          widget.productData['businessName'],
                         );
 
                         return displayDialog(

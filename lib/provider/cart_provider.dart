@@ -46,6 +46,7 @@ class CartProvider with ChangeNotifier {
                   price: item['price'],
                   vendorId: item['vendorId'],
                   productSize: item['productSize'],
+                  businessName: item['businessName'],
                 ))
             .toList();
         _cartItems = Map.fromIterable(
@@ -66,6 +67,7 @@ class CartProvider with ChangeNotifier {
     double price,
     String vendorId,
     String productSize,
+    String businessName,
   ) {
     if (_cartItems.containsKey(productId)) {
       _cartItems.update(
@@ -77,6 +79,7 @@ class CartProvider with ChangeNotifier {
                 price: existingCart.price,
                 vendorId: existingCart.vendorId,
                 productSize: existingCart.productSize,
+                businessName: existingCart.businessName,
               ));
 
       notifyListeners();
@@ -90,6 +93,7 @@ class CartProvider with ChangeNotifier {
                 price: price,
                 vendorId: vendorId,
                 productSize: productSize,
+                businessName: businessName,
               ));
 
       notifyListeners();
