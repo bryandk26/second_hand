@@ -11,11 +11,14 @@ class ProductsScreen extends StatefulWidget {
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
+enum SortOption { AtoZ, ZtoA, MostViewed }
+
 class _ProductsScreenState extends State<ProductsScreen> {
   final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
       .collection('products')
       .where('approved', isEqualTo: true)
       .snapshots();
+  SortOption _sortOption = SortOption.AtoZ;
 
   String? _searchValue = '';
 
@@ -44,6 +47,33 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
         ),
+        actions: [
+          PopupMenuButton<SortOption>(
+            icon: Icon(
+              Icons.sort,
+              color: blackColor,
+            ),
+            onSelected: (SortOption option) {
+              setState(() {
+                _sortOption = option;
+              });
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: SortOption.AtoZ,
+                child: Text('A-Z'),
+              ),
+              PopupMenuItem(
+                value: SortOption.ZtoA,
+                child: Text('Z-A'),
+              ),
+              PopupMenuItem(
+                value: SortOption.MostViewed,
+                child: Text('Most Viewed'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _productsStream,
@@ -75,10 +105,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
             );
           }
 
+          List<QueryDocumentSnapshot> sortedList = searchedData;
+          if (_sortOption == SortOption.AtoZ) {
+            sortedList.sort((a, b) => a['productName']
+                .toString()
+                .toLowerCase()
+                .compareTo(b['productName'].toString()));
+          } else if (_sortOption == SortOption.ZtoA) {
+            sortedList.sort((a, b) => b['productName']
+                .toString()
+                .toLowerCase()
+                .compareTo(a['productName'].toString()));
+          } else {
+            sortedList.sort((a, b) => b['viewed'].compareTo(a['viewed']));
+          }
+
           return ListView.builder(
-            itemCount: searchedData.length,
+            itemCount: sortedList.length,
             itemBuilder: (context, index) {
-              final productData = searchedData[index];
+              final productData = sortedList[index];
               final productImage = productData['imageUrlList'][0];
               return InkWell(
                 onTap: () {

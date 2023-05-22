@@ -39,6 +39,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         .where('vendorId', isEqualTo: widget.productData['vendorId'])
         .snapshots();
 
+    void updateViewedField() {
+      FirebaseFirestore.instance
+          .collection('products')
+          .doc(widget.productData['productId'])
+          .update({
+        'viewed': FieldValue.increment(1),
+      });
+    }
+
+    updateViewedField();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: whiteColor,

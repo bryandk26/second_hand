@@ -268,7 +268,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 TextFormGlobal(
                   text: 'Address',
-                  textInputType: TextInputType.phone,
+                  textInputType: TextInputType.text,
                   context: context,
                   controller: _addressController,
                 ),

@@ -74,10 +74,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           if (_sortOption == SortOption.AtoZ) {
             sortedList.sort((a, b) => a['categoryName']
                 .toString()
+                .toLowerCase()
                 .compareTo(b['categoryName'].toString()));
           } else {
             sortedList.sort((a, b) => b['categoryName']
                 .toString()
+                .toLowerCase()
                 .compareTo(a['categoryName'].toString()));
           }
 

@@ -42,6 +42,7 @@ class UploadProductsView extends StatelessWidget {
         'size': productProvider.productData['size'],
         'vendorId': FirebaseAuth.instance.currentUser!.uid,
         'approved': false,
+        'viewed': 0,
         'productAddedDate': DateTime.now(),
       }).whenComplete(() {
         productProvider.clearData();
