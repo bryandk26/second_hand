@@ -23,11 +23,13 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
         .collection('categories')
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((element) {
-        setState(() {
-          _categoryList.add(element['categoryName']);
+      if (mounted) {
+        querySnapshot.docs.forEach((element) {
+          setState(() {
+            _categoryList.add(element['categoryName']);
+          });
         });
-      });
+      }
     });
   }
 

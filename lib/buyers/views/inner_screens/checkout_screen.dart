@@ -158,18 +158,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
             ),
             bottomSheet: data['address'] == ''
-                ? TextButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen(
-                          userData: data,
-                        );
-                      })).whenComplete(() {
-                        Navigator.pop(context);
-                      });
-                    },
-                    child: Text('Enter Billing Address'))
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return EditProfileScreen(
+                            userData: data,
+                          );
+                        })).whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: ButtonGlobal(
+                          isLoading: _isLoading, text: 'Enter Billing Address'),
+                    ),
+                  )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(

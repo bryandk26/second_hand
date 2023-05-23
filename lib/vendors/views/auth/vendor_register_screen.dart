@@ -50,12 +50,13 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
         _image,
       )
           .whenComplete(() {
+        if (mounted) {
+          setState(() {
+            _formKey.currentState!.reset();
+            _image = null;
+          });
+        }
         EasyLoading.dismiss();
-
-        setState(() {
-          _formKey.currentState!.reset();
-          _image = null;
-        });
       });
     } else {
       EasyLoading.dismiss();
