@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:second_chance/buyers/views/inner_screens/buyer_order_detail_screen.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/vendor_order_views/vendor_orders_detail_view.dart';
 
-class BuyerOrdersScreen extends StatelessWidget {
+class VendorOrderNotAcceptedTab extends StatelessWidget {
   String formatedDate(date) {
     final OutPutDateFormat = DateFormat('dd/MM/yyyy');
     final outPutDate = OutPutDateFormat.format(date);
@@ -14,53 +14,39 @@ class BuyerOrdersScreen extends StatelessWidget {
     return outPutDate;
   }
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
         .collection('orders')
-        .where('buyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('vendorId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('accepted', isEqualTo: false)
         .snapshots();
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: whiteColor,
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(CupertinoIcons.back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          iconTheme: IconThemeData(color: blackColor),
-          title: Text(
-            'My Orders',
-            style: subTitle,
-          ),
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: _orderStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Something went wrong');
-            }
+    return StreamBuilder<QuerySnapshot>(
+      stream: _orderStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(color: blackColor),
-              );
-            }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(color: blackColor),
+          );
+        }
 
-            return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                return Column(
+        return ListView(
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+            return Slidable(
+                child: Column(
                   children: [
                     ListTile(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return BuyerOrderDetailScreen(orderData: document);
+                            return VendorOrderDetailView(orderData: document);
                           },
                         ));
                       },
@@ -115,12 +101,14 @@ class BuyerOrdersScreen extends StatelessWidget {
                               document['productImage'][0],
                             ),
                           ),
+                          title:
+                              Text('Product Name: ' + document['productName']),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ListTile(
                                 title: Text(
-                                  'Product Details',
+                                  'Buyer Details',
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -129,10 +117,9 @@ class BuyerOrdersScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Name: ' + document['productName']),
-                                    Text('Price: '
-                                        '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}'),
-                                    Text('Size: ' + document['productSize']),
+                                    Text('Name ' + document['fullName']),
+                                    Text('Email' + document['email']),
+                                    Text('Address' + document['address']),
                                   ],
                                 ),
                               )
@@ -142,10 +129,45 @@ class BuyerOrdersScreen extends StatelessWidget {
                       ],
                     )
                   ],
-                );
-              }).toList(),
-            );
-          },
-        ));
+                ),
+                startActionPane: ActionPane(
+                  motion: const ScrollMotion(),
+                  children: [
+                    if (!document['accepted'])
+                      SlidableAction(
+                        onPressed: (context) async {
+                          await _firestore
+                              .collection('orders')
+                              .doc(document['orderId'])
+                              .update({
+                            'accepted': false,
+                          });
+                        },
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icons.do_not_disturb_sharp,
+                        label: 'Reject',
+                      ),
+                    SlidableAction(
+                      onPressed: (context) async {
+                        await _firestore
+                            .collection('orders')
+                            .doc(document['orderId'])
+                            .update({
+                          'accepted': true,
+                          'status': 'Waiting for Payment'
+                        });
+                      },
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      icon: Icons.check,
+                      label: !document['accepted'] ? 'Accept' : 'Accepted',
+                    ),
+                  ],
+                ));
+          }).toList(),
+        );
+      },
+    );
   }
 }
