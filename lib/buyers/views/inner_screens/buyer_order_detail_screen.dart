@@ -9,7 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:second_chance/buyers/views/inner_screens/buyer_orders_screen.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/theme.dart';
 
@@ -235,7 +235,8 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
           ),
         ),
       ),
-      bottomSheet: widget.orderData['status'] == 'On Delivery'
+      bottomSheet: widget.orderData.data()!.containsKey('status') &&
+              widget.orderData['status'] == 'On Delivery'
           ? Container(
               height: 125,
               child: Padding(
@@ -267,11 +268,17 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                                           .update({
                                         'status': 'Done',
                                       }).then((_) {
-                                        Navigator.push(
+                                        FirebaseFirestore.instance
+                                            .collection('products')
+                                            .doc(widget.orderData['productId'])
+                                            .update({
+                                          'sold': true,
+                                        });
+                                        Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  BuyerOrdersScreen(),
+                                                  MainScreen(),
                                             ));
                                       });
                                     },

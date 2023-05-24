@@ -161,7 +161,8 @@ class VendorOrderDetailView extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: orderData['status'] == 'Paid'
+      bottomSheet: orderData.data()!.containsKey('status') &&
+              orderData['status'] == 'Paid'
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(

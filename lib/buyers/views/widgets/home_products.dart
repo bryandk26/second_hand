@@ -14,6 +14,7 @@ class HomeProductWidget extends StatelessWidget {
         .collection('products')
         .where('category', isEqualTo: categoryName)
         .where('approved', isEqualTo: true)
+        .where('sold', isEqualTo: false)
         .snapshots();
     return StreamBuilder<QuerySnapshot>(
       stream: _productStream,

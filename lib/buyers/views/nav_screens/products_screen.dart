@@ -17,6 +17,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
       .collection('products')
       .where('approved', isEqualTo: true)
+      .where('sold', isEqualTo: false)
       .snapshots();
   SortOption _sortOption = SortOption.AtoZ;
 

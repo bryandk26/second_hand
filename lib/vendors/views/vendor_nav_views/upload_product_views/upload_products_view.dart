@@ -49,6 +49,7 @@ class UploadProductsView extends StatelessWidget {
         'vendorId': FirebaseAuth.instance.currentUser!.uid,
         'businessName': vendorSnapshot['businessName'],
         'approved': false,
+        'sold': false,
         'viewed': 0,
         'productAddedDate': DateTime.now(),
       }).whenComplete(() {

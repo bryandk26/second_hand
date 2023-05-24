@@ -16,6 +16,7 @@ class AllProductsScreen extends StatelessWidget {
         .collection('products')
         .where('category', isEqualTo: categoryData['categoryName'])
         .where('approved', isEqualTo: true)
+        .where('sold', isEqualTo: false)
         .snapshots();
 
     return Scaffold(
