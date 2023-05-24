@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/vendor_order_views/vendor_orders_detail_view.dart';
 
 class VendorOrdersView extends StatelessWidget {
   String formatedDate(date) {
@@ -14,6 +15,22 @@ class VendorOrdersView extends StatelessWidget {
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> updateOrderStatus(DocumentSnapshot document) async {
+    if (document['accepted'] == true) {
+      final status = 'Waiting for Payment';
+      final orderId = document['orderId'];
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('orders')
+            .doc(orderId)
+            .update({'status': status});
+      } catch (e) {
+        print('Error updating order status: $e');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +60,7 @@ class VendorOrdersView extends StatelessWidget {
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(color: Colors.yellow.shade900),
+                child: CircularProgressIndicator(color: blackColor),
               );
             }
 
@@ -53,6 +70,14 @@ class VendorOrdersView extends StatelessWidget {
                     child: Column(
                       children: [
                         ListTile(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return VendorOrderDetailView(
+                                    orderData: document);
+                              },
+                            ));
+                          },
                           leading: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 14,
@@ -138,20 +163,21 @@ class VendorOrdersView extends StatelessWidget {
                     startActionPane: ActionPane(
                       motion: const ScrollMotion(),
                       children: [
-                        SlidableAction(
-                          onPressed: (context) async {
-                            await _firestore
-                                .collection('orders')
-                                .doc(document['orderId'])
-                                .update({
-                              'accepted': false,
-                            });
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.do_not_disturb_sharp,
-                          label: 'Reject',
-                        ),
+                        if (!document['accepted'])
+                          SlidableAction(
+                            onPressed: (context) async {
+                              await _firestore
+                                  .collection('orders')
+                                  .doc(document['orderId'])
+                                  .update({
+                                'accepted': false,
+                              });
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.do_not_disturb_sharp,
+                            label: 'Reject',
+                          ),
                         SlidableAction(
                           onPressed: (context) async {
                             await _firestore
@@ -159,12 +185,12 @@ class VendorOrdersView extends StatelessWidget {
                                 .doc(document['orderId'])
                                 .update({
                               'accepted': true,
-                            });
+                            }).whenComplete(() => updateOrderStatus(document));
                           },
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                           icon: Icons.check,
-                          label: 'Accept',
+                          label: !document['accepted'] ? 'Accept' : 'Accepted',
                         ),
                       ],
                     ));

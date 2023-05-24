@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_order_detail_screen.dart';
 import 'package:second_chance/theme.dart';
 
 class BuyerOrdersScreen extends StatelessWidget {
@@ -47,7 +48,7 @@ class BuyerOrdersScreen extends StatelessWidget {
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(color: Colors.yellow.shade900),
+                child: CircularProgressIndicator(color: blackColor),
               );
             }
 
@@ -56,6 +57,13 @@ class BuyerOrdersScreen extends StatelessWidget {
                 return Column(
                   children: [
                     ListTile(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return BuyerOrderDetailScreen(orderData: document);
+                          },
+                        ));
+                      },
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 14,
