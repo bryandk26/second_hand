@@ -2,7 +2,10 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/vendor_order_views/input_delivery_order_view.dart';
 
 class VendorOrderDetailView extends StatelessWidget {
   final dynamic orderData;
@@ -12,6 +15,8 @@ class VendorOrderDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isLoading = false;
+
     final NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id',
       symbol: 'Rp ',
@@ -114,10 +119,28 @@ class VendorOrderDetailView extends StatelessWidget {
                         ),
                       ),
                       subtitle: orderData.data()!.containsKey('paymentReceipt')
-                          ? Image.network(
-                              orderData['paymentReceipt'],
-                              fit: BoxFit.cover,
-                              height: 200,
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PhotoView(
+                                      backgroundDecoration:
+                                          BoxDecoration(color: whiteColor),
+                                      imageProvider: NetworkImage(
+                                          orderData['paymentReceipt']),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                  orderData['paymentReceipt'],
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                              ),
                             )
                           : Padding(
                               padding:
@@ -138,6 +161,22 @@ class VendorOrderDetailView extends StatelessWidget {
           ),
         ),
       ),
+      bottomSheet: orderData['status'] == 'Paid'
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              InputDeliveryOrderView(orderData: orderData),
+                        ));
+                  },
+                  child: ButtonGlobal(
+                      isLoading: _isLoading, text: 'DELIVER ORDER')),
+            )
+          : null,
     );
   }
 }
