@@ -74,7 +74,7 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
             Navigator.pop(context);
           });
         } catch (e) {
-          print('Error uploading payment receipt: $e');
+          EasyLoading.showError('Error uploading payment receipt: $e');
           EasyLoading.dismiss();
         }
       }
@@ -180,7 +180,8 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                         Text('Address: ${widget.orderData['address']}'),
                         SizedBox(height: 16),
                         ConditionalBuilder(
-                          condition: widget.orderData['accepted'] == true,
+                          condition: widget.orderData['accepted'] == true &&
+                              widget.orderData['status'] != 'Canceled',
                           builder: (context) => Card(
                             color: Colors.grey[200],
                             elevation: 2.0,

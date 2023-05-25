@@ -97,74 +97,79 @@ class _RequestWarrantyOrderScreenState
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Card(
-                    color: Colors.grey[200],
-                    elevation: 2.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        'Upload Request Warranty Image',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Card(
+                      color: Colors.grey[200],
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      subtitle: widget.orderData
-                              .data()!
-                              .containsKey('warrantyImage')
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PhotoView(
-                                      backgroundDecoration:
-                                          BoxDecoration(color: whiteColor),
-                                      imageProvider: NetworkImage(
-                                          widget.orderData['warrantyImage']),
+                      child: ListTile(
+                        title: Text(
+                          'Upload Request Warranty Image',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: widget.orderData
+                                .data()!
+                                .containsKey('warrantyImage')
+                            ? GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PhotoView(
+                                        backgroundDecoration:
+                                            BoxDecoration(color: whiteColor),
+                                        imageProvider: NetworkImage(
+                                            widget.orderData['warrantyImage']),
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.network(
+                                    widget.orderData['warrantyImage'],
+                                    fit: BoxFit.cover,
+                                    height: 200,
                                   ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.network(
-                                  widget.orderData['warrantyImage'],
-                                  fit: BoxFit.cover,
-                                  height: 200,
                                 ),
+                              )
+                            : ElevatedButton(
+                                onPressed: _pickImageFromGallery,
+                                child: Text('Add Image'),
                               ),
-                            )
-                          : ElevatedButton(
-                              onPressed: _pickImageFromGallery,
-                              child: Text('Add Image'),
-                            ),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormGlobal(
-                    text: 'Reason of Request Warranty ',
-                    textInputType: TextInputType.text,
-                    context: context,
-                    onChanged: (value) {
-                      reason = value;
-                      return null;
-                    },
-                  ),
-                ],
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormGlobal(
+                      text: 'Reason of Request Warranty ',
+                      textInputType: TextInputType.text,
+                      context: context,
+                      onChanged: (value) {
+                        reason = value;
+                        return null;
+                      },
+                      maxLength: 800,
+                      maxLines: 6,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

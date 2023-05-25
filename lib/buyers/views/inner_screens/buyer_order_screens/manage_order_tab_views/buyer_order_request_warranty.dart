@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/buyer_order_detail_screen.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/manage_order_tab_views/request_warranty_order_screens/buyer_request_warranty_detail_screen.dart';
 import 'package:second_chance/theme.dart';
 
 class BuyerOrderWarrantyTab extends StatelessWidget {
@@ -18,8 +18,12 @@ class BuyerOrderWarrantyTab extends StatelessWidget {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
         .collection('orders')
         .where('buyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', whereIn: ['Request Warranty', 'Requested'])
-        .snapshots();
+        .where('status', whereIn: [
+      'Request Warranty',
+      'Waiting Delivery',
+      'Waiting Vendor Payment',
+      'Warranty Taken',
+    ]).snapshots();
 
     return StreamBuilder<QuerySnapshot>(
       stream: _orderStream,
@@ -42,7 +46,7 @@ class BuyerOrderWarrantyTab extends StatelessWidget {
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
-                        return BuyerOrderDetailScreen(orderData: document);
+                        return BuyerWarrantyDetailScreen(orderData: document);
                       },
                     ));
                   },
@@ -51,12 +55,18 @@ class BuyerOrderWarrantyTab extends StatelessWidget {
                     radius: 14,
                     child: Icon(
                       Icons.change_circle,
-                      color: Colors.yellow.shade900,
+                      color: document['status'] == 'Warranty Taken'
+                          ? Colors.green
+                          : Colors.yellow.shade900,
                     ),
                   ),
                   title: Text(
                     '${document['status']}',
-                    style: TextStyle(color: Colors.yellow.shade900),
+                    style: TextStyle(
+                      color: document['status'] == 'Warranty Taken'
+                          ? Colors.green
+                          : Colors.yellow.shade900,
+                    ),
                   ),
                   trailing: Text(
                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',

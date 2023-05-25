@@ -18,7 +18,7 @@ class VendorOrderWaitingPaymentTab extends StatelessWidget {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
         .collection('orders')
         .where('vendorId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: 'Waiting for Payment')
+        .where('status', isEqualTo: 'Waiting For Payment')
         .snapshots();
 
     return StreamBuilder<QuerySnapshot>(

@@ -18,7 +18,7 @@ class VendorOrdersView extends StatelessWidget {
 
   Future<void> updateOrderStatus(DocumentSnapshot document) async {
     if (document['accepted'] == true) {
-      final status = 'Waiting for Payment';
+      final status = 'Waiting For Payment';
       final orderId = document['orderId'];
 
       try {

@@ -156,7 +156,7 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                             .doc(document['orderId'])
                             .update({
                           'accepted': true,
-                          'status': 'Waiting for Payment'
+                          'status': 'Waiting For Payment'
                         });
                       },
                       backgroundColor: Colors.green,
