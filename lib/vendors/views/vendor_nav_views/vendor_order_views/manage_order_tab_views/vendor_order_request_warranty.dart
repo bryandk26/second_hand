@@ -49,19 +49,15 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 14,
-                    child: document['accepted'] == true
-                        ? Icon(Icons.delivery_dining)
-                        : Icon(Icons.access_time),
+                    child: Icon(
+                      Icons.change_circle,
+                      color: Colors.yellow.shade900,
+                    ),
                   ),
-                  title: document['accepted'] == true
-                      ? Text(
-                          'Accepted',
-                          style: TextStyle(color: Colors.green),
-                        )
-                      : Text(
-                          'Not Accepted',
-                          style: TextStyle(color: Colors.red),
-                        ),
+                  title: Text(
+                    '${document['status']}',
+                    style: TextStyle(color: Colors.yellow.shade900),
+                  ),
                   trailing: Text(
                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',
                     style: TextStyle(

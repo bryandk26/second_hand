@@ -81,7 +81,7 @@ class VendorOrderDetailView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: orderData.data()!.containsKey('status')
-                        ? Colors.green
+                        ? Colors.blue
                         : Colors.red,
                   ),
                 ),

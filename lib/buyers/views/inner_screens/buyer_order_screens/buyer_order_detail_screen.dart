@@ -153,7 +153,7 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                             fontWeight: FontWeight.bold,
                             color:
                                 widget.orderData.data()!.containsKey('status')
-                                    ? Colors.green
+                                    ? Colors.blue
                                     : Colors.red,
                           ),
                         ),
@@ -305,10 +305,17 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                       SizedBox(height: 8),
                       Expanded(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            FirebaseFirestore.instance
+                                .collection('orders')
+                                .doc(widget.orderData['orderId'])
+                                .update({
+                              'status': 'Request Warranty',
+                            }).then((value) => Navigator.pop(context));
+                          },
                           child: ButtonGlobal(
                             isLoading: _isLoading,
-                            text: 'SUBMIT WARRANTY',
+                            text: 'REQUEST WARRANTY',
                             color: primaryColor,
                           ),
                         ),

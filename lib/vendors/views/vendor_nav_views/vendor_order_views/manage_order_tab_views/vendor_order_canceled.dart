@@ -47,21 +47,16 @@ class VendorOrderCanceledTab extends StatelessWidget {
                     ));
                   },
                   leading: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 14,
-                    child: document['accepted'] == true
-                        ? Icon(Icons.delivery_dining)
-                        : Icon(Icons.access_time),
+                      backgroundColor: Colors.white,
+                      radius: 14,
+                      child: Icon(
+                        Icons.cancel,
+                        color: primaryColor,
+                      )),
+                  title: Text(
+                    '${document['status']}',
+                    style: TextStyle(color: primaryColor),
                   ),
-                  title: document['accepted'] == true
-                      ? Text(
-                          'Accepted',
-                          style: TextStyle(color: Colors.green),
-                        )
-                      : Text(
-                          'Not Accepted',
-                          style: TextStyle(color: Colors.red),
-                        ),
                   trailing: Text(
                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',
                     style: TextStyle(

@@ -140,7 +140,8 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                               .collection('orders')
                               .doc(document['orderId'])
                               .update({
-                            'accepted': false,
+                            'accepted': true,
+                            'status': 'Canceled',
                           });
                         },
                         backgroundColor: Colors.red,
