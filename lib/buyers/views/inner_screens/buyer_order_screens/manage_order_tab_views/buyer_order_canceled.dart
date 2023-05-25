@@ -50,7 +50,7 @@ class BuyerOrderCanceledTab extends StatelessWidget {
                       backgroundColor: Colors.white,
                       radius: 14,
                       child: Icon(
-                        Icons.cancel_outlined,
+                        Icons.cancel,
                         color: primaryColor,
                       )),
                   title: Text(

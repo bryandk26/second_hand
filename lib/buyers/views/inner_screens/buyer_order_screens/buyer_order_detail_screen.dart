@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/manage_order_tab_views/request_warranty_order_screens/request_warranty_screen.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/theme.dart';
@@ -306,12 +307,13 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            FirebaseFirestore.instance
-                                .collection('orders')
-                                .doc(widget.orderData['orderId'])
-                                .update({
-                              'status': 'Request Warranty',
-                            }).then((value) => Navigator.pop(context));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RequestWarrantyOrderScreen(
+                                          orderData: widget.orderData),
+                                ));
                           },
                           child: ButtonGlobal(
                             isLoading: _isLoading,

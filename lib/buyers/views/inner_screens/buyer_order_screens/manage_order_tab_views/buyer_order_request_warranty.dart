@@ -18,7 +18,7 @@ class BuyerOrderWarrantyTab extends StatelessWidget {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
         .collection('orders')
         .where('buyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: 'Request Warranty')
+        .where('status', whereIn: ['Request Warranty', 'Requested'])
         .snapshots();
 
     return StreamBuilder<QuerySnapshot>(
