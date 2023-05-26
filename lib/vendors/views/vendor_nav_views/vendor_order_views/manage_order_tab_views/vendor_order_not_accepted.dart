@@ -158,6 +158,13 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                           'accepted': true,
                           'status': 'Waiting For Payment'
                         });
+
+                        await FirebaseFirestore.instance
+                            .collection('products')
+                            .doc(document['productId'])
+                            .update({
+                          'onPayment': true,
+                        });
                       },
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,

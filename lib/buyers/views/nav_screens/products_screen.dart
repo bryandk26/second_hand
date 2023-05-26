@@ -18,6 +18,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       .collection('products')
       .where('approved', isEqualTo: true)
       .where('sold', isEqualTo: false)
+      .where('onPayment', isEqualTo: false)
       .snapshots();
   SortOption _sortOption = SortOption.AtoZ;
 

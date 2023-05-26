@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_bargain_screens/bargain_request_form_screen.dart';
 import 'package:second_chance/buyers/views/inner_screens/store_detail_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/provider/cart_provider.dart';
@@ -341,7 +342,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   SizedBox(width: 8),
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BargainRequestFormScreen(
+                                  productData: widget.productData),
+                            ));
+                      },
                       child: ButtonGlobal(
                         isLoading: _isLoading,
                         text: 'BARGAIN',

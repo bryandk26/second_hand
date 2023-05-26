@@ -50,6 +50,7 @@ class UploadProductsView extends StatelessWidget {
         'businessName': vendorSnapshot['businessName'],
         'approved': false,
         'sold': false,
+        'onPayment': false,
         'viewed': 0,
         'productAddedDate': DateTime.now(),
       }).whenComplete(() {

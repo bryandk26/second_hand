@@ -17,6 +17,7 @@ class StoreDetailScreen extends StatelessWidget {
         .where('vendorId', isEqualTo: storeData['vendorId'])
         .where('approved', isEqualTo: true)
         .where('sold', isEqualTo: false)
+        .where('onPayment', isEqualTo: false)
         .snapshots();
 
     return Scaffold(

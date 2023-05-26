@@ -18,6 +18,7 @@ class PublishedTab extends StatelessWidget {
         .where('vendorId', isEqualTo: _auth.currentUser!.uid)
         .where('approved', isEqualTo: true)
         .where('sold', isEqualTo: false)
+        .where('onPayment', isEqualTo: false)
         .snapshots();
 
     return Scaffold(

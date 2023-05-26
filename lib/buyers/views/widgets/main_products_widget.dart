@@ -10,6 +10,7 @@ class MainProductsWidget extends StatelessWidget {
         .collection('products')
         .where('approved', isEqualTo: true)
         .where('sold', isEqualTo: false)
+        .where('onPayment', isEqualTo: false)
         .snapshots();
     return StreamBuilder<QuerySnapshot>(
       stream: _productStream,
