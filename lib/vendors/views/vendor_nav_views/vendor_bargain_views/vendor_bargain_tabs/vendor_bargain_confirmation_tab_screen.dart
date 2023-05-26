@@ -166,7 +166,6 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                             .doc(document['productId'])
                             .update({
                           'onPayment': true,
-                          'productPrice': document['bargainPrice']
                         });
                       });
                     },

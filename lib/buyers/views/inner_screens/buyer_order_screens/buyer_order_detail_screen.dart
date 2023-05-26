@@ -283,6 +283,8 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                                                   widget.orderData['productId'])
                                               .update({
                                             'sold': true,
+                                            'productPrice': widget
+                                                .orderData['productPrice'],
                                           });
                                           Navigator.pushReplacement(
                                               context,

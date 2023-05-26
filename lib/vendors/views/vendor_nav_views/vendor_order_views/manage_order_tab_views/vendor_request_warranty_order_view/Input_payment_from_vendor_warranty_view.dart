@@ -61,7 +61,13 @@ class _InputPaymentFromVendorWarrantyViewState
               .update({
             'refundWarrantyReceipt': imageUrl,
             'status': 'Warranty Taken'
-          }).whenComplete(() {
+          }).whenComplete(() async {
+            await FirebaseFirestore.instance
+                .collection('products')
+                .doc(widget.orderData['productId'])
+                .update({
+              'onPayment': false,
+            });
             EasyLoading.dismiss();
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
