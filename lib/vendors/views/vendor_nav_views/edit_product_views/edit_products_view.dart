@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/manage_product_tab_views/on_transaction_tab.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/manage_product_tab_views/sold_tab.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/manage_product_tab_views/unpublished_tab.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/manage_product_tab_views/published_tab.dart';
@@ -10,7 +11,7 @@ class EditProductsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -21,7 +22,7 @@ class EditProductsView extends StatelessWidget {
             'Manage Product',
             style: subTitle,
           ),
-          bottom: TabBar(indicatorColor: blackColor, tabs: [
+          bottom: TabBar(isScrollable: true, indicatorColor: blackColor, tabs: [
             Tab(
               child: Text(
                 'Published',
@@ -36,6 +37,12 @@ class EditProductsView extends StatelessWidget {
             ),
             Tab(
               child: Text(
+                'On Transaction',
+                style: TextStyle(color: blackColor, fontSize: 12),
+              ),
+            ),
+            Tab(
+              child: Text(
                 'Sold',
                 style: TextStyle(color: blackColor, fontSize: 12),
               ),
@@ -45,6 +52,7 @@ class EditProductsView extends StatelessWidget {
         body: TabBarView(children: [
           PublishedTab(),
           UnpublishedTab(),
+          OnTransactionTab(),
           SoldTab(),
         ]),
       ),

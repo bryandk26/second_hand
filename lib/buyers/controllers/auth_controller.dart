@@ -65,7 +65,12 @@ class AuthController {
             'phoneNumber': phoneNumber,
             'buyerId': cred.user!.uid,
             'address': '',
-            'profileImage': profileImageUrl ?? ''
+            'postalCode': '',
+            'bankName': '',
+            'bankAccountName': '',
+            'bankAccountNumber': '',
+            'profileImage': profileImageUrl ?? '',
+            'registeredDate': DateTime.now(),
           },
         );
 

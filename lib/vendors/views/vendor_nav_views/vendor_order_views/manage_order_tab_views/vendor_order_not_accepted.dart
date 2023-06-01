@@ -37,118 +37,114 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
           );
         }
 
+        if (snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Text(
+              'No Order Not Accepted',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             return Slidable(
-                child: Column(
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return VendorOrderDetailView(orderData: document);
-                          },
-                        ));
-                      },
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 14,
-                        child: document['accepted'] == true
-                            ? Icon(Icons.delivery_dining)
-                            : Icon(Icons.access_time),
-                      ),
-                      title: document['accepted'] == true
-                          ? Text(
-                              'Accepted',
-                              style: TextStyle(color: Colors.green),
-                            )
-                          : Text(
-                              'Not Accepted',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                      trailing: Text(
-                        '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.green,
-                        ),
-                      ),
-                      subtitle: Text(
-                        formatedDate(
-                          document['orderDate'].toDate(),
-                        ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return VendorOrderDetailView(orderData: document);
+                        },
+                      ));
+                    },
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 14,
+                      child: document['accepted'] == true
+                          ? Icon(Icons.delivery_dining)
+                          : Icon(Icons.access_time),
+                    ),
+                    title: document['accepted'] == true
+                        ? Text(
+                            'Accepted',
+                            style: TextStyle(color: Colors.green),
+                          )
+                        : Text(
+                            'Not Accepted',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                    trailing: Text(
+                      '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.green,
                       ),
                     ),
-                    ExpansionTile(
-                      title: Text(
-                        'Order Detail',
-                        style: TextStyle(
-                          color: Colors.yellow.shade900,
-                          fontSize: 15,
+                    subtitle: Text(
+                      formatedDate(
+                        document['orderDate'].toDate(),
+                      ),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                  ExpansionTile(
+                    title: Text(
+                      'Order Detail',
+                      style: TextStyle(
+                        color: Colors.yellow.shade900,
+                        fontSize: 15,
+                      ),
+                    ),
+                    subtitle: Text('View Order Details'),
+                    children: [
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Image.network(
+                            document['productImage'][0],
+                          ),
                         ),
-                      ),
-                      subtitle: Text('View Order Details'),
-                      children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: Image.network(
-                              document['productImage'][0],
-                            ),
-                          ),
-                          title:
-                              Text('Product Name: ' + document['productName']),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                title: Text(
-                                  'Buyer Details',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
+                        title: Text('Product Name: ' + document['productName']),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                'Buyer Details',
+                                style: TextStyle(
+                                  fontSize: 18,
                                 ),
-                                subtitle: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Name ' + document['fullName']),
-                                    Text('Email' + document['email']),
-                                    Text('Address' + document['address']),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                startActionPane: ActionPane(
-                  motion: const ScrollMotion(),
-                  children: [
-                    if (!document['accepted'])
-                      SlidableAction(
-                        onPressed: (context) async {
-                          await _firestore
-                              .collection('orders')
-                              .doc(document['orderId'])
-                              .update({
-                            'accepted': true,
-                            'status': 'Canceled',
-                          });
-                        },
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        icon: Icons.do_not_disturb_sharp,
-                        label: 'Reject',
-                      ),
+                              ),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Name: ' + document['fullName']),
+                                  Text('Email: ' + document['email']),
+                                  Text('Address: ' + document['address']),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  if (!document['accepted'])
                     SlidableAction(
                       onPressed: (context) async {
                         await _firestore
@@ -156,23 +152,39 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                             .doc(document['orderId'])
                             .update({
                           'accepted': true,
-                          'status': 'Waiting For Payment'
-                        });
-
-                        await FirebaseFirestore.instance
-                            .collection('products')
-                            .doc(document['productId'])
-                            .update({
-                          'onPayment': true,
+                          'status': 'Canceled',
                         });
                       },
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      icon: Icons.check,
-                      label: !document['accepted'] ? 'Accept' : 'Accepted',
+                      icon: Icons.do_not_disturb_sharp,
+                      label: 'Reject',
                     ),
-                  ],
-                ));
+                  SlidableAction(
+                    onPressed: (context) async {
+                      await _firestore
+                          .collection('orders')
+                          .doc(document['orderId'])
+                          .update({
+                        'accepted': true,
+                        'status': 'Waiting For Payment'
+                      });
+
+                      await FirebaseFirestore.instance
+                          .collection('products')
+                          .doc(document['productId'])
+                          .update({
+                        'onPayment': true,
+                      });
+                    },
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    icon: Icons.check,
+                    label: !document['accepted'] ? 'Accept' : 'Accepted',
+                  ),
+                ],
+              ),
+            );
           }).toList(),
         );
       },

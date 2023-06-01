@@ -91,7 +91,7 @@ class _StoreScreenState extends State<StoreScreen> {
                   child: Card(
                     child: ListTile(
                       title: Text(storeData['businessName']),
-                      subtitle: Text(storeData['countryValue']),
+                      subtitle: Text(storeData['email']),
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(
                           storeImage == null || storeImage == ''

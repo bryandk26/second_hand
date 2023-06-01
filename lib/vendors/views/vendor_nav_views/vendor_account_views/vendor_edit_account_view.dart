@@ -27,9 +27,13 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
   final TextEditingController _businessNamecontroller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _bankNameController = TextEditingController();
+  final TextEditingController _bankAccountNameController =
+      TextEditingController();
+  final TextEditingController _bankAccountNumberController =
+      TextEditingController();
 
   bool _isLoading = false;
 
@@ -43,9 +47,11 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
       _businessNamecontroller.text = widget.vendorData.businessName;
       _emailController.text = widget.vendorData.email;
       _phoneController.text = widget.vendorData.phoneNumber;
-      _countryController.text = widget.vendorData.countryValue;
-      _stateController.text = widget.vendorData.stateValue;
-      _cityController.text = widget.vendorData.cityValue;
+      _addressController.text = widget.vendorData.address;
+      _postalCodeController.text = widget.vendorData.postalCode;
+      _bankNameController.text = widget.vendorData.bankName;
+      _bankAccountNameController.text = widget.vendorData.bankAccountName;
+      _bankAccountNumberController.text = widget.vendorData.bankAccountNumber;
     });
     super.initState();
   }
@@ -55,9 +61,11 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
     _businessNamecontroller.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _countryController.dispose();
-    _stateController.dispose();
-    _cityController.dispose();
+    _addressController.dispose();
+    _postalCodeController.dispose();
+    _bankNameController.dispose();
+    _bankAccountNameController.dispose();
+    _bankAccountNumberController.dispose();
 
     super.dispose();
   }
@@ -101,7 +109,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
     }
   }
 
-  Future<void> _updateBuyerProfile(BuildContext context) async {
+  Future<void> _updateVendorProfile(BuildContext context) async {
     setState(() {
       _isLoading = true;
     });
@@ -115,6 +123,11 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           'businessName': _businessNamecontroller.text,
           'email': _emailController.text,
           'phoneNumber': _phoneController.text,
+          'vendorAddress': _addressController,
+          'vendorPostalCode': _postalCodeController.text,
+          'vendorBankName': _bankNameController.text,
+          'vendorBankAccountName': _bankAccountNameController.text,
+          'vendorBankAccountNumber': _bankAccountNumberController.text,
         });
 
         setState(() {
@@ -242,61 +255,111 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                 ),
                 SizedBox(height: 30),
                 Divider(),
-                SizedBox(height: 10),
-                TextFormGlobal(
-                  text: 'BusinessName',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _businessNamecontroller,
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Business Profile',
+                          style: subTitle,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormGlobal(
+                          text: 'BusinessName',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _businessNamecontroller,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          enabled: false,
+                          text: 'Email',
+                          textInputType: TextInputType.emailAddress,
+                          context: context,
+                          controller: _emailController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Phone Number',
+                          textInputType: TextInputType.phone,
+                          context: context,
+                          controller: _phoneController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Address',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _addressController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Postal Code',
+                          textInputType: TextInputType.number,
+                          context: context,
+                          controller: _postalCodeController,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormGlobal(
-                  enabled: false,
-                  text: 'Email',
-                  textInputType: TextInputType.emailAddress,
-                  context: context,
-                  controller: _emailController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  text: 'Phone Number',
-                  textInputType: TextInputType.phone,
-                  context: context,
-                  controller: _phoneController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  enabled: false,
-                  text: 'Country',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _countryController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  enabled: false,
-                  text: 'State',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _stateController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  enabled: false,
-                  text: 'City',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _cityController,
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Bank Account',
+                          style: subTitle,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormGlobal(
+                          text: 'Bank Name',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _bankNameController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Bank Account Name',
+                          textInputType: TextInputType.emailAddress,
+                          context: context,
+                          controller: _bankAccountNameController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Bank Account Number',
+                          textInputType: TextInputType.number,
+                          context: context,
+                          controller: _bankAccountNumberController,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 50,
@@ -310,7 +373,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () async {
-            await _updateBuyerProfile(context);
+            await _updateVendorProfile(context);
           },
           child: ButtonGlobal(isLoading: _isLoading, text: 'Update Profile'),
         ),

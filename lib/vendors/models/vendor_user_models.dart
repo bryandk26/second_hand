@@ -2,22 +2,26 @@ class VendorUserModel {
   final bool? approved;
   final String? vendorId;
   final String? businessName;
-  final String? cityValue;
-  final String? countryValue;
+  final String? address;
+  final String? postalCode;
+  final String? bankName;
+  final String? bankAccountName;
+  final String? bankAccountNumber;
   final String? email;
   final String? phoneNumber;
-  final String? stateValue;
   String? _storeImage;
 
   VendorUserModel({
     required this.approved,
     required this.vendorId,
     required this.businessName,
-    required this.cityValue,
-    required this.countryValue,
+    required this.address,
+    required this.postalCode,
+    required this.bankName,
+    required this.bankAccountName,
+    required this.bankAccountNumber,
     required this.email,
     required this.phoneNumber,
-    required this.stateValue,
     required String? storeImage,
   }) : _storeImage = storeImage;
 
@@ -26,11 +30,13 @@ class VendorUserModel {
           approved: json['approved']! as bool,
           vendorId: json['vendorId']! as String,
           businessName: json['businessName']! as String,
-          cityValue: json['cityValue']! as String,
-          countryValue: json['countryValue']! as String,
+          address: json['vendorAddress']! as String,
+          postalCode: json['vendorPostalCode']! as String,
+          bankName: json['vendorBankName']! as String,
+          bankAccountName: json['vendorBankAccountName']! as String,
+          bankAccountNumber: json['vendorBankAccountNumber']! as String,
           email: json['email']! as String,
           phoneNumber: json['phoneNumber']! as String,
-          stateValue: json['stateValue']! as String,
           storeImage: json['storeImage']! as String,
         );
 
@@ -39,11 +45,13 @@ class VendorUserModel {
       'approved': approved,
       'vendorId': vendorId,
       'businessName': businessName,
-      'cityValue': cityValue,
-      'countryValue': countryValue,
+      'vendorAddress': address,
+      'vendorPostalCode': postalCode,
+      'vendorBankName': bankName,
+      'vendorBankAccountName': bankAccountName,
+      'vendorBankAccountNumber': bankAccountNumber,
       'email': email,
       'phoneNumber': phoneNumber,
-      'stateValue': stateValue,
       'storeImage': storeImage,
     };
   }

@@ -5,11 +5,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:second_chance/provider/product_provider.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/upload_product_views/upload_tab_screens/atrributes_tab_screen.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/upload_product_views/upload_tab_screens/general_tab_screen.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/upload_product_views/upload_tab_screens/images_tab_screen.dart';
-import 'package:second_chance/vendors/views/vendor_nav_views/upload_product_views/upload_tab_screens/shipping_tab_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class UploadProductsView extends StatelessWidget {
@@ -22,8 +22,17 @@ class UploadProductsView extends StatelessWidget {
       return;
     }
 
-    if (productProvider.productData['imageUrlList'].isEmpty) {
-      return;
+    if (productProvider.productData['imageUrlList'] == null ||
+        productProvider.productData['imageUrlList'].isEmpty) {
+      return displayDialog(
+        context,
+        'You must upload atleast 1 image',
+        Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 60,
+        ),
+      );
     }
 
     EasyLoading.show(status: 'On Progress...');
@@ -42,8 +51,6 @@ class UploadProductsView extends StatelessWidget {
         'productDescription': productProvider.productData['productDescription'],
         'category': productProvider.productData['category'],
         'imageUrlList': productProvider.productData['imageUrlList'],
-        'chargeShipping': productProvider.productData['chargeShipping'],
-        'shippingCharge': productProvider.productData['shippingCharge'],
         'brandName': productProvider.productData['brandName'],
         'size': productProvider.productData['size'],
         'vendorId': FirebaseAuth.instance.currentUser!.uid,
@@ -73,7 +80,7 @@ class UploadProductsView extends StatelessWidget {
         Provider.of<ProductProvider>(context);
 
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Form(
         key: _formKey,
         child: Scaffold(
@@ -97,12 +104,6 @@ class UploadProductsView extends StatelessWidget {
                 ),
                 Tab(
                   child: Text(
-                    'Shipping',
-                    style: TextStyle(color: blackColor, fontSize: 12),
-                  ),
-                ),
-                Tab(
-                  child: Text(
                     'Attributes',
                     style: TextStyle(color: blackColor, fontSize: 12),
                   ),
@@ -119,7 +120,6 @@ class UploadProductsView extends StatelessWidget {
           body: TabBarView(
             children: [
               GeneralTabScreen(),
-              ShippingTabScreen(),
               AttributesTabScreen(),
               ImagesTabScreen(),
             ],

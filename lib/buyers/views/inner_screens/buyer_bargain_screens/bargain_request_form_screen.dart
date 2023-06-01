@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
@@ -62,6 +63,62 @@ class BargainRequestFormScreen extends StatelessWidget {
                   padding: EdgeInsets.all(28.0),
                   child: Column(
                     children: [
+                      if (data['address'] != '' && data['postalCode'] != '')
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Shipping Information',
+                                    style: subTitle,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return EditProfileScreen(
+                                              userData: data);
+                                        },
+                                      ));
+                                    },
+                                    child: Icon(CupertinoIcons.pencil),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Name: ${data['fullName']}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Phone: ${data['phoneNumber']}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Address: ${data['address']}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Postal Code: ${data['postalCode']}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (data['address'] != '' && data['postalCode'] != '')
+                        SizedBox(
+                          height: 20,
+                        ),
                       TextFormGlobal(
                         text: 'Bargain Price',
                         textInputType: TextInputType.number,
@@ -76,60 +133,80 @@ class BargainRequestFormScreen extends StatelessWidget {
                 ),
               ),
             ),
-            bottomSheet: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      _isLoading = true;
+            bottomSheet: data['address'] == '' || data['postalCode'] == ''
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return EditProfileScreen(
+                            userData: data,
+                          );
+                        })).whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: ButtonGlobal(
+                          isLoading: _isLoading, text: 'Enter Billing Address'),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            _isLoading = true;
 
-                      final bargainId = Uuid().v4();
+                            final bargainId = Uuid().v4();
 
-                      FirebaseFirestore.instance
-                          .collection('bargains')
-                          .doc(bargainId)
-                          .set({
-                        'bargainId': bargainId,
-                        'bargainPrice': bargainPrice,
-                        'email': data['email'],
-                        'phone': data['phoneNumber'],
-                        'address': data['address'],
-                        'buyerId': data['buyerId'],
-                        'buyerPhoto': data['profileImage'],
-                        'fullName': data['fullName'],
-                        'vendorId': productData['vendorId'],
-                        'businessName': productData['businessName'],
-                        'productId': productData['productId'],
-                        'productName': productData['productName'],
-                        'productPrice': productData['productPrice'],
-                        'category': productData['category'],
-                        'productImage': productData['imageUrlList'],
-                        'productSize': productData['size'],
-                        'confirmed': false,
-                        'accepted': false,
-                        'bargainRequestDate': DateTime.now(),
-                      }).then((_) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainScreen(),
-                            ));
-                      }).catchError((error) {
-                        displayDialog(
-                          context,
-                          'Error submitting bargain request: $error',
-                          Icon(
-                            Icons.error,
-                            color: Colors.red,
-                            size: 60,
-                          ),
-                        );
-                        _isLoading = false;
-                      });
-                    }
-                  },
-                  child: ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT')),
-            ),
+                            FirebaseFirestore.instance
+                                .collection('bargains')
+                                .doc(bargainId)
+                                .set({
+                              'bargainId': bargainId,
+                              'bargainPrice': bargainPrice,
+                              'email': data['email'],
+                              'phone': data['phoneNumber'],
+                              'address': data['address'],
+                              'postalCode': data['postalCode'],
+                              'buyerId': data['buyerId'],
+                              'buyerPhoto': data['profileImage'],
+                              'fullName': data['fullName'],
+                              'vendorId': productData['vendorId'],
+                              'businessName': productData['businessName'],
+                              'productId': productData['productId'],
+                              'productName': productData['productName'],
+                              'productPrice': productData['productPrice'],
+                              'category': productData['category'],
+                              'productImage': productData['imageUrlList'],
+                              'productSize': productData['size'],
+                              'confirmed': false,
+                              'accepted': false,
+                              'bargainRequestDate': DateTime.now(),
+                            }).then((_) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MainScreen(),
+                                  ));
+                            }).catchError((error) {
+                              displayDialog(
+                                context,
+                                'Error submitting bargain request: $error',
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                  size: 60,
+                                ),
+                              );
+                              _isLoading = false;
+                            });
+                          }
+                        },
+                        child: ButtonGlobal(
+                            isLoading: _isLoading, text: 'SUBMIT')),
+                  ),
           );
         }
 

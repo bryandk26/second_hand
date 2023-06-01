@@ -28,6 +28,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _bankNameController = TextEditingController();
+  final TextEditingController _bankAccountNameController =
+      TextEditingController();
+  final TextEditingController _bankAccountNumberController =
+      TextEditingController();
 
   bool _isLoading = false;
 
@@ -42,6 +48,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _emailController.text = widget.userData['email'] ?? '';
       _phoneController.text = widget.userData['phoneNumber'] ?? '';
       _addressController.text = widget.userData['address'] ?? '';
+      _postalCodeController.text = widget.userData['postalCode'] ?? '';
+      _bankNameController.text = widget.userData['bankName'] ?? '';
+      _bankAccountNameController.text =
+          widget.userData['bankAccountName'] ?? '';
+      _bankAccountNumberController.text =
+          widget.userData['bankAccountNumber'] ?? '';
     });
     super.initState();
   }
@@ -52,6 +64,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
+    _postalCodeController.dispose();
+    _bankNameController.dispose();
+    _bankAccountNameController.dispose();
+    _bankAccountNumberController.dispose();
 
     super.dispose();
   }
@@ -110,6 +126,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'email': _emailController.text,
           'phoneNumber': _phoneController.text,
           'address': _addressController.text,
+          'postalCode': _postalCodeController.text,
+          'bankName': _bankNameController.text,
+          'bankAccountName': _bankAccountNameController.text,
+          'bankAccountNumber': _bankAccountNumberController.text,
         });
 
         setState(() {
@@ -237,40 +257,111 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 SizedBox(height: 30),
                 Divider(),
-                SizedBox(height: 10),
-                TextFormGlobal(
-                  text: 'Full Name',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _fullNamecontroller,
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'My Profile',
+                          style: subTitle,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormGlobal(
+                          text: 'Full Name',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _fullNamecontroller,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          enabled: false,
+                          text: 'Email',
+                          textInputType: TextInputType.emailAddress,
+                          context: context,
+                          controller: _emailController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Phone Number',
+                          textInputType: TextInputType.phone,
+                          context: context,
+                          controller: _phoneController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Address',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _addressController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Postal Code',
+                          textInputType: TextInputType.number,
+                          context: context,
+                          controller: _postalCodeController,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormGlobal(
-                  enabled: false,
-                  text: 'Email',
-                  textInputType: TextInputType.emailAddress,
-                  context: context,
-                  controller: _emailController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  text: 'Phone Number',
-                  textInputType: TextInputType.phone,
-                  context: context,
-                  controller: _phoneController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormGlobal(
-                  text: 'Address',
-                  textInputType: TextInputType.text,
-                  context: context,
-                  controller: _addressController,
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Bank Account',
+                          style: subTitle,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormGlobal(
+                          text: 'Bank Name',
+                          textInputType: TextInputType.text,
+                          context: context,
+                          controller: _bankNameController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Bank Account Name',
+                          textInputType: TextInputType.emailAddress,
+                          context: context,
+                          controller: _bankAccountNameController,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          text: 'Bank Account Number',
+                          textInputType: TextInputType.number,
+                          context: context,
+                          controller: _bankAccountNumberController,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 50,

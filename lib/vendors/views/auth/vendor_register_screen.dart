@@ -1,10 +1,10 @@
-import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
+import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/controllers/vendor_register_controller.dart';
 
@@ -21,9 +21,11 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   late String businessName;
   late String email;
   late String phoneNumber;
-  String countryValue = '';
-  String stateValue = '';
-  String cityValue = '';
+  String address = '';
+  String postalCode = '';
+  String bankName = '';
+  String bankAccountName = '';
+  String bankAccountNumber = '';
   Uint8List? _image;
 
   bool _isLoading = false;
@@ -44,9 +46,11 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
         businessName,
         email,
         phoneNumber,
-        countryValue,
-        stateValue,
-        cityValue,
+        address,
+        postalCode,
+        bankName,
+        bankAccountName,
+        bankAccountNumber,
         _image,
       )
           .whenComplete(() {
@@ -72,7 +76,6 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
             toolbarHeight: 200,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraints) {
-                //means height and widht
                 return FlexibleSpaceBar(
                   background: Container(
                     decoration: BoxDecoration(
@@ -118,109 +121,101 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
+                    TextFormGlobal(
+                      text: 'Business Name',
+                      textInputType: TextInputType.name,
+                      context: context,
                       onChanged: (value) {
                         businessName = value;
+                        return null;
                       },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please Business Name must not be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        labelText: 'Business Name',
-                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
+                    TextFormGlobal(
+                      text: 'Email Address',
+                      textInputType: TextInputType.emailAddress,
+                      context: context,
                       onChanged: (value) {
                         email = value;
+                        return null;
                       },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please Email Address must not be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: 'Email Address',
-                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
+                    TextFormGlobal(
+                      text: 'Phone Number',
+                      textInputType: TextInputType.phone,
+                      context: context,
                       onChanged: (value) {
                         phoneNumber = value;
+                        return null;
                       },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please Phone Number must not be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    CSCPicker(
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 3),
-                      ),
-                      disabledDropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.grey.shade300,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 3),
-                      ),
-                      onCountryChanged: (value) {
-                        setState(() {
-                          countryValue = value.toString();
-                        });
+                    TextFormGlobal(
+                      text: 'Address',
+                      textInputType: TextInputType.text,
+                      context: context,
+                      onChanged: (value) {
+                        address = value;
+                        return null;
                       },
-                      onStateChanged: (value) {
-                        setState(() {
-                          stateValue = value.toString();
-                        });
-                      },
-                      onCityChanged: (value) {
-                        setState(() {
-                          cityValue = value.toString();
-                        });
+                      maxLength: 200,
+                      maxLines: 3,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormGlobal(
+                      text: 'Postal Code',
+                      textInputType: TextInputType.number,
+                      context: context,
+                      onChanged: (value) {
+                        postalCode = value;
+                        return null;
                       },
                     ),
-                    // SelectState(
-                    //   onCountryChanged: (value) {
-                    //     setState(() {
-                    //       countryValue = value;
-                    //     });
-                    //   },
-                    //   onStateChanged: (value) {
-                    //     setState(() {
-                    //       stateValue = value;
-                    //     });
-                    //   },
-                    //   onCityChanged: (value) {
-                    //     setState(() {
-                    //       cityValue = value;
-                    //     });
-                    //   },
-                    // ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormGlobal(
+                      text: 'Bank Name',
+                      textInputType: TextInputType.text,
+                      context: context,
+                      onChanged: (value) {
+                        bankName = value;
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormGlobal(
+                      text: 'Bank Account Name',
+                      textInputType: TextInputType.text,
+                      context: context,
+                      onChanged: (value) {
+                        bankAccountName = value;
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormGlobal(
+                      text: 'Bank Account Number',
+                      textInputType: TextInputType.number,
+                      context: context,
+                      onChanged: (value) {
+                        bankAccountNumber = value;
+                        return null;
+                      },
+                    ),
                     SizedBox(height: 20),
                     InkWell(
                       onTap: () {

@@ -34,6 +34,18 @@ class BuyerBargainAcceptedTab extends StatelessWidget {
           );
         }
 
+        if (snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Text(
+              'No Bargain Request Accepted',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             return Column(

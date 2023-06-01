@@ -218,7 +218,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         elevation: 0,
                         child: ListTile(
                           title: Text(storeData['businessName']),
-                          subtitle: Text(storeData['countryValue']),
+                          subtitle: Text(storeData['email']),
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(
                               storeImage == null || storeImage == ''

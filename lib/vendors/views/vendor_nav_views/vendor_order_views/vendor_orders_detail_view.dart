@@ -101,6 +101,7 @@ class VendorOrderDetailView extends StatelessWidget {
                 Text('Name: ${orderData['fullName']}'),
                 Text('Email: ${orderData['email']}'),
                 Text('Address: ${orderData['address']}'),
+                Text('Postal Code: ${orderData['postalCode']}'),
                 SizedBox(height: 16),
                 ConditionalBuilder(
                   condition: orderData['accepted'] == true,

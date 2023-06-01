@@ -31,11 +31,11 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
     if (pickedFile == null) {
       print('no image picked');
     } else {
+      EasyLoading.show(status: 'Uploading...');
       setState(() {
         _image.add(File(pickedFile.path));
       });
-      await uploadImage(
-          _image.last); // Panggil uploadImage() dengan gambar terakhir
+      await uploadImage(_image.last);
     }
   }
 

@@ -27,6 +27,10 @@ class BuyerOrderDetailScreen extends StatefulWidget {
 class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final Stream<QuerySnapshot> _vendorsStream = FirebaseFirestore.instance
+        .collection('vendors')
+        .where('vendorId', isEqualTo: widget.orderData['vendorId'])
+        .snapshots();
     bool _isLoading = false;
 
     final NumberFormat currencyFormatter = NumberFormat.currency(
@@ -109,140 +113,196 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
             style: subTitle,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _vendorsStream,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: blackColor,
+                ),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data!.size,
+              itemBuilder: (context, index) {
+                final storeData = snapshot.data!.docs[index];
+                return Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: Image.network(
-                              widget.orderData['productImage'][0],
-                            ),
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          title: Text(
-                            'Product Name: ${widget.orderData['productName']}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Order Details',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Status: ${widget.orderData.data()!.containsKey('status') ? widget.orderData.data()!['status'] : 'Not Accepted'}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color:
-                                widget.orderData.data()!.containsKey('status')
-                                    ? Colors.blue
-                                    : Colors.red,
-                          ),
-                        ),
-                        Text(
-                            'Price: ${currencyFormatter.format(widget.orderData['productPrice'])}'),
-                        Text(
-                            'Order Date: ${dateFormatter.format(widget.orderData['orderDate'].toDate())}'),
-                        if (widget.orderData.data()!.containsKey('expedition'))
-                          Text('Expedition: ${widget.orderData['expedition']}'),
-                        if (widget.orderData.data()!.containsKey('receipt'))
-                          Text('Receipt: ${widget.orderData['receipt']}'),
-                        SizedBox(height: 16),
-                        Text(
-                          'Buyer Details',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text('Name: ${widget.orderData['fullName']}'),
-                        Text('Email: ${widget.orderData['email']}'),
-                        Text('Address: ${widget.orderData['address']}'),
-                        SizedBox(height: 16),
-                        ConditionalBuilder(
-                          condition: widget.orderData['accepted'] == true &&
-                              widget.orderData['status'] != 'Canceled',
-                          builder: (context) => Card(
-                            color: Colors.grey[200],
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                'Payment Receipt',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.network(
+                                      widget.orderData['productImage'][0],
+                                    ),
+                                  ),
+                                  title: Text(
+                                    'Product Name: ${widget.orderData['productName']}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              subtitle: widget.orderData
-                                      .data()!
-                                      .containsKey('paymentReceipt')
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PhotoView(
-                                              backgroundDecoration:
-                                                  BoxDecoration(
-                                                      color: whiteColor),
-                                              imageProvider: NetworkImage(widget
-                                                  .orderData['paymentReceipt']),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.network(
-                                          widget.orderData['paymentReceipt'],
-                                          fit: BoxFit.cover,
-                                          height: 200,
+                                SizedBox(height: 16),
+                                Text(
+                                  'Order Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Status: ${widget.orderData.data()!.containsKey('status') ? widget.orderData.data()!['status'] : 'Not Accepted'}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.orderData
+                                            .data()!
+                                            .containsKey('status')
+                                        ? Colors.blue
+                                        : Colors.red,
+                                  ),
+                                ),
+                                Text(
+                                    'Price: ${currencyFormatter.format(widget.orderData['productPrice'])}'),
+                                Text(
+                                    'Order Date: ${dateFormatter.format(widget.orderData['orderDate'].toDate())}'),
+                                if (widget.orderData
+                                    .data()!
+                                    .containsKey('expedition'))
+                                  Text(
+                                      'Expedition: ${widget.orderData['expedition']}'),
+                                if (widget.orderData
+                                    .data()!
+                                    .containsKey('receipt'))
+                                  Text(
+                                      'Receipt: ${widget.orderData['receipt']}'),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Buyer Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text('Name: ${widget.orderData['fullName']}'),
+                                Text('Email: ${widget.orderData['email']}'),
+                                Text('Address: ${widget.orderData['address']}'),
+                                Text(
+                                    'Postal Code: ${widget.orderData['postalCode']}'),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Vendor Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text('Name: ${storeData['businessName']}'),
+                                Text(
+                                    'Bank Name: ${storeData['vendorBankName']}'),
+                                Text(
+                                    'Bank Account Name: ${storeData['vendorBankAccountName']}'),
+                                Text(
+                                    'Bank Account Number: ${storeData['vendorBankAccountNumber']}'),
+                                SizedBox(height: 16),
+                                ConditionalBuilder(
+                                  condition: widget.orderData['accepted'] ==
+                                          true &&
+                                      widget.orderData['status'] != 'Canceled',
+                                  builder: (context) => Card(
+                                    color: Colors.grey[200],
+                                    elevation: 2.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        'Payment Receipt',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    )
-                                  : ElevatedButton(
-                                      onPressed: _pickImageFromGallery,
-                                      child: Text('Add Receipt'),
+                                      subtitle: widget.orderData
+                                              .data()!
+                                              .containsKey('paymentReceipt')
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PhotoView(
+                                                      backgroundDecoration:
+                                                          BoxDecoration(
+                                                              color:
+                                                                  whiteColor),
+                                                      imageProvider:
+                                                          NetworkImage(widget
+                                                                  .orderData[
+                                                              'paymentReceipt']),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Image.network(
+                                                  widget.orderData[
+                                                      'paymentReceipt'],
+                                                  fit: BoxFit.cover,
+                                                  height: 200,
+                                                ),
+                                              ),
+                                            )
+                                          : ElevatedButton(
+                                              onPressed: _pickImageFromGallery,
+                                              child: Text('Add Receipt'),
+                                            ),
                                     ),
+                                  ),
+                                  fallback: (context) => Container(),
+                                ),
+                              ],
                             ),
                           ),
-                          fallback: (context) => Container(),
                         ),
+                        if (widget.orderData.data()!.containsKey('status') &&
+                            widget.orderData['status'] == 'On Delivery')
+                          SizedBox(
+                            height: 125,
+                          )
                       ],
                     ),
                   ),
-                ),
-                if (widget.orderData.data()!.containsKey('status') &&
-                    widget.orderData['status'] == 'On Delivery')
-                  SizedBox(
-                    height: 125,
-                  )
-              ],
-            ),
-          ),
+                );
+              },
+            );
+          },
         ),
         bottomSheet: widget.orderData.data()!.containsKey('status') &&
                 widget.orderData['status'] == 'On Delivery'

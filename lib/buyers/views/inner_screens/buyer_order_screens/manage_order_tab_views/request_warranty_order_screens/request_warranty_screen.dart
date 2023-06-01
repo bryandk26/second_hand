@@ -1,12 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
@@ -60,6 +62,7 @@ class _RequestWarrantyOrderScreenState
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('buyers');
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
     Future<void> _pickImageFromGallery() async {
@@ -77,142 +80,188 @@ class _RequestWarrantyOrderScreenState
 
     bool _isLoading = false;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: whiteColor,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        iconTheme: IconThemeData(color: blackColor),
-        title: Text(
-          'Delivery Order Information',
-          style: subTitle,
-        ),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: whiteColor,
+              elevation: 0,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(CupertinoIcons.back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Card(
-                      color: Colors.grey[200],
-                      elevation: 2.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          'Upload Request Warranty Image',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: widget.orderData
-                                .data()!
-                                .containsKey('warrantyImage')
-                            ? GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PhotoView(
-                                        backgroundDecoration:
-                                            BoxDecoration(color: whiteColor),
-                                        imageProvider: NetworkImage(
-                                            widget.orderData['warrantyImage']),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.network(
-                                    widget.orderData['warrantyImage'],
-                                    fit: BoxFit.cover,
-                                    height: 200,
-                                  ),
+              iconTheme: IconThemeData(color: blackColor),
+              title: Text(
+                'Delivery Order Information',
+                style: subTitle,
+              ),
+            ),
+            body: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Card(
+                            color: Colors.grey[200],
+                            elevation: 2.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                'Upload Request Warranty Image',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              )
-                            : ElevatedButton(
-                                onPressed: _pickImageFromGallery,
-                                child: Text('Add Image'),
                               ),
+                              subtitle: widget.orderData
+                                      .data()!
+                                      .containsKey('warrantyImage')
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PhotoView(
+                                              backgroundDecoration:
+                                                  BoxDecoration(
+                                                      color: whiteColor),
+                                              imageProvider: NetworkImage(widget
+                                                  .orderData['warrantyImage']),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.network(
+                                          widget.orderData['warrantyImage'],
+                                          fit: BoxFit.cover,
+                                          height: 200,
+                                        ),
+                                      ),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: _pickImageFromGallery,
+                                      child: Text('Add Image'),
+                                    ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFormGlobal(
+                            text: 'Reason of Request Warranty ',
+                            textInputType: TextInputType.text,
+                            context: context,
+                            onChanged: (value) {
+                              reason = value;
+                              return null;
+                            },
+                            maxLength: 800,
+                            maxLines: 6,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormGlobal(
-                      text: 'Reason of Request Warranty ',
-                      textInputType: TextInputType.text,
-                      context: context,
-                      onChanged: (value) {
-                        reason = value;
-                        return null;
-                      },
-                      maxLength: 800,
-                      maxLines: 6,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: InkWell(
-            onTap: () {
-              if (_formKey.currentState!.validate()) {
-                _isLoading = true;
-
-                FirebaseFirestore.instance
-                    .collection('orders')
-                    .doc(widget.orderData['orderId'])
-                    .update({
-                  'requestReason': reason,
-                  'status': 'Request Warranty',
-                }).then((_) async {
-                  await uploadPaymentReceipt();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VendorMainScreen(
-                          initialIndex: 3,
-                        ),
-                      ));
-                }).catchError((error) {
-                  displayDialog(
-                    context,
-                    'Error submitting delivery order: $error',
-                    Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 60,
+            bottomSheet: data['bankName'] == '' ||
+                    data['bankAccountName'] == '' ||
+                    data['bankAccountNumber'] == ''
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return EditProfileScreen(
+                            userData: data,
+                          );
+                        })).whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: ButtonGlobal(
+                          isLoading: _isLoading, text: 'Enter Bank Account'),
                     ),
-                  );
-                  _isLoading = false;
-                });
-              }
-            },
-            child: ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT')),
-      ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            _isLoading = true;
+
+                            FirebaseFirestore.instance
+                                .collection('orders')
+                                .doc(widget.orderData['orderId'])
+                                .update({
+                              'requestReason': reason,
+                              'status': 'Request Warranty',
+                            }).then((_) async {
+                              await uploadPaymentReceipt();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VendorMainScreen(
+                                      initialIndex: 3,
+                                    ),
+                                  ));
+                            }).catchError((error) {
+                              displayDialog(
+                                context,
+                                'Error submitting delivery order: $error',
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                  size: 60,
+                                ),
+                              );
+                              _isLoading = false;
+                            });
+                          }
+                        },
+                        child: ButtonGlobal(
+                            isLoading: _isLoading, text: 'SUBMIT')),
+                  ),
+          );
+        }
+
+        return Center(
+          child: CircularProgressIndicator(
+            color: Colors.yellow.shade900,
+          ),
+        );
+      },
     );
   }
 }

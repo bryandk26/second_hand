@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +23,7 @@ class _VendorRequestWarrantyDetailViewState
     extends State<VendorRequestWarrantyDetailView> {
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('buyers');
     bool _isLoading = false;
     final NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id',
@@ -45,168 +48,203 @@ class _VendorRequestWarrantyDetailViewState
           style: subTitle,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Image.network(
-                            widget.orderData['productImage'][0],
-                          ),
-                        ),
-                        title: Text(
-                          'Product Name: ${widget.orderData['productName']}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return Text("Document does not exist");
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Warranty Order Details',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Status: ${widget.orderData.data()!.containsKey('status') ? widget.orderData.data()!['status'] : 'Not Accepted'}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: widget.orderData.data()!.containsKey('status')
-                              ? Colors.blue
-                              : Colors.red,
-                        ),
-                      ),
-                      Text(
-                          'Price: ${currencyFormatter.format(widget.orderData['productPrice'])}'),
-                      Text(
-                          'Order Date: ${dateFormatter.format(widget.orderData['orderDate'].toDate())}'),
-                      Text(
-                          'Request Reason: ${(widget.orderData['requestReason'])}'),
-                      if (widget.orderData
-                          .data()!
-                          .containsKey('WarrantyExpedition'))
-                        Text('Expedition: ${widget.orderData['expedition']}'),
-                      if (widget.orderData
-                          .data()!
-                          .containsKey('WarrantyReceipt'))
-                        Text('Receipt: ${widget.orderData['receipt']}'),
-                      SizedBox(height: 16),
-                      Text(
-                        'Buyer Details',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text('Name: ${widget.orderData['fullName']}'),
-                      Text('Email: ${widget.orderData['email']}'),
-                      Text('Address: ${widget.orderData['address']}'),
-                      SizedBox(height: 16),
-                      Card(
-                        color: Colors.grey[200],
-                        elevation: 2.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: ListTile(
-                            title: Text(
-                              'Warranty Product Image',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PhotoView(
-                                      backgroundDecoration:
-                                          BoxDecoration(color: whiteColor),
-                                      imageProvider: NetworkImage(
-                                          widget.orderData['warrantyImage']),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.transparent,
                                 child: Image.network(
-                                  widget.orderData['warrantyImage'],
-                                  fit: BoxFit.cover,
-                                  height: 200,
+                                  widget.orderData['productImage'][0],
                                 ),
                               ),
-                            )),
-                      ),
-                      if (widget.orderData
-                          .data()!
-                          .containsKey('refundWarrantyReceipt'))
-                        Card(
-                          color: Colors.grey[200],
-                          elevation: 2.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: ListTile(
                               title: Text(
-                                'Refund Receipt Image',
+                                'Product Name: ${widget.orderData['productName']}',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              subtitle: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PhotoView(
-                                        backgroundDecoration:
-                                            BoxDecoration(color: whiteColor),
-                                        imageProvider: NetworkImage(
-                                            widget.orderData[
-                                                'refundWarrantyReceipt']),
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Warranty Order Details',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Status: ${widget.orderData.data()!.containsKey('status') ? widget.orderData.data()!['status'] : 'Not Accepted'}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.orderData
+                                        .data()!
+                                        .containsKey('status')
+                                    ? Colors.blue
+                                    : Colors.red,
+                              ),
+                            ),
+                            Text(
+                                'Price: ${currencyFormatter.format(widget.orderData['productPrice'])}'),
+                            Text(
+                                'Order Date: ${dateFormatter.format(widget.orderData['orderDate'].toDate())}'),
+                            Text(
+                                'Request Reason: ${(widget.orderData['requestReason'])}'),
+                            if (widget.orderData
+                                .data()!
+                                .containsKey('warrantyExpedition'))
+                              Text(
+                                  'Expedition: ${widget.orderData['warrantyExpedition']}'),
+                            if (widget.orderData
+                                .data()!
+                                .containsKey('warrantyReceipt'))
+                              Text(
+                                  'Receipt: ${widget.orderData['warrantyReceipt']}'),
+                            SizedBox(height: 16),
+                            Text(
+                              'Buyer Details',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text('Name: ${widget.orderData['fullName']}'),
+                            Text('Email: ${widget.orderData['email']}'),
+                            Text('Address: ${widget.orderData['address']}'),
+                            Text('Bank Name: ${data['bankName']}'),
+                            Text(
+                                'Bank Account Name: ${data['bankAccountName']}'),
+                            Text(
+                                'Bank Account Number: ${data['bankAccountNumber']}'),
+                            SizedBox(height: 16),
+                            Card(
+                              color: Colors.grey[200],
+                              elevation: 2.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: ListTile(
+                                  title: Text(
+                                    'Warranty Product Image',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PhotoView(
+                                            backgroundDecoration: BoxDecoration(
+                                                color: whiteColor),
+                                            imageProvider: NetworkImage(widget
+                                                .orderData['warrantyImage']),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.network(
+                                        widget.orderData['warrantyImage'],
+                                        fit: BoxFit.cover,
+                                        height: 200,
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.network(
-                                    widget.orderData['refundWarrantyReceipt'],
-                                    fit: BoxFit.cover,
-                                    height: 200,
-                                  ),
+                                  )),
+                            ),
+                            if (widget.orderData
+                                .data()!
+                                .containsKey('refundWarrantyReceipt'))
+                              Card(
+                                color: Colors.grey[200],
+                                elevation: 2.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                              )),
+                                child: ListTile(
+                                    title: Text(
+                                      'Refund Receipt Image',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PhotoView(
+                                              backgroundDecoration:
+                                                  BoxDecoration(
+                                                      color: whiteColor),
+                                              imageProvider: NetworkImage(
+                                                  widget.orderData[
+                                                      'refundWarrantyReceipt']),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.network(
+                                          widget.orderData[
+                                              'refundWarrantyReceipt'],
+                                          fit: BoxFit.cover,
+                                          height: 200,
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                          ],
                         ),
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.yellow.shade900,
+            ),
+          );
+        },
       ),
       bottomSheet: widget.orderData.data()!.containsKey('status') &&
               widget.orderData['status'] == 'Waiting Vendor Payment'

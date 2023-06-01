@@ -40,6 +40,18 @@ class VendorOrderWarrantyTab extends StatelessWidget {
           );
         }
 
+        if (snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Text(
+              'No Request Order Warranty',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             return document['status'] == 'Request Warranty'
@@ -120,9 +132,9 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('Name ' + document['fullName']),
-                                        Text('Email' + document['email']),
-                                        Text('Address' + document['address']),
+                                        Text('Name: ' + document['fullName']),
+                                        Text('Email: ' + document['email']),
+                                        Text('Address: ' + document['address']),
                                       ],
                                     ),
                                   )

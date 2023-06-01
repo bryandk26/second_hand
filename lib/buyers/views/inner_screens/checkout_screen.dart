@@ -62,7 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             body: Column(
               children: [
-                if (data['address'] != '')
+                if (data['address'] != '' && data['postalCode'] != '')
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
@@ -102,6 +102,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Text(
                           'Address: ${data['address']}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          'Postal Code: ${data['postalCode']}',
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -157,7 +161,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     }),
               ],
             ),
-            bottomSheet: data['address'] == ''
+            bottomSheet: data['address'] == '' || data['postalCode'] == ''
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
@@ -189,6 +193,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             'email': data['email'],
                             'phone': data['phoneNumber'],
                             'address': data['address'],
+                            'postalCode': data['postalCode'],
                             'buyerId': data['buyerId'],
                             'fullName': data['fullName'],
                             'buyerPhoto': data['profileImage'],

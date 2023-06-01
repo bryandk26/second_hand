@@ -34,6 +34,18 @@ class BuyerOrderCanceledTab extends StatelessWidget {
           );
         }
 
+        if (snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Text(
+              'No Order Canceled',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             return Column(
