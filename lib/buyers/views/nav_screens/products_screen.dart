@@ -98,11 +98,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             return Center(
               child: Text(
                 'Searched Product is Not Found',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 5,
-                ),
+                style: subTitle,
               ),
             );
           }

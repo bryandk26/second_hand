@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/inner_screens/product_detail_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:second_chance/theme.dart';
 
 class HomeProductWidget extends StatelessWidget {
   final String categoryName;
@@ -26,6 +27,19 @@ class HomeProductWidget extends StatelessWidget {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Loading.....");
+        }
+
+        if (snapshot.data!.docs.isEmpty) {
+          return Container(
+            height: 260,
+            alignment: Alignment.center,
+            child: Center(
+              child: Text(
+                'No Product for this Category',
+                style: subTitle,
+              ),
+            ),
+          );
         }
 
         return Container(

@@ -55,11 +55,7 @@ class AllProductsScreen extends StatelessWidget {
             return Center(
               child: Text(
                 'No products found',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 5,
-                ),
+                style: subTitle,
               ),
             );
           }

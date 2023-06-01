@@ -94,10 +94,7 @@ class CartScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Your Shopping Cart is Empty',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: subTitle,
                   ),
                   SizedBox(
                     height: 20,

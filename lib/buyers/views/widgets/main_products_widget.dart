@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/inner_screens/product_detail_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:second_chance/theme.dart';
 
 class MainProductsWidget extends StatelessWidget {
   @override
@@ -23,6 +24,19 @@ class MainProductsWidget extends StatelessWidget {
           return Center(
             child: LinearProgressIndicator(
               color: Colors.yellow.shade900,
+            ),
+          );
+        }
+
+        if (snapshot.data!.docs.isEmpty) {
+          return Container(
+            height: 260,
+            alignment: Alignment.center,
+            child: Center(
+              child: Text(
+                'No Product',
+                style: subTitle,
+              ),
             ),
           );
         }

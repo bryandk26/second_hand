@@ -63,11 +63,7 @@ class _StoreScreenState extends State<StoreScreen> {
             return Center(
               child: Text(
                 'Searched Store is Not Found',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 5,
-                ),
+                style: subTitle,
               ),
             );
           }
