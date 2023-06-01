@@ -177,8 +177,9 @@ class _RequestWarrantyOrderScreenState
                             height: 20,
                           ),
                           TextFormGlobal(
-                            text: 'Reason of Request Warranty ',
-                            textInputType: TextInputType.text,
+                            text: 'Reason of Request Warranty',
+                            textInputType: TextInputType.multiline,
+                            labelText: 'Reason of Request Warranty',
                             context: context,
                             onChanged: (value) {
                               reason = value;

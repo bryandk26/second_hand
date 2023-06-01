@@ -35,10 +35,7 @@ class SoldTab extends StatelessWidget {
             return Center(
               child: Text(
                 'No Product Sold',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: subTitle,
               ),
             );
           }

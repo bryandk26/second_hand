@@ -24,9 +24,13 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
       child: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 10,
+            ),
             TextFormGlobal(
               text: 'Brand',
               textInputType: TextInputType.text,
+              labelText: 'Brand',
               context: context,
               onChanged: (value) {
                 _product_provider.getFormData(brandName: value);
@@ -40,6 +44,7 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
               text:
                   'Detail Size\n\nEx:\nChest: 39 cm\nWaist: 37 cm\nSleeves: 24 cm\nShoulder: 18 cm\nLength: 29 cm',
               textInputType: TextInputType.multiline,
+              labelText: 'Detail Size',
               context: context,
               onChanged: (value) {
                 _product_provider.getFormData(size: value);

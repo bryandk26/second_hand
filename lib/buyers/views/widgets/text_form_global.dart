@@ -7,6 +7,7 @@ class TextFormGlobal extends StatelessWidget {
     this.controller,
     required this.text,
     required this.textInputType,
+    required this.labelText,
     this.obsecure = false,
     this.onChanged,
     required this.context,
@@ -17,6 +18,7 @@ class TextFormGlobal extends StatelessWidget {
   final TextEditingController? controller;
   final String text;
   final TextInputType textInputType;
+  final String labelText;
   final bool obsecure;
   final String? Function(String)? onChanged;
   final BuildContext context;
@@ -43,6 +45,8 @@ class TextFormGlobal extends StatelessWidget {
           color: greyColor,
           fontSize: 16,
         ),
+        labelText: '${labelText}',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 18,

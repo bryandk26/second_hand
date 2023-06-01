@@ -123,7 +123,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           'businessName': _businessNamecontroller.text,
           'email': _emailController.text,
           'phoneNumber': _phoneController.text,
-          'vendorAddress': _addressController,
+          'vendorAddress': _addressController.text,
           'vendorPostalCode': _postalCodeController.text,
           'vendorBankName': _bankNameController.text,
           'vendorBankAccountName': _bankAccountNameController.text,
@@ -268,10 +268,11 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           'Business Profile',
                           style: subTitle,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 25),
                         TextFormGlobal(
-                          text: 'BusinessName',
+                          text: 'Business Name',
                           textInputType: TextInputType.text,
+                          labelText: 'Business Name',
                           context: context,
                           controller: _businessNamecontroller,
                         ),
@@ -282,6 +283,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           enabled: false,
                           text: 'Email',
                           textInputType: TextInputType.emailAddress,
+                          labelText: 'Email',
                           context: context,
                           controller: _emailController,
                         ),
@@ -291,6 +293,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                         TextFormGlobal(
                           text: 'Phone Number',
                           textInputType: TextInputType.phone,
+                          labelText: 'Phone Number',
                           context: context,
                           controller: _phoneController,
                         ),
@@ -300,6 +303,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                         TextFormGlobal(
                           text: 'Address',
                           textInputType: TextInputType.text,
+                          labelText: 'Address',
                           context: context,
                           controller: _addressController,
                         ),
@@ -309,6 +313,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                         TextFormGlobal(
                           text: 'Postal Code',
                           textInputType: TextInputType.number,
+                          labelText: 'Postal Code',
                           context: context,
                           controller: _postalCodeController,
                         ),
@@ -332,10 +337,11 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           'Bank Account',
                           style: subTitle,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 25),
                         TextFormGlobal(
                           text: 'Bank Name',
                           textInputType: TextInputType.text,
+                          labelText: 'Bank Name',
                           context: context,
                           controller: _bankNameController,
                         ),
@@ -345,6 +351,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                         TextFormGlobal(
                           text: 'Bank Account Name',
                           textInputType: TextInputType.emailAddress,
+                          labelText: 'Bank Account Name',
                           context: context,
                           controller: _bankAccountNameController,
                         ),
@@ -354,6 +361,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                         TextFormGlobal(
                           text: 'Bank Account Number',
                           textInputType: TextInputType.number,
+                          labelText: 'Bank Account Number',
                           context: context,
                           controller: _bankAccountNumberController,
                         ),

@@ -122,6 +122,7 @@ class BargainRequestFormScreen extends StatelessWidget {
                       TextFormGlobal(
                         text: 'Bargain Price',
                         textInputType: TextInputType.number,
+                        labelText: 'Bargain Price',
                         context: context,
                         onChanged: (value) {
                           bargainPrice = double.parse(value);

@@ -38,10 +38,7 @@ class BuyerOrderDoneTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order Completed',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

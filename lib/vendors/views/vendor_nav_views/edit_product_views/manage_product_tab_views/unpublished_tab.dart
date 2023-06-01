@@ -38,10 +38,7 @@ class UnpublishedTab extends StatelessWidget {
             return Center(
               child: Text(
                 'No Unpublished Product Yet',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: subTitle,
               ),
             );
           }

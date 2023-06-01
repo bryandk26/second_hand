@@ -48,6 +48,7 @@ class InputWarrantyOrderView extends StatelessWidget {
                 TextFormGlobal(
                   text: 'Warranty Expedition Name',
                   textInputType: TextInputType.text,
+                  labelText: 'Warranty Expedition Name',
                   context: context,
                   onChanged: (value) {
                     warrantyExpedition = value;
@@ -60,6 +61,7 @@ class InputWarrantyOrderView extends StatelessWidget {
                 TextFormGlobal(
                   text: 'Warranty Delivery Receipt',
                   textInputType: TextInputType.text,
+                  labelText: 'Warranty Delivery Receipt',
                   context: context,
                   onChanged: (value) {
                     warrantyReceipt = value;

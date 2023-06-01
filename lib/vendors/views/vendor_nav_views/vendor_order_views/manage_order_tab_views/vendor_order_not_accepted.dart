@@ -41,10 +41,7 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order Not Accepted',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

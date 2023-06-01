@@ -56,10 +56,7 @@ class StoreDetailScreen extends StatelessWidget {
             return Center(
               child: Text(
                 'No Product Uploaded',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: subTitle,
               ),
             );
           }

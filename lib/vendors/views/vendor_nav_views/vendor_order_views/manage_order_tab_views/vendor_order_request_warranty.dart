@@ -44,10 +44,7 @@ class VendorOrderWarrantyTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Request Order Warranty',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

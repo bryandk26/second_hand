@@ -6,6 +6,7 @@ class DropdownFormGlobal<T> extends StatelessWidget {
     super.key,
     this.controller,
     required this.text,
+    required this.labelText,
     required this.onChanged,
     required this.context,
     this.enabled = true,
@@ -13,6 +14,7 @@ class DropdownFormGlobal<T> extends StatelessWidget {
   });
   final TextEditingController? controller;
   final String text;
+  final String labelText;
   final String? Function(T?)? onChanged;
   final BuildContext context;
   final bool enabled;
@@ -40,6 +42,8 @@ class DropdownFormGlobal<T> extends StatelessWidget {
           color: greyColor,
           fontSize: 16,
         ),
+        labelText: '${labelText}',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 18,

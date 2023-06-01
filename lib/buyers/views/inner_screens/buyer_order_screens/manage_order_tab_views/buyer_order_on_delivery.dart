@@ -38,10 +38,7 @@ class BuyerOrderOnDeliveryTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order On Delivery',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

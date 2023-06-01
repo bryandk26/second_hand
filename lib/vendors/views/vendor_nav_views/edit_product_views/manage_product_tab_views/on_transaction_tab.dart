@@ -36,10 +36,7 @@ class OnTransactionTab extends StatelessWidget {
             return Center(
               child: Text(
                 'No Product On Transaction',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: subTitle,
               ),
             );
           }

@@ -38,10 +38,7 @@ class BuyerBargainAcceptedTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Bargain Request Accepted',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

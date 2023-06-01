@@ -38,10 +38,7 @@ class BuyerOrderPaidTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order Paid',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

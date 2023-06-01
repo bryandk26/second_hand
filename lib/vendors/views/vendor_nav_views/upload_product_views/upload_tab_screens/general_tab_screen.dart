@@ -59,9 +59,13 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(
+                height: 10,
+              ),
               TextFormGlobal(
                 text: 'Product Name',
                 textInputType: TextInputType.text,
+                labelText: 'Product Name',
                 context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(productName: value);
@@ -74,6 +78,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
               TextFormGlobal(
                 text: 'Product Price',
                 textInputType: TextInputType.number,
+                labelText: 'Product Price',
                 context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(
@@ -86,6 +91,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
               ),
               DropdownFormGlobal(
                   text: 'Category',
+                  labelText: 'Category',
                   onChanged: (value) {
                     setState(() {
                       _product_provider.getFormData(category: value.toString());
@@ -100,6 +106,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
               TextFormGlobal(
                 text: 'Product Description',
                 textInputType: TextInputType.multiline,
+                labelText: 'Product Description',
                 context: context,
                 onChanged: (value) {
                   _product_provider.getFormData(productDescription: value);

@@ -70,165 +70,214 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            toolbarHeight: 200,
-            flexibleSpace: LayoutBuilder(
-              builder: (context, constraints) {
-                return FlexibleSpaceBar(
-                  background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [primaryColor, blackColor],
+      body: Form(
+        key: _formKey,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              toolbarHeight: 200,
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  return FlexibleSpaceBar(
+                    background: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [primaryColor, blackColor],
+                        ),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: _image != null
+                                  ? Image.memory(
+                                      _image!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        selectGalleryImage();
+                                      },
+                                      icon: Icon(CupertinoIcons.photo),
+                                    ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    child: Center(
+                  );
+                },
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: _image != null
-                                ? Image.memory(
-                                    _image!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : IconButton(
-                                    onPressed: () {
-                                      selectGalleryImage();
-                                    },
-                                    icon: Icon(CupertinoIcons.photo),
-                                  ),
-                          )
+                          Text(
+                            'Business Profile',
+                            style: subTitle,
+                          ),
+                          SizedBox(height: 10),
+                          TextFormGlobal(
+                            text: 'Business Name',
+                            textInputType: TextInputType.name,
+                            labelText: 'Business Name',
+                            context: context,
+                            onChanged: (value) {
+                              businessName = value;
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Email Address',
+                            textInputType: TextInputType.emailAddress,
+                            labelText: 'Email Address',
+                            context: context,
+                            onChanged: (value) {
+                              email = value;
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Phone Number',
+                            textInputType: TextInputType.phone,
+                            labelText: 'Phone Number',
+                            context: context,
+                            onChanged: (value) {
+                              phoneNumber = value;
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Address',
+                            textInputType: TextInputType.multiline,
+                            labelText: 'Address',
+                            context: context,
+                            onChanged: (value) {
+                              address = value;
+                              return null;
+                            },
+                            maxLength: 200,
+                            maxLines: 3,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Postal Code',
+                            textInputType: TextInputType.number,
+                            labelText: 'Postal Code',
+                            context: context,
+                            onChanged: (value) {
+                              postalCode = value;
+                              return null;
+                            },
+                          ),
                         ],
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormGlobal(
-                      text: 'Business Name',
-                      textInputType: TextInputType.name,
-                      context: context,
-                      onChanged: (value) {
-                        businessName = value;
-                        return null;
-                      },
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    SizedBox(
-                      height: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Bank Information',
+                            style: subTitle,
+                          ),
+                          SizedBox(height: 10),
+                          TextFormGlobal(
+                            text: 'Bank Name',
+                            textInputType: TextInputType.text,
+                            labelText: 'Bank Name',
+                            context: context,
+                            onChanged: (value) {
+                              bankName = value;
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Bank Account Name',
+                            textInputType: TextInputType.text,
+                            labelText: 'Bank Account Name',
+                            context: context,
+                            onChanged: (value) {
+                              bankAccountName = value;
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormGlobal(
+                            text: 'Bank Account Number',
+                            textInputType: TextInputType.number,
+                            labelText: 'Bank Account Number',
+                            context: context,
+                            onChanged: (value) {
+                              bankAccountNumber = value;
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    TextFormGlobal(
-                      text: 'Email Address',
-                      textInputType: TextInputType.emailAddress,
-                      context: context,
-                      onChanged: (value) {
-                        email = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Phone Number',
-                      textInputType: TextInputType.phone,
-                      context: context,
-                      onChanged: (value) {
-                        phoneNumber = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Address',
-                      textInputType: TextInputType.text,
-                      context: context,
-                      onChanged: (value) {
-                        address = value;
-                        return null;
-                      },
-                      maxLength: 200,
-                      maxLines: 3,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Postal Code',
-                      textInputType: TextInputType.number,
-                      context: context,
-                      onChanged: (value) {
-                        postalCode = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Bank Name',
-                      textInputType: TextInputType.text,
-                      context: context,
-                      onChanged: (value) {
-                        bankName = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Bank Account Name',
-                      textInputType: TextInputType.text,
-                      context: context,
-                      onChanged: (value) {
-                        bankAccountName = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormGlobal(
-                      text: 'Bank Account Number',
-                      textInputType: TextInputType.number,
-                      context: context,
-                      onChanged: (value) {
-                        bankAccountNumber = value;
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    InkWell(
-                      onTap: () {
-                        _saveVendorDetail();
-                      },
-                      child: ButtonGlobal(isLoading: _isLoading, text: 'Save'),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 60,
+                  )
+                ],
               ),
             ),
+          ],
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          onTap: () {
+            _saveVendorDetail();
+          },
+          child: ButtonGlobal(
+            isLoading: _isLoading,
+            text: 'Save',
           ),
-        ],
+        ),
       ),
     );
   }

@@ -38,10 +38,7 @@ class VendorOrderCanceledTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order Canceled',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

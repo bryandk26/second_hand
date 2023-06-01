@@ -48,6 +48,7 @@ class InputDeliveryOrderView extends StatelessWidget {
                 TextFormGlobal(
                   text: 'Expedition Name',
                   textInputType: TextInputType.text,
+                  labelText: 'Expedition Name',
                   context: context,
                   onChanged: (value) {
                     expedition = value;
@@ -60,6 +61,7 @@ class InputDeliveryOrderView extends StatelessWidget {
                 TextFormGlobal(
                   text: 'Delivery Receipt',
                   textInputType: TextInputType.text,
+                  labelText: 'Delivery Receipt',
                   context: context,
                   onChanged: (value) {
                     receipt = value;

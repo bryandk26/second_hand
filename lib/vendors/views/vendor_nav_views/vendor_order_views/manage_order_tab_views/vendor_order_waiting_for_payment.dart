@@ -38,10 +38,7 @@ class VendorOrderWaitingPaymentTab extends StatelessWidget {
           return Center(
             child: Text(
               'No Order Waiting for Payment',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: subTitle,
             ),
           );
         }

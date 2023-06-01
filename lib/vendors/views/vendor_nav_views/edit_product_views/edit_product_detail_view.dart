@@ -106,6 +106,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                   text: 'Product Name',
                   controller: _productNameController,
                   textInputType: TextInputType.text,
+                  labelText: 'Product Name',
                   context: context,
                 ),
                 SizedBox(
@@ -115,6 +116,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                   text: 'Brand Name',
                   controller: _brandNameController,
                   textInputType: TextInputType.text,
+                  labelText: 'Brand Name',
                   context: context,
                 ),
                 SizedBox(
@@ -125,6 +127,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                   text: 'Category',
                   controller: _categoryNameController,
                   textInputType: TextInputType.text,
+                  labelText: 'Category',
                   context: context,
                 ),
                 SizedBox(
@@ -134,6 +137,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                   text: 'Price',
                   controller: _productPriceController,
                   textInputType: TextInputType.number,
+                  labelText: 'Price',
                   context: context,
                 ),
                 SizedBox(
@@ -144,6 +148,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                       'Detail Size\n\nEx:\nChest: 39 cm\nWaist: 37 cm\nSleeves: 24 cm\nShoulder: 18 cm\nLength: 29 cm',
                   controller: _detailSizeController,
                   textInputType: TextInputType.multiline,
+                  labelText: 'Detail Size',
                   context: context,
                   maxLines: 8,
                   maxLength: 800,
@@ -155,6 +160,7 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
                   text: 'Product Description',
                   controller: _productDescriptionController,
                   textInputType: TextInputType.multiline,
+                  labelText: 'Product Description',
                   context: context,
                   maxLength: 800,
                   maxLines: 6,

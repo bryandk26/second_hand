@@ -270,10 +270,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           'My Profile',
                           style: subTitle,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 25),
                         TextFormGlobal(
                           text: 'Full Name',
                           textInputType: TextInputType.text,
+                          labelText: 'Full Name',
                           context: context,
                           controller: _fullNamecontroller,
                         ),
@@ -284,6 +285,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           enabled: false,
                           text: 'Email',
                           textInputType: TextInputType.emailAddress,
+                          labelText: 'Email',
                           context: context,
                           controller: _emailController,
                         ),
@@ -293,6 +295,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFormGlobal(
                           text: 'Phone Number',
                           textInputType: TextInputType.phone,
+                          labelText: 'Phone Number',
                           context: context,
                           controller: _phoneController,
                         ),
@@ -302,6 +305,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFormGlobal(
                           text: 'Address',
                           textInputType: TextInputType.text,
+                          labelText: 'Address',
                           context: context,
                           controller: _addressController,
                         ),
@@ -311,6 +315,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFormGlobal(
                           text: 'Postal Code',
                           textInputType: TextInputType.number,
+                          labelText: 'Postal Code',
                           context: context,
                           controller: _postalCodeController,
                         ),
@@ -334,10 +339,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           'Bank Account',
                           style: subTitle,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 25),
                         TextFormGlobal(
                           text: 'Bank Name',
                           textInputType: TextInputType.text,
+                          labelText: 'Bank Name',
                           context: context,
                           controller: _bankNameController,
                         ),
@@ -347,6 +353,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFormGlobal(
                           text: 'Bank Account Name',
                           textInputType: TextInputType.emailAddress,
+                          labelText: 'Bank Account Name',
                           context: context,
                           controller: _bankAccountNameController,
                         ),
@@ -356,6 +363,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFormGlobal(
                           text: 'Bank Account Number',
                           textInputType: TextInputType.number,
+                          labelText: 'Bank Account Number',
                           context: context,
                           controller: _bankAccountNumberController,
                         ),

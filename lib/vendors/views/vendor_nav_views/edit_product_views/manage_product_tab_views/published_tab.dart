@@ -41,10 +41,7 @@ class PublishedTab extends StatelessWidget {
             return Center(
               child: Text(
                 'No Published Product Yet',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: subTitle,
               ),
             );
           }
