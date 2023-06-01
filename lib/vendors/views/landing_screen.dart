@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/role_view.dart';
+import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 import 'package:second_chance/vendors/models/vendor_user_models.dart';
 import 'package:second_chance/vendors/views/auth/vendor_register_screen.dart';
@@ -65,15 +66,12 @@ class LandingScreen extends StatelessWidget {
                 SizedBox(height: 15),
                 Text(
                   vendorUserModel.businessName.toString(),
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: titleText,
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Your application has been sent to shop admin\nAdmin will get back to you soon',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                  style: normalText,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 10),

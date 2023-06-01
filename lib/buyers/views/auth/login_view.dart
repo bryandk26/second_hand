@@ -110,7 +110,7 @@ class _LoginViewState extends State<LoginView> {
                     },
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextFormGlobal(
                     text: 'Password',

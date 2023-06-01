@@ -132,7 +132,9 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             'Business Profile',
                             style: subTitle,
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormGlobal(
                             text: 'Business Name',
                             textInputType: TextInputType.name,
@@ -144,7 +146,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             },
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           TextFormGlobal(
                             text: 'Email Address',
@@ -157,7 +159,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             },
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           TextFormGlobal(
                             text: 'Phone Number',
@@ -170,7 +172,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             },
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           TextFormGlobal(
                             text: 'Address',
@@ -217,7 +219,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             'Bank Information',
                             style: subTitle,
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormGlobal(
                             text: 'Bank Name',
                             textInputType: TextInputType.text,
@@ -229,7 +231,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             },
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           TextFormGlobal(
                             text: 'Bank Account Name',
@@ -242,7 +244,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             },
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           TextFormGlobal(
                             text: 'Bank Account Number',
@@ -259,7 +261,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 80,
                   )
                 ],
               ),

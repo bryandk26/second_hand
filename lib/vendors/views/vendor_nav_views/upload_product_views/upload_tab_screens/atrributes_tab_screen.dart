@@ -38,7 +38,7 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
               },
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             TextFormGlobal(
               text:
