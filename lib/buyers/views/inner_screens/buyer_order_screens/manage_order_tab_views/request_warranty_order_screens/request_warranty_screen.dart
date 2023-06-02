@@ -14,7 +14,6 @@ import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
-import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 
 class RequestWarrantyOrderScreen extends StatefulWidget {
   final dynamic orderData;
