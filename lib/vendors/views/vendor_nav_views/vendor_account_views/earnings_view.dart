@@ -16,7 +16,7 @@ class EarningsView extends StatelessWidget {
     final Stream<QuerySnapshot> _ordersStream = FirebaseFirestore.instance
         .collection('orders')
         .where('vendorId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('accepted', isEqualTo: true)
+        .where('status', isEqualTo: 'Done')
         .snapshots();
 
     return FutureBuilder<DocumentSnapshot>(
@@ -90,7 +90,7 @@ class EarningsView extends StatelessWidget {
                             height: 150,
                             width: MediaQuery.of(context).size.width * 0.5,
                             decoration: BoxDecoration(
-                              color: Colors.yellow.shade900,
+                              color: blackColor,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Column(
@@ -100,11 +100,7 @@ class EarningsView extends StatelessWidget {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
                                     'TOTAL EARNINGS',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: textButton,
                                   ),
                                 ),
                                 Padding(
@@ -113,7 +109,7 @@ class EarningsView extends StatelessWidget {
                                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(totalOrder)}',
                                     style: TextStyle(
                                       color: Colors.green,
-                                      fontSize: 22,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -125,7 +121,7 @@ class EarningsView extends StatelessWidget {
                             height: 150,
                             width: MediaQuery.of(context).size.width * 0.5,
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: blackColor,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Column(
@@ -135,11 +131,7 @@ class EarningsView extends StatelessWidget {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
                                     'TOTAL ORDERS',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: textButton,
                                   ),
                                 ),
                                 Padding(
@@ -147,8 +139,8 @@ class EarningsView extends StatelessWidget {
                                   child: Text(
                                     snapshot.data!.docs.length.toString(),
                                     style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 22,
+                                      color: whiteColor,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

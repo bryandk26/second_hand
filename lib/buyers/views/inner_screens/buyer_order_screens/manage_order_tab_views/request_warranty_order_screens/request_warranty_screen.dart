@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/buyer_orders_tab_view.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
+import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
@@ -226,10 +226,10 @@ class _RequestWarrantyOrderScreenState
                               'status': 'Request Warranty',
                             }).then((_) async {
                               await uploadPaymentReceipt();
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BuyerOrderTabView(),
+                                  builder: (context) => MainScreen(),
                                 ),
                               );
                             }).catchError((error) {

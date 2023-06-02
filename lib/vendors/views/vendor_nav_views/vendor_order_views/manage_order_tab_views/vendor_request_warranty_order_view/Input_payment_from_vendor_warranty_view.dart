@@ -109,7 +109,7 @@ class _InputPaymentFromVendorWarrantyViewState
         ),
         iconTheme: IconThemeData(color: blackColor),
         title: Text(
-          'Payment Warranty Order Information',
+          'Payment Warranty Order',
           style: subTitle,
         ),
       ),

@@ -51,7 +51,10 @@ class VendorBargainAcceptedTab extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 14,
-                    child: Icon(Icons.access_time),
+                    child: Icon(
+                      Icons.done,
+                      color: Colors.green,
+                    ),
                   ),
                   title: Text(
                     'Accepted',

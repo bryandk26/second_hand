@@ -58,7 +58,10 @@ class VendorOrderDoneTab extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 14,
-                    child: Icon(Icons.done),
+                    child: Icon(
+                      Icons.done,
+                      color: Colors.green,
+                    ),
                   ),
                   title: Text(
                     '${document['status']}',

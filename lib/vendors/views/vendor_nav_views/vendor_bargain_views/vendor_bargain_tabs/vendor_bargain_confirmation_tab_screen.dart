@@ -157,6 +157,7 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                           'email': document['email'],
                           'phone': document['phone'],
                           'address': document['address'],
+                          'postalCode': document['postalCode'],
                           'buyerId': document['buyerId'],
                           'fullName': document['fullName'],
                           'buyerPhoto': document['buyerPhoto'],

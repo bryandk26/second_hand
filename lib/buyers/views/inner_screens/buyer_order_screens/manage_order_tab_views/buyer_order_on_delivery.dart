@@ -62,7 +62,7 @@ class BuyerOrderOnDeliveryTab extends StatelessWidget {
                   ),
                   title: Text(
                     '${document['status']}',
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: Colors.yellow.shade900),
                   ),
                   trailing: Text(
                     '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(document['productPrice'])}',
