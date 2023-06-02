@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +12,14 @@ class BannerWidget extends StatefulWidget {
 
 class _BannerWidgetState extends State<BannerWidget> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  StreamSubscription<QuerySnapshot>? _subscription;
   final List _bannerImage = [];
 
-  getBanners() {
-    return _firestore
+  void getBanners() {
+    _subscription = _firestore
         .collection('banners')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
+        .snapshots()
+        .listen((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         setState(() {
           _bannerImage.add(doc['image']);
@@ -29,8 +30,14 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   @override
   void initState() {
-    getBanners();
     super.initState();
+    getBanners();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override

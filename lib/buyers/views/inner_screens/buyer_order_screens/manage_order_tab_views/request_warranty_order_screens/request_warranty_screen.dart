@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/buyer_orders_tab_view.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
@@ -26,11 +27,12 @@ class RequestWarrantyOrderScreen extends StatefulWidget {
 
 class _RequestWarrantyOrderScreenState
     extends State<RequestWarrantyOrderScreen> {
-  XFile? _image;
+  File? _pickedImageFile;
+
   Future<void> uploadPaymentReceipt() async {
     EasyLoading.show(status: 'Please Wait');
 
-    if (_image != null) {
+    if (_pickedImageFile != null) {
       final String orderId = widget.orderData['orderId'];
 
       try {
@@ -39,7 +41,7 @@ class _RequestWarrantyOrderScreenState
             .child('requestWarranty')
             .child('$orderId.jpg');
 
-        Uint8List imageBytes = await _image!.readAsBytes();
+        Uint8List imageBytes = await _pickedImageFile!.readAsBytes();
 
         UploadTask uploadTask = ref.putData(imageBytes);
 
@@ -71,7 +73,7 @@ class _RequestWarrantyOrderScreenState
           await picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
-          _image = pickedImage;
+          _pickedImageFile = File(pickedImage.path);
         });
       }
     }
@@ -140,31 +142,13 @@ class _RequestWarrantyOrderScreenState
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              subtitle: widget.orderData
-                                      .data()!
-                                      .containsKey('warrantyImage')
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PhotoView(
-                                              backgroundDecoration:
-                                                  BoxDecoration(
-                                                      color: whiteColor),
-                                              imageProvider: NetworkImage(widget
-                                                  .orderData['warrantyImage']),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.network(
-                                          widget.orderData['warrantyImage'],
-                                          fit: BoxFit.cover,
-                                          height: 200,
-                                        ),
+                              subtitle: (_pickedImageFile != null)
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.file(
+                                        _pickedImageFile!,
+                                        fit: BoxFit.cover,
+                                        height: 200,
                                       ),
                                     )
                                   : ElevatedButton(
@@ -218,9 +202,22 @@ class _RequestWarrantyOrderScreenState
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            _isLoading = true;
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          if (_pickedImageFile == null) {
+                            displayDialog(
+                              context,
+                              'Please select an image',
+                              Icon(
+                                Icons.error,
+                                color: Colors.red,
+                                size: 60,
+                              ),
+                            );
+                          } else {
+                            setState(() {
+                              _isLoading = true;
+                            });
 
                             FirebaseFirestore.instance
                                 .collection('orders')
@@ -231,12 +228,11 @@ class _RequestWarrantyOrderScreenState
                             }).then((_) async {
                               await uploadPaymentReceipt();
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => VendorMainScreen(
-                                      initialIndex: 3,
-                                    ),
-                                  ));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BuyerOrderTabView(),
+                                ),
+                              );
                             }).catchError((error) {
                               displayDialog(
                                 context,
@@ -247,19 +243,23 @@ class _RequestWarrantyOrderScreenState
                                   size: 60,
                                 ),
                               );
-                              _isLoading = false;
+                              setState(() {
+                                _isLoading = false;
+                              });
                             });
                           }
-                        },
-                        child: ButtonGlobal(
-                            isLoading: _isLoading, text: 'SUBMIT')),
+                        }
+                      },
+                      child:
+                          ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT'),
+                    ),
                   ),
           );
         }
 
         return Center(
           child: CircularProgressIndicator(
-            color: Colors.yellow.shade900,
+            color: blackColor,
           ),
         );
       },
