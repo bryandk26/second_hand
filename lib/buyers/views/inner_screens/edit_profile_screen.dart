@@ -1,11 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:second_chance/buyers/controllers/edit_profile_controller.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
@@ -23,92 +18,37 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _fullNamecontroller = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _postalCodeController = TextEditingController();
-  final TextEditingController _bankNameController = TextEditingController();
-  final TextEditingController _bankAccountNameController =
-      TextEditingController();
-  final TextEditingController _bankAccountNumberController =
-      TextEditingController();
+  final EditProfileController _controller = EditProfileController();
 
   bool _isLoading = false;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   void initState() {
-    setState(() {
-      _fullNamecontroller.text = widget.userData['fullName'] ?? '';
-      _emailController.text = widget.userData['email'] ?? '';
-      _phoneController.text = widget.userData['phoneNumber'] ?? '';
-      _addressController.text = widget.userData['address'] ?? '';
-      _postalCodeController.text = widget.userData['postalCode'] ?? '';
-      _bankNameController.text = widget.userData['bankName'] ?? '';
-      _bankAccountNameController.text =
-          widget.userData['bankAccountName'] ?? '';
-      _bankAccountNumberController.text =
-          widget.userData['bankAccountNumber'] ?? '';
-    });
     super.initState();
+    _controller.fullNameController.text = widget.userData.fullName;
+    _controller.emailController.text = widget.userData.email;
+    _controller.phoneController.text = widget.userData.phoneNumber;
+    _controller.addressController.text = widget.userData.address;
+    _controller.postalCodeController.text = widget.userData.postalCode;
+    _controller.bankNameController.text = widget.userData.bankName;
+    _controller.bankAccountNameController.text =
+        widget.userData.bankAccountName;
+    _controller.bankAccountNumberController.text =
+        widget.userData.bankAccountNumber;
   }
 
   @override
   void dispose() {
-    _fullNamecontroller.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _addressController.dispose();
-    _postalCodeController.dispose();
-    _bankNameController.dispose();
-    _bankAccountNameController.dispose();
-    _bankAccountNumberController.dispose();
+    _controller.fullNameController.dispose();
+    _controller.emailController.dispose();
+    _controller.phoneController.dispose();
+    _controller.addressController.dispose();
+    _controller.postalCodeController.dispose();
+    _controller.bankNameController.dispose();
+    _controller.bankAccountNameController.dispose();
+    _controller.bankAccountNumberController.dispose();
 
     super.dispose();
-  }
-
-  Future<Uint8List?> pickImage() async {
-    final ImagePicker _imagePicker = ImagePicker();
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedImage == null) return null;
-    final imageBytes = await pickedImage.readAsBytes();
-    return imageBytes;
-  }
-
-  Future<String?> uploadImage(Uint8List? imageBytes) async {
-    if (imageBytes == null) return null;
-    final Reference ref =
-        _storage.ref().child('profilePics').child(_auth.currentUser!.uid);
-    final UploadTask uploadTask = ref.putData(imageBytes);
-    final TaskSnapshot snapshot = await uploadTask;
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
-  Future<void> _updateProfileImage() async {
-    final imageBytes = await pickImage();
-    if (imageBytes != null) {
-      EasyLoading.show(status: 'Uploading...');
-      final downloadUrl = await uploadImage(imageBytes);
-      if (downloadUrl != null) {
-        await _firestore
-            .collection('buyers')
-            .doc(_auth.currentUser!.uid)
-            .update({'profileImage': downloadUrl});
-        setState(() {
-          widget.userData['profileImage'] = downloadUrl;
-        });
-        EasyLoading.showSuccess('Image uploaded successfully');
-      } else {
-        EasyLoading.showError('Failed to upload image');
-      }
-    }
   }
 
   Future<void> _updateBuyerProfile(BuildContext context) async {
@@ -118,31 +58,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (_formKey.currentState!.validate()) {
       try {
-        await _firestore
-            .collection('buyers')
-            .doc(_auth.currentUser!.uid)
-            .update({
-          'fullName': _fullNamecontroller.text,
-          'email': _emailController.text,
-          'phoneNumber': _phoneController.text,
-          'address': _addressController.text,
-          'postalCode': _postalCodeController.text,
-          'bankName': _bankNameController.text,
-          'bankAccountName': _bankAccountNameController.text,
-          'bankAccountNumber': _bankAccountNumberController.text,
-        });
+        await _controller.updateBuyerProfile(widget.userData);
 
         setState(() {
           _isLoading = false;
         });
 
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MainScreen(
-                initialIndex: 5,
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(
+              initialIndex: 5,
+            ),
+          ),
+        );
       } catch (error) {
         setState(() {
           _isLoading = false;
@@ -180,7 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String profileImage = widget.userData['profileImage'];
+    String profileImage = widget.userData.profileImage;
     if (profileImage.isEmpty) {
       profileImage =
           'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';
@@ -246,7 +175,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 size: 20,
                               ),
                               onPressed: () {
-                                _updateProfileImage();
+                                _controller.updateProfileImage();
                               },
                             ),
                           ),
@@ -276,7 +205,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.text,
                           labelText: 'Full Name',
                           context: context,
-                          controller: _fullNamecontroller,
+                          controller: _controller.fullNameController,
                         ),
                         SizedBox(
                           height: 20,
@@ -287,7 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.emailAddress,
                           labelText: 'Email',
                           context: context,
-                          controller: _emailController,
+                          controller: _controller.emailController,
                         ),
                         SizedBox(
                           height: 20,
@@ -297,7 +226,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.phone,
                           labelText: 'Phone Number',
                           context: context,
-                          controller: _phoneController,
+                          controller: _controller.phoneController,
                         ),
                         SizedBox(
                           height: 20,
@@ -307,7 +236,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.text,
                           labelText: 'Address',
                           context: context,
-                          controller: _addressController,
+                          controller: _controller.addressController,
                         ),
                         SizedBox(
                           height: 20,
@@ -317,7 +246,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.number,
                           labelText: 'Postal Code',
                           context: context,
-                          controller: _postalCodeController,
+                          controller: _controller.postalCodeController,
                         ),
                       ],
                     ),
@@ -345,7 +274,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.text,
                           labelText: 'Bank Name',
                           context: context,
-                          controller: _bankNameController,
+                          controller: _controller.bankNameController,
                         ),
                         SizedBox(
                           height: 20,
@@ -355,7 +284,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.emailAddress,
                           labelText: 'Bank Account Name',
                           context: context,
-                          controller: _bankAccountNameController,
+                          controller: _controller.bankAccountNameController,
                         ),
                         SizedBox(
                           height: 20,
@@ -365,7 +294,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           textInputType: TextInputType.number,
                           labelText: 'Bank Account Number',
                           context: context,
-                          controller: _bankAccountNumberController,
+                          controller: _controller.bankAccountNumberController,
                         ),
                       ],
                     ),
