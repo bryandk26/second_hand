@@ -1,15 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
+import 'package:second_chance/vendors/controllers/vendor_edit_profile_controller.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 
 class VendorEditAccountView extends StatefulWidget {
@@ -23,90 +18,20 @@ class VendorEditAccountView extends StatefulWidget {
 
 class _VendorEditAccountViewState extends State<VendorEditAccountView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _businessNamecontroller = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _postalCodeController = TextEditingController();
-  final TextEditingController _bankNameController = TextEditingController();
-  final TextEditingController _bankAccountNameController =
-      TextEditingController();
-  final TextEditingController _bankAccountNumberController =
-      TextEditingController();
+  final VendorEditProfileController _controller = VendorEditProfileController();
 
   bool _isLoading = false;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   void initState() {
-    setState(() {
-      _businessNamecontroller.text = widget.vendorData.businessName;
-      _emailController.text = widget.vendorData.email;
-      _phoneController.text = widget.vendorData.phoneNumber;
-      _addressController.text = widget.vendorData.address;
-      _postalCodeController.text = widget.vendorData.postalCode;
-      _bankNameController.text = widget.vendorData.bankName;
-      _bankAccountNameController.text = widget.vendorData.bankAccountName;
-      _bankAccountNumberController.text = widget.vendorData.bankAccountNumber;
-    });
     super.initState();
+    _controller.initControllerData(widget.vendorData);
   }
 
   @override
   void dispose() {
-    _businessNamecontroller.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _addressController.dispose();
-    _postalCodeController.dispose();
-    _bankNameController.dispose();
-    _bankAccountNameController.dispose();
-    _bankAccountNumberController.dispose();
-
+    _controller.disposeControllers();
     super.dispose();
-  }
-
-  Future<Uint8List?> pickImage() async {
-    final ImagePicker _imagePicker = ImagePicker();
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedImage == null) return null;
-    final imageBytes = await pickedImage.readAsBytes();
-    return imageBytes;
-  }
-
-  Future<String?> uploadImage(Uint8List? imageBytes) async {
-    if (imageBytes == null) return null;
-    final Reference ref =
-        _storage.ref().child('storeImage').child(_auth.currentUser!.uid);
-    final UploadTask uploadTask = ref.putData(imageBytes);
-    final TaskSnapshot snapshot = await uploadTask;
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
-  Future<void> _updateStoreImage() async {
-    final imageBytes = await pickImage();
-    if (imageBytes != null) {
-      EasyLoading.show(status: 'Uploading...');
-      final downloadUrl = await uploadImage(imageBytes);
-      if (downloadUrl != null) {
-        await _firestore
-            .collection('vendors')
-            .doc(_auth.currentUser!.uid)
-            .update({'storeImage': downloadUrl});
-        setState(() {
-          widget.vendorData?.storeImage = downloadUrl;
-        });
-        EasyLoading.showSuccess('Image uploaded successfully');
-      } else {
-        EasyLoading.showError('Failed to upload image');
-      }
-    }
   }
 
   Future<void> _updateVendorProfile(BuildContext context) async {
@@ -116,20 +41,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
 
     if (_formKey.currentState!.validate()) {
       try {
-        await _firestore
-            .collection('vendors')
-            .doc(_auth.currentUser!.uid)
-            .update({
-          'businessName': _businessNamecontroller.text,
-          'email': _emailController.text,
-          'phoneNumber': _phoneController.text,
-          'vendorAddress': _addressController.text,
-          'vendorPostalCode': _postalCodeController.text,
-          'vendorBankName': _bankNameController.text,
-          'vendorBankAccountName': _bankAccountNameController.text,
-          'vendorBankAccountNumber': _bankAccountNumberController.text,
-        });
-
+        await _controller.updateVendorProfile(widget.vendorData);
         setState(() {
           _isLoading = false;
         });
@@ -169,7 +81,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
         'Please fields must not be empty',
         Icon(
           Icons.error,
-          color: Colors.red,
+          color: primaryColor,
           size: 60,
         ),
       );
@@ -244,7 +156,12 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                                 size: 20,
                               ),
                               onPressed: () {
-                                _updateStoreImage();
+                                _controller.updateStoreImage(
+                                    widget.vendorData.toJson(), (downloadUrl) {
+                                  setState(() {
+                                    widget.vendorData.storeImage = downloadUrl;
+                                  });
+                                });
                               },
                             ),
                           ),
@@ -274,7 +191,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.text,
                           labelText: 'Business Name',
                           context: context,
-                          controller: _businessNamecontroller,
+                          controller: _controller.businessNamecontroller,
                         ),
                         SizedBox(
                           height: 20,
@@ -285,7 +202,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.emailAddress,
                           labelText: 'Email',
                           context: context,
-                          controller: _emailController,
+                          controller: _controller.emailController,
                         ),
                         SizedBox(
                           height: 20,
@@ -295,7 +212,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.phone,
                           labelText: 'Phone Number',
                           context: context,
-                          controller: _phoneController,
+                          controller: _controller.phoneController,
                         ),
                         SizedBox(
                           height: 20,
@@ -305,7 +222,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.text,
                           labelText: 'Address',
                           context: context,
-                          controller: _addressController,
+                          controller: _controller.addressController,
                         ),
                         SizedBox(
                           height: 20,
@@ -315,7 +232,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.number,
                           labelText: 'Postal Code',
                           context: context,
-                          controller: _postalCodeController,
+                          controller: _controller.postalCodeController,
                         ),
                       ],
                     ),
@@ -343,7 +260,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.text,
                           labelText: 'Bank Name',
                           context: context,
-                          controller: _bankNameController,
+                          controller: _controller.bankNameController,
                         ),
                         SizedBox(
                           height: 20,
@@ -353,7 +270,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.emailAddress,
                           labelText: 'Bank Account Name',
                           context: context,
-                          controller: _bankAccountNameController,
+                          controller: _controller.bankAccountNameController,
                         ),
                         SizedBox(
                           height: 20,
@@ -363,7 +280,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
                           textInputType: TextInputType.number,
                           labelText: 'Bank Account Number',
                           context: context,
-                          controller: _bankAccountNumberController,
+                          controller: _controller.bankAccountNumberController,
                         ),
                       ],
                     ),

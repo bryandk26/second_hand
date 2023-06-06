@@ -1,28 +1,28 @@
 class VendorUserModel {
-  final bool? approved;
-  final String? vendorId;
-  final String? businessName;
-  final String? address;
-  final String? postalCode;
-  final String? bankName;
-  final String? bankAccountName;
-  final String? bankAccountNumber;
-  final String? email;
-  final String? phoneNumber;
+  bool? approved;
+  String? vendorId;
+  String? businessName;
+  String? address;
+  String? postalCode;
+  String? bankName;
+  String? bankAccountName;
+  String? bankAccountNumber;
+  String? email;
+  String? phoneNumber;
   String? _storeImage;
 
   VendorUserModel({
-    required this.approved,
-    required this.vendorId,
-    required this.businessName,
-    required this.address,
-    required this.postalCode,
-    required this.bankName,
-    required this.bankAccountName,
-    required this.bankAccountNumber,
-    required this.email,
-    required this.phoneNumber,
-    required String? storeImage,
+    this.approved,
+    this.vendorId,
+    this.businessName,
+    this.address,
+    this.postalCode,
+    this.bankName,
+    this.bankAccountName,
+    this.bankAccountNumber,
+    this.email,
+    this.phoneNumber,
+    String? storeImage,
   }) : _storeImage = storeImage;
 
   VendorUserModel.fromJson(Map<String, Object?> json)

@@ -23,6 +23,28 @@ class EditProfileController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  void initControllerData(dynamic userData) {
+    fullNameController.text = userData.fullName;
+    emailController.text = userData.email;
+    phoneController.text = userData.phoneNumber;
+    addressController.text = userData.address;
+    postalCodeController.text = userData.postalCode;
+    bankNameController.text = userData.bankName;
+    bankAccountNameController.text = userData.bankAccountName;
+    bankAccountNumberController.text = userData.bankAccountNumber;
+  }
+
+  void disposeControllers() {
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    postalCodeController.dispose();
+    bankNameController.dispose();
+    bankAccountNameController.dispose();
+    bankAccountNumberController.dispose();
+  }
+
   Future<Uint8List?> pickImage() async {
     final ImagePicker _imagePicker = ImagePicker();
     final pickedImage =
@@ -42,7 +64,8 @@ class EditProfileController {
     return downloadUrl;
   }
 
-  Future<void> updateProfileImage() async {
+  Future<void> updateProfileImage(
+      Map<String, dynamic> userData, Function(String) setStateCallback) async {
     final imageBytes = await pickImage();
     if (imageBytes != null) {
       EasyLoading.show(status: 'Uploading...');
@@ -52,6 +75,7 @@ class EditProfileController {
             .collection('buyers')
             .doc(_auth.currentUser!.uid)
             .update({'profileImage': downloadUrl});
+        setStateCallback(downloadUrl);
         EasyLoading.showSuccess('Image uploaded successfully');
       } else {
         EasyLoading.showError('Failed to upload image');
