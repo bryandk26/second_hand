@@ -25,12 +25,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _controller.initControllerData(widget.userData);
+    _controller.fullNameController.text = widget.userData.fullName;
+    _controller.emailController.text = widget.userData.email;
+    _controller.phoneController.text = widget.userData.phoneNumber;
+    _controller.addressController.text = widget.userData.address;
+    _controller.postalCodeController.text = widget.userData.postalCode;
+    _controller.bankNameController.text = widget.userData.bankName;
+    _controller.bankAccountNameController.text =
+        widget.userData.bankAccountName;
+    _controller.bankAccountNumberController.text =
+        widget.userData.bankAccountNumber;
   }
 
   @override
   void dispose() {
-    _controller.disposeControllers();
+    _controller.fullNameController.dispose();
+    _controller.emailController.dispose();
+    _controller.phoneController.dispose();
+    _controller.addressController.dispose();
+    _controller.postalCodeController.dispose();
+    _controller.bankNameController.dispose();
+    _controller.bankAccountNameController.dispose();
+    _controller.bankAccountNumberController.dispose();
+
     super.dispose();
   }
 
@@ -83,7 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         'Please fields must not be empty',
         Icon(
           Icons.error,
-          color: primaryColor,
+          color: Colors.red,
           size: 60,
         ),
       );
@@ -158,12 +175,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 size: 20,
                               ),
                               onPressed: () {
-                                _controller.updateProfileImage(
-                                    widget.userData.toMap(), (downloadUrl) {
-                                  setState(() {
-                                    widget.userData.profileImage = downloadUrl;
-                                  });
-                                });
+                                _controller.updateProfileImage();
                               },
                             ),
                           ),
