@@ -5,7 +5,6 @@ import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
-import 'package:second_chance/vendors/models/vendor_user_models.dart';
 import 'package:second_chance/vendors/views/auth/vendor_register_screen.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -38,14 +37,14 @@ class LandingScreen extends StatelessWidget {
             return VendorRegistrationScreen();
           }
 
-          VendorUserModel vendorUserModel = VendorUserModel.fromJson(
-              snapshot.data!.data()! as Map<String, dynamic>);
+          Map<String, dynamic> vendorData =
+              snapshot.data!.data() as Map<String, dynamic>;
 
-          if (vendorUserModel.approved == true) {
+          if (vendorData['approved'] == true) {
             return VendorMainScreen();
           }
 
-          String storeImage = vendorUserModel.storeImage.toString();
+          String storeImage = vendorData['storeImage'];
           if (storeImage.isEmpty) {
             storeImage =
                 'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';
@@ -65,7 +64,7 @@ class LandingScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  vendorUserModel.businessName.toString(),
+                  vendorData['businessName'],
                   style: titleText,
                 ),
                 SizedBox(height: 10),

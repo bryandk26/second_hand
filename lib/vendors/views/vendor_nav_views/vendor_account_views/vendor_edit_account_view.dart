@@ -44,14 +44,16 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
   @override
   void initState() {
     setState(() {
-      _businessNamecontroller.text = widget.vendorData.businessName;
-      _emailController.text = widget.vendorData.email;
-      _phoneController.text = widget.vendorData.phoneNumber;
-      _addressController.text = widget.vendorData.address;
-      _postalCodeController.text = widget.vendorData.postalCode;
-      _bankNameController.text = widget.vendorData.bankName;
-      _bankAccountNameController.text = widget.vendorData.bankAccountName;
-      _bankAccountNumberController.text = widget.vendorData.bankAccountNumber;
+      _businessNamecontroller.text = widget.vendorData['businessName'];
+      _emailController.text = widget.vendorData['email'];
+      _phoneController.text = widget.vendorData['phoneNumber'];
+      _addressController.text = widget.vendorData['vendorAddress'];
+      _postalCodeController.text = widget.vendorData['vendorPostalCode'];
+      _bankNameController.text = widget.vendorData['vendorBankName'];
+      _bankAccountNameController.text =
+          widget.vendorData['vendorBankAccountName'];
+      _bankAccountNumberController.text =
+          widget.vendorData['vendorBankAccountNumber'];
     });
     super.initState();
   }
@@ -100,7 +102,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
             .doc(_auth.currentUser!.uid)
             .update({'storeImage': downloadUrl});
         setState(() {
-          widget.vendorData?.storeImage = downloadUrl;
+          widget.vendorData?['storeImage'] = downloadUrl;
         });
         EasyLoading.showSuccess('Image uploaded successfully');
       } else {
@@ -178,7 +180,7 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
 
   @override
   Widget build(BuildContext context) {
-    String storeImage = widget.vendorData.storeImage;
+    String storeImage = widget.vendorData['storeImage'];
     if (storeImage.isEmpty) {
       storeImage =
           'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';

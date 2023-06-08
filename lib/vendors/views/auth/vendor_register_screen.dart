@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
-import 'package:second_chance/vendors/controllers/vendor_register_controller.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class VendorRegistrationScreen extends StatefulWidget {
   @override
@@ -16,7 +19,9 @@ class VendorRegistrationScreen extends StatefulWidget {
 
 class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final VendorController _vendorController = VendorController();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late String businessName;
   late String email;
@@ -30,38 +35,78 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
 
   bool _isLoading = false;
 
-  selectGalleryImage() async {
-    Uint8List im = await _vendorController.pickStoreImage(ImageSource.gallery);
+  _uploadVendorImageToStorage(Uint8List? image) async {
+    Reference ref =
+        _storage.ref().child('storeImage').child(_auth.currentUser!.uid);
 
-    setState(() {
-      _image = im;
-    });
+    UploadTask uploadTask = ref.putData(image!);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+
+    return downloadUrl;
   }
 
-  _saveVendorDetail() async {
+  Future<void> _pickStoreImage() async {
+    final ImagePicker _imagePicker = ImagePicker();
+
+    XFile? _file = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (_file != null) {
+      Uint8List imageData = await _file.readAsBytes();
+      setState(() {
+        _image = imageData;
+      });
+    } else {
+      print('No Image Selected');
+    }
+  }
+
+  Future<void> _saveVendorDetail() async {
     EasyLoading.show(status: 'Please Wait');
     if (_formKey.currentState!.validate()) {
-      await _vendorController
-          .registerVendor(
-        businessName,
-        email,
-        phoneNumber,
-        address,
-        postalCode,
-        bankName,
-        bankAccountName,
-        bankAccountNumber,
-        _image,
-      )
-          .whenComplete(() {
-        if (mounted) {
-          setState(() {
-            _formKey.currentState!.reset();
-            _image = null;
-          });
+      try {
+        String? storeImage;
+
+        if (_image != null) {
+          storeImage = await _uploadVendorImageToStorage(_image);
         }
+
+        await _firestore.collection('vendors').doc(_auth.currentUser!.uid).set({
+          'businessName': businessName,
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'vendorAddress': address,
+          'vendorPostalCode': postalCode,
+          'vendorBankName': bankName,
+          'vendorBankAccountName': bankAccountName,
+          'vendorBankAccountNumber': bankAccountNumber,
+          'storeImage': storeImage ?? '',
+          'approved': false,
+          'vendorRegisteredDate': DateTime.now(),
+          'vendorId': _auth.currentUser!.uid,
+        });
+      } catch (e) {
         EasyLoading.dismiss();
-      });
+
+        displayDialog(
+          context,
+          e.toString(),
+          Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 60,
+          ),
+        );
+      }
+
+      if (mounted) {
+        setState(() {
+          _formKey.currentState!.reset();
+          _image = null;
+        });
+      }
+
+      EasyLoading.dismiss();
     } else {
       EasyLoading.dismiss();
     }
@@ -103,7 +148,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                                     )
                                   : IconButton(
                                       onPressed: () {
-                                        selectGalleryImage();
+                                        _pickStoreImage();
                                       },
                                       icon: Icon(CupertinoIcons.photo),
                                     ),

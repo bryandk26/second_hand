@@ -7,7 +7,6 @@ import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
-import 'package:second_chance/vendors/models/vendor_user_models.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/earnings_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/vendor_edit_account_view.dart';
 
@@ -33,10 +32,10 @@ class VendorAccountView extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          VendorUserModel vendorUserModel = VendorUserModel.fromJson(
-              snapshot.data!.data()! as Map<String, dynamic>);
+          Map<String, dynamic> vendorData =
+              snapshot.data!.data() as Map<String, dynamic>;
 
-          String storeImage = vendorUserModel.storeImage.toString();
+          String storeImage = vendorData['storeImage'];
           if (storeImage.isEmpty) {
             storeImage =
                 'https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg';
@@ -74,7 +73,7 @@ class VendorAccountView extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      vendorUserModel.businessName.toString(),
+                      vendorData['businessName'],
                       style: TextStyle(
                         color: blackColor,
                         fontSize: 18,
@@ -82,7 +81,7 @@ class VendorAccountView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      vendorUserModel.email.toString(),
+                      vendorData['email'],
                       style: TextStyle(
                         color: blackColor,
                         fontSize: 14,
@@ -98,7 +97,7 @@ class VendorAccountView extends StatelessWidget {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
                               return VendorEditAccountView(
-                                vendorData: vendorUserModel,
+                                vendorData: vendorData,
                               );
                             },
                           ));
