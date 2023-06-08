@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/controllers/banner_controller.dart';
-import 'package:second_chance/buyers/models/banner_model.dart';
 import 'package:second_chance/theme.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -11,22 +11,32 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  final BannerController _bannerController = BannerController();
-  List<BannerModel> _bannerImages = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _subscription;
+  final List _bannerImage = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _bannerController.getBanners((List<BannerModel> banners) {
-      setState(() {
-        _bannerImages = banners;
+  void getBanners() {
+    _subscription = _firestore
+        .collection('banners')
+        .snapshots()
+        .listen((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          _bannerImage.add(doc['image']);
+        });
       });
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    getBanners();
+  }
+
+  @override
   void dispose() {
-    _bannerController.dispose();
+    _subscription?.cancel();
     super.dispose();
   }
 
@@ -42,13 +52,12 @@ class _BannerWidgetState extends State<BannerWidget> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: PageView.builder(
-          itemCount: _bannerImages.length,
+          itemCount: _bannerImage.length,
           itemBuilder: (context, index) {
-            final banner = _bannerImages[index];
             return ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: banner.image,
+                imageUrl: _bannerImage[index],
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,

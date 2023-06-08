@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:second_chance/buyers/models/buyer_model.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
@@ -84,9 +83,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
-                                    return EditProfileScreen(
-                                      userData: BuyerModel.fromMap(data),
-                                    );
+                                    return EditProfileScreen(userData: data);
                                   },
                                 ));
                               },
@@ -172,7 +169,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return EditProfileScreen(
-                            userData: BuyerModel.fromMap(data),
+                            userData: data,
                           );
                         })).whenComplete(() {
                           Navigator.pop(context);

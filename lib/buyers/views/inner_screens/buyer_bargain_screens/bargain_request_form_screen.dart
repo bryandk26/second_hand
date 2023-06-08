@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/models/buyer_model.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
@@ -88,8 +87,7 @@ class BargainRequestFormScreen extends StatelessWidget {
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
                                           return EditProfileScreen(
-                                              userData:
-                                                  BuyerModel.fromMap(data));
+                                              userData: data);
                                         },
                                       ));
                                     },
@@ -144,7 +142,7 @@ class BargainRequestFormScreen extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return EditProfileScreen(
-                            userData: BuyerModel.fromMap(data),
+                            userData: data,
                           );
                         })).whenComplete(() {
                           Navigator.pop(context);
