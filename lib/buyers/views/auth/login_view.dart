@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/controllers/auth_controller.dart';
 import 'package:second_chance/buyers/views/auth/register_view.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
@@ -14,10 +14,10 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthController _authController = AuthController();
-  late String email;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late String password;
+  late String _email;
+  late String _password;
 
   bool _isLoading = false;
 
@@ -26,7 +26,27 @@ class _LoginViewState extends State<LoginView> {
       _isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      String res = await _authController.loginUsers(email, password);
+      String res = 'something went wrong';
+
+      try {
+        if (_email.isNotEmpty && _password.isNotEmpty) {
+          await _auth.signInWithEmailAndPassword(
+              email: _email, password: _password);
+          res = 'success';
+        } else {
+          res = 'Please fields must not be empty';
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          res = 'No user found';
+        } else if (e.code == 'wrong-password') {
+          res = 'Wrong password';
+        } else {
+          res = e.message ?? 'Something went wrong';
+        }
+      } catch (e) {
+        res = e.toString();
+      }
 
       if (res == 'success') {
         return Navigator.pushReplacement(
@@ -105,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                     labelText: 'Email',
                     context: context,
                     onChanged: (value) {
-                      email = value;
+                      _email = value;
                       return null;
                     },
                   ),
@@ -119,7 +139,7 @@ class _LoginViewState extends State<LoginView> {
                     obsecure: true,
                     context: context,
                     onChanged: (value) {
-                      password = value;
+                      _password = value;
                       return null;
                     },
                   ),

@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/controllers/auth_controller.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
@@ -13,40 +15,96 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final AuthController _authController = AuthController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  late String email;
-
-  late String fullName;
-
-  late String phoneNumber;
-
-  late String password;
+  late String _email;
+  late String _fullName;
+  late String _phoneNumber;
+  late String _password;
+  Uint8List? _image;
 
   bool _isLoading = false;
 
-  Uint8List? _image;
+  _uploadProfileImageToStorage(Uint8List? image) async {
+    Reference ref =
+        _storage.ref().child('profilePics').child(_auth.currentUser!.uid);
+
+    UploadTask uploadTask = ref.putData(image!);
+
+    TaskSnapshot snapshot = await uploadTask;
+
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+
+    return downloadUrl;
+  }
 
   _signUpUser() async {
     setState(() {
       _isLoading = true;
     });
+
     if (_formKey.currentState!.validate()) {
-      String res = await _authController
-          .signUpUsers(email, fullName, phoneNumber, password, _image)
-          .whenComplete(() {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+      String res = 'Some error occurred';
+
+      try {
+        if (_email.isNotEmpty &&
+            _fullName.isNotEmpty &&
+            _phoneNumber.isNotEmpty &&
+            _password.isNotEmpty) {
+          UserCredential cred = await _auth.createUserWithEmailAndPassword(
+            email: _email,
+            password: _password,
+          );
+
+          String? profileImageUrl;
+          if (_image != null) {
+            profileImageUrl = await _uploadProfileImageToStorage(_image);
+          }
+
+          await _firestore.collection('buyers').doc(cred.user!.uid).set(
+            {
+              'email': _email,
+              'fullName': _fullName,
+              'phoneNumber': _phoneNumber,
+              'buyerId': cred.user!.uid,
+              'address': '',
+              'postalCode': '',
+              'bankName': '',
+              'bankAccountName': '',
+              'bankAccountNumber': '',
+              'profileImage': profileImageUrl ?? '',
+              'registeredDate': DateTime.now(),
+            },
+          );
+
+          res = 'success';
+        } else {
+          res = 'Please fields must not be empty';
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          res = 'The password is too weak.';
+        } else if (e.code == 'email-already-in-use') {
+          res = 'The account already exists for that email.';
+        } else if (e.code == 'invalid-email') {
+          res = 'The email address is badly formatted';
+        } else if (e.code == 'invalid-input') {
+          res = 'Please fill all fields';
+        } else {
+          res = e.message ?? 'An error occurred while signing up';
+        }
+      } catch (e) {
+        res = e.toString();
+      }
 
       if (res == 'success') {
         setState(() {
           _formKey.currentState!.reset();
         });
-        return displayDialog(
+        displayDialog(
           context,
           'Congratulations your account has been created!',
           Icon(
@@ -56,9 +114,6 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         );
       } else {
-        setState(() {
-          _isLoading = false;
-        });
         displayDialog(
           context,
           res,
@@ -70,9 +125,6 @@ class _RegisterViewState extends State<RegisterView> {
         );
       }
     } else {
-      setState(() {
-        _isLoading = false;
-      });
       displayDialog(
         context,
         'Please fields must not be empty',
@@ -83,6 +135,10 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       );
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -123,7 +179,7 @@ class _RegisterViewState extends State<RegisterView> {
                     labelText: 'Full Name',
                     context: context,
                     onChanged: (value) {
-                      fullName = value;
+                      _fullName = value;
                       return null;
                     },
                   ),
@@ -136,7 +192,7 @@ class _RegisterViewState extends State<RegisterView> {
                     labelText: 'Email',
                     context: context,
                     onChanged: (value) {
-                      email = value;
+                      _email = value;
                       return null;
                     },
                   ),
@@ -149,7 +205,7 @@ class _RegisterViewState extends State<RegisterView> {
                     labelText: 'Phone Number',
                     context: context,
                     onChanged: (value) {
-                      phoneNumber = value;
+                      _phoneNumber = value;
                       return null;
                     },
                   ),
@@ -163,7 +219,7 @@ class _RegisterViewState extends State<RegisterView> {
                     obsecure: true,
                     context: context,
                     onChanged: (value) {
-                      password = value;
+                      _password = value;
                       return null;
                     },
                   ),

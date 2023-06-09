@@ -23,16 +23,17 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  late String businessName;
-  late String email;
-  late String phoneNumber;
-  String address = '';
-  String postalCode = '';
-  String bankName = '';
-  String bankAccountName = '';
-  String bankAccountNumber = '';
-  Uint8List? _image;
+  late String _businessName;
+  late String _email;
+  late String _phoneNumber;
+  String _address = '';
+  String _postalCode = '';
+  String _bankName = '';
+  String _bankAccountName = '';
+  String _bankAccountNumber = '';
+  String? _storeImage;
 
+  Uint8List? _image;
   bool _isLoading = false;
 
   _uploadVendorImageToStorage(Uint8List? image) async {
@@ -65,22 +66,20 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
     EasyLoading.show(status: 'Please Wait');
     if (_formKey.currentState!.validate()) {
       try {
-        String? storeImage;
-
         if (_image != null) {
-          storeImage = await _uploadVendorImageToStorage(_image);
+          _storeImage = await _uploadVendorImageToStorage(_image);
         }
 
         await _firestore.collection('vendors').doc(_auth.currentUser!.uid).set({
-          'businessName': businessName,
-          'email': email,
-          'phoneNumber': phoneNumber,
-          'vendorAddress': address,
-          'vendorPostalCode': postalCode,
-          'vendorBankName': bankName,
-          'vendorBankAccountName': bankAccountName,
-          'vendorBankAccountNumber': bankAccountNumber,
-          'storeImage': storeImage ?? '',
+          'businessName': _businessName,
+          'email': _email,
+          'phoneNumber': _phoneNumber,
+          'vendorAddress': _address,
+          'vendorPostalCode': _postalCode,
+          'vendorBankName': _bankName,
+          'vendorBankAccountName': _bankAccountName,
+          'vendorBankAccountNumber': _bankAccountNumber,
+          'storeImage': _storeImage ?? '',
           'approved': false,
           'vendorRegisteredDate': DateTime.now(),
           'vendorId': _auth.currentUser!.uid,
@@ -186,7 +185,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Business Name',
                             context: context,
                             onChanged: (value) {
-                              businessName = value;
+                              _businessName = value;
                               return null;
                             },
                           ),
@@ -199,7 +198,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Email Address',
                             context: context,
                             onChanged: (value) {
-                              email = value;
+                              _email = value;
                               return null;
                             },
                           ),
@@ -212,7 +211,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Phone Number',
                             context: context,
                             onChanged: (value) {
-                              phoneNumber = value;
+                              _phoneNumber = value;
                               return null;
                             },
                           ),
@@ -225,7 +224,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Address',
                             context: context,
                             onChanged: (value) {
-                              address = value;
+                              _address = value;
                               return null;
                             },
                             maxLength: 200,
@@ -240,7 +239,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Postal Code',
                             context: context,
                             onChanged: (value) {
-                              postalCode = value;
+                              _postalCode = value;
                               return null;
                             },
                           ),
@@ -271,7 +270,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Bank Name',
                             context: context,
                             onChanged: (value) {
-                              bankName = value;
+                              _bankName = value;
                               return null;
                             },
                           ),
@@ -284,7 +283,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Bank Account Name',
                             context: context,
                             onChanged: (value) {
-                              bankAccountName = value;
+                              _bankAccountName = value;
                               return null;
                             },
                           ),
@@ -297,7 +296,7 @@ class _VendorRegistrationScreenState extends State<VendorRegistrationScreen> {
                             labelText: 'Bank Account Number',
                             context: context,
                             onChanged: (value) {
-                              bankAccountNumber = value;
+                              _bankAccountNumber = value;
                               return null;
                             },
                           ),
