@@ -169,7 +169,7 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                           icon: Icons.check,
-                          label: 'Accepted',
+                          label: 'Accept',
                         ),
                       ],
                     ))

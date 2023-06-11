@@ -36,25 +36,19 @@ class _InputPaymentFromVendorWarrantyViewState
         final String orderId = widget.orderData['orderId'];
 
         try {
-          // Create a reference to the paymentReceipt image file in the 'paymentReceipt' folder
           Reference ref = FirebaseStorage.instance
               .ref()
               .child('RefundWarranty')
               .child('$orderId.jpg');
 
-          // Read the image data as Uint8List from XFile
           Uint8List imageBytes = await _image!.readAsBytes();
 
-          // Upload the image data to the storage bucket
           UploadTask uploadTask = ref.putData(imageBytes);
 
-          // Await for the upload to complete
           TaskSnapshot snapshot = await uploadTask;
 
-          // Get the download URL of the uploaded image
           String imageUrl = await snapshot.ref.getDownloadURL();
 
-          // Update the 'paymentReceipt' field in the 'orders' collection with the download URL
           await FirebaseFirestore.instance
               .collection('orders')
               .doc(orderId)

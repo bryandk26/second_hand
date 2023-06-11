@@ -116,7 +116,7 @@ class CartScreen extends StatelessWidget {
       bottomSheet: Padding(
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
-          onTap: _cartProvider.totalPrice == 0.00
+          onTap: _cartProvider.getTotalPrice == 0.00
               ? null
               : () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -125,9 +125,10 @@ class CartScreen extends StatelessWidget {
                 },
           child: ButtonGlobal(
               isLoading: _isLoading,
-              color: _cartProvider.totalPrice == 0.00 ? greyColor : blackColor,
+              color:
+                  _cartProvider.getTotalPrice == 0.00 ? greyColor : blackColor,
               text:
-                  '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(_cartProvider.totalPrice)}' +
+                  '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(_cartProvider.getTotalPrice)}' +
                       ' ' +
                       'CHECKOUT'),
         ),

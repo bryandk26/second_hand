@@ -75,9 +75,9 @@ class EarningsView extends StatelessWidget {
                     );
                   }
 
-                  double totalOrder = 0.0;
+                  double totalEarnings = 0.0;
                   for (var orderItem in snapshot.data!.docs) {
-                    totalOrder += orderItem['productPrice'];
+                    totalEarnings += orderItem['productPrice'];
                   }
 
                   return Center(
@@ -106,7 +106,7 @@ class EarningsView extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
-                                    '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(totalOrder)}',
+                                    '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(totalEarnings)}',
                                     style: TextStyle(
                                       color: Colors.green,
                                       fontSize: 18,

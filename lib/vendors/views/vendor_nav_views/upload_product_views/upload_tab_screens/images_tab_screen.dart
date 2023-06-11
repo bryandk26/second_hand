@@ -23,9 +23,9 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
   final ImagePicker picker = ImagePicker();
 
   List<File> _image = [];
-  List<String> _imageUrlList = [];
+  List<String> _imageUrlLists = [];
 
-  chooseImage() async {
+  _chooseImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) {
@@ -35,11 +35,11 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
       setState(() {
         _image.add(File(pickedFile.path));
       });
-      await uploadImage(_image.last);
+      await _uploadImage(_image.last);
     }
   }
 
-  Future<void> uploadImage(File image) async {
+  Future<void> _uploadImage(File image) async {
     final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
     final Reference ref =
         _firebaseStorage.ref().child('productImage').child(Uuid().v4());
@@ -47,10 +47,10 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
     await ref.putFile(image).whenComplete(() async {
       await ref.getDownloadURL().then((value) {
         setState(() {
-          _imageUrlList.add(value);
+          _imageUrlLists.add(value);
         });
         Provider.of<ProductProvider>(context, listen: false)
-            .getFormData(imageUrlList: _imageUrlList);
+            .getFormData(imageUrlList: _imageUrlLists);
         EasyLoading.dismiss();
       });
     });
@@ -79,7 +79,7 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
                     ? Center(
                         child: IconButton(
                             onPressed: () {
-                              chooseImage();
+                              _chooseImage();
                             },
                             icon: Icon(Icons.add)),
                       )

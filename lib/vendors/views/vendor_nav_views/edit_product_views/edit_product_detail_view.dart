@@ -69,9 +69,6 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
     Navigator.pop(context);
   }
 
-  double? productPrice;
-  int? productQuantity;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

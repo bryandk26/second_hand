@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:second_chance/buyers/views/auth/login_view.dart';
+import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
@@ -80,7 +80,7 @@ class LandingScreen extends StatelessWidget {
 
                     Navigator.pushReplacement(context, MaterialPageRoute(
                       builder: (context) {
-                        return LoginView();
+                        return AuthenticationWrapper();
                       },
                     ));
                   },

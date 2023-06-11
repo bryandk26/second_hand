@@ -11,7 +11,7 @@ class CartProvider with ChangeNotifier {
     return _cartItems;
   }
 
-  double get totalPrice {
+  double get getTotalPrice {
     var total = 0.00;
 
     _cartItems.forEach((key, value) {

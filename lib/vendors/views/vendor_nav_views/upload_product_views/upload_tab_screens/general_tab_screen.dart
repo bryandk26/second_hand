@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:second_chance/buyers/views/widgets/dropdown_form_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/provider/product_provider.dart';
-import 'package:intl/intl.dart';
 
 class GeneralTabScreen extends StatefulWidget {
   @override
@@ -37,14 +36,6 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
   void initState() {
     _getCategories();
     super.initState();
-  }
-
-  String formatedDate(date) {
-    final outputDateFormat = DateFormat('dd/MM/yyy');
-
-    final outputFormat = outputDateFormat.format(date);
-
-    return outputFormat;
   }
 
   @override

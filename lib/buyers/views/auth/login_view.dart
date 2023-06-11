@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/auth/register_view.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
-import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
 
@@ -53,7 +53,7 @@ class _LoginViewState extends State<LoginView> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return RoleView();
+              return AuthenticationWrapper();
             },
           ),
         );
