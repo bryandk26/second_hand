@@ -124,7 +124,7 @@ class _InputPaymentFromVendorWarrantyViewState
                 ),
                 child: ListTile(
                   title: Text(
-                    'Refund Warrantly Receipt',
+                    'Refund Warranty Receipt',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

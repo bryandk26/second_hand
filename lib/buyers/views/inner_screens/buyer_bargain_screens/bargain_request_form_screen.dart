@@ -10,10 +10,16 @@ import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
 import 'package:uuid/uuid.dart';
 
-class BargainRequestFormScreen extends StatelessWidget {
+class BargainRequestFormScreen extends StatefulWidget {
   final dynamic productData;
   const BargainRequestFormScreen({super.key, required this.productData});
 
+  @override
+  State<BargainRequestFormScreen> createState() =>
+      _BargainRequestFormScreenState();
+}
+
+class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('buyers');
@@ -22,6 +28,97 @@ class BargainRequestFormScreen extends StatelessWidget {
     late double bargainPrice;
 
     bool _isLoading = false;
+
+    void submitBargainRequest() {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          _isLoading = true;
+        });
+
+        final bargainId = Uuid().v4();
+
+        users
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get()
+            .then((snapshot) {
+          if (snapshot.exists) {
+            Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+            FirebaseFirestore.instance
+                .collection('bargains')
+                .doc(bargainId)
+                .set({
+              'bargainId': bargainId,
+              'bargainPrice': bargainPrice,
+              'email': data['email'],
+              'phone': data['phoneNumber'],
+              'address': data['address'],
+              'postalCode': data['postalCode'],
+              'buyerId': data['buyerId'],
+              'buyerPhoto': data['profileImage'],
+              'fullName': data['fullName'],
+              'vendorId': widget.productData['vendorId'],
+              'businessName': widget.productData['businessName'],
+              'productId': widget.productData['productId'],
+              'productName': widget.productData['productName'],
+              'productPrice': widget.productData['productPrice'],
+              'category': widget.productData['category'],
+              'productImage': widget.productData['imageUrlList'],
+              'productSize': widget.productData['size'],
+              'confirmed': false,
+              'accepted': false,
+              'bargainRequestDate': DateTime.now(),
+            }).then((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MainScreen(),
+                ),
+              );
+            }).catchError((error) {
+              displayDialog(
+                context,
+                'Error submitting bargain request: $error',
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 60,
+                ),
+              );
+              setState(() {
+                _isLoading = false;
+              });
+            });
+          } else {
+            displayDialog(
+              context,
+              'User data not found.',
+              Icon(
+                Icons.error,
+                color: Colors.red,
+                size: 60,
+              ),
+            );
+            setState(() {
+              _isLoading = false;
+            });
+          }
+        }).catchError((error) {
+          displayDialog(
+            context,
+            'Error retrieving user data: $error',
+            Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 60,
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      }
+    }
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
@@ -156,54 +253,7 @@ class BargainRequestFormScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            _isLoading = true;
-
-                            final bargainId = Uuid().v4();
-
-                            FirebaseFirestore.instance
-                                .collection('bargains')
-                                .doc(bargainId)
-                                .set({
-                              'bargainId': bargainId,
-                              'bargainPrice': bargainPrice,
-                              'email': data['email'],
-                              'phone': data['phoneNumber'],
-                              'address': data['address'],
-                              'postalCode': data['postalCode'],
-                              'buyerId': data['buyerId'],
-                              'buyerPhoto': data['profileImage'],
-                              'fullName': data['fullName'],
-                              'vendorId': productData['vendorId'],
-                              'businessName': productData['businessName'],
-                              'productId': productData['productId'],
-                              'productName': productData['productName'],
-                              'productPrice': productData['productPrice'],
-                              'category': productData['category'],
-                              'productImage': productData['imageUrlList'],
-                              'productSize': productData['size'],
-                              'confirmed': false,
-                              'accepted': false,
-                              'bargainRequestDate': DateTime.now(),
-                            }).then((_) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MainScreen(),
-                                  ));
-                            }).catchError((error) {
-                              displayDialog(
-                                context,
-                                'Error submitting bargain request: $error',
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                  size: 60,
-                                ),
-                              );
-                              _isLoading = false;
-                            });
-                          }
+                          submitBargainRequest();
                         },
                         child: ButtonGlobal(
                             isLoading: _isLoading, text: 'SUBMIT')),

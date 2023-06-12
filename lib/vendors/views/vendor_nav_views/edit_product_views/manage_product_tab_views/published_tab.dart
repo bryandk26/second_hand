@@ -9,6 +9,17 @@ import 'package:second_chance/vendors/views/vendor_nav_views/edit_product_views/
 class PublishedTab extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> deleteProduct(String productId) async {
+    await _firestore.collection('products').doc(productId).delete();
+  }
+
+  Future<void> unpublishProduct(String productId) async {
+    await _firestore
+        .collection('products')
+        .doc(productId)
+        .update({'approved': false});
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -107,10 +118,8 @@ class PublishedTab extends StatelessWidget {
                       SlidableAction(
                         flex: 2,
                         onPressed: (context) async {
-                          await _firestore
-                              .collection('products')
-                              .doc(vendorProductsData['productId'])
-                              .update({'approved': false});
+                          await unpublishProduct(
+                              vendorProductsData['productId']);
                         },
                         backgroundColor: Color(0xFF21B7CA),
                         foregroundColor: Colors.white,
@@ -120,10 +129,7 @@ class PublishedTab extends StatelessWidget {
                       SlidableAction(
                         flex: 2,
                         onPressed: (context) async {
-                          await _firestore
-                              .collection('products')
-                              .doc(vendorProductsData['productId'])
-                              .delete();
+                          await deleteProduct(vendorProductsData['productId']);
                         },
                         backgroundColor: Color(0xFFFE4A49),
                         foregroundColor: Colors.white,

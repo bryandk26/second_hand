@@ -12,12 +12,12 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WelcomeText(),
+          WelcomeTextWidget(),
           SizedBox(
             height: 14,
           ),
           BannerWidget(),
-          CategoryText(),
+          CategoryTextWidget(),
         ],
       ),
     );

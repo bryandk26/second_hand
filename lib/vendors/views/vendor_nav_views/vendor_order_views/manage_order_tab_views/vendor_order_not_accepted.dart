@@ -16,6 +16,24 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> rejectOrder(String orderId) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'accepted': true,
+      'status': 'Canceled',
+    });
+  }
+
+  Future<void> acceptOrder(String orderId, String productId) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'accepted': true,
+      'status': 'Waiting For Payment',
+    });
+
+    await _firestore.collection('products').doc(productId).update({
+      'onPayment': true,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
@@ -144,13 +162,7 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                   if (!document['accepted'])
                     SlidableAction(
                       onPressed: (context) async {
-                        await _firestore
-                            .collection('orders')
-                            .doc(document['orderId'])
-                            .update({
-                          'accepted': true,
-                          'status': 'Canceled',
-                        });
+                        await rejectOrder(document['orderId']);
                       },
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
@@ -159,25 +171,15 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                     ),
                   SlidableAction(
                     onPressed: (context) async {
-                      await _firestore
-                          .collection('orders')
-                          .doc(document['orderId'])
-                          .update({
-                        'accepted': true,
-                        'status': 'Waiting For Payment'
-                      });
-
-                      await FirebaseFirestore.instance
-                          .collection('products')
-                          .doc(document['productId'])
-                          .update({
-                        'onPayment': true,
-                      });
+                      await acceptOrder(
+                        document['orderId'],
+                        document['productId'],
+                      );
                     },
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     icon: Icons.check,
-                    label: !document['accepted'] ? 'Accept' : 'Accepted',
+                    label: 'Accept',
                   ),
                 ],
               ),

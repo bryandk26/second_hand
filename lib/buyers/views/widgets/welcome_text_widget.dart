@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class WelcomeText extends StatelessWidget {
-  const WelcomeText({
+class WelcomeTextWidget extends StatelessWidget {
+  const WelcomeTextWidget({
     Key? key,
   }) : super(key: key);
 

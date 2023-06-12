@@ -7,10 +7,15 @@ import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 
-class InputDeliveryOrderView extends StatelessWidget {
+class InputDeliveryOrderView extends StatefulWidget {
   final dynamic orderData;
   const InputDeliveryOrderView({super.key, required this.orderData});
 
+  @override
+  State<InputDeliveryOrderView> createState() => _InputDeliveryOrderViewState();
+}
+
+class _InputDeliveryOrderViewState extends State<InputDeliveryOrderView> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -19,6 +24,48 @@ class InputDeliveryOrderView extends StatelessWidget {
     late String receipt;
 
     bool _isLoading = false;
+
+    Future<void> submitDeliveryOrderDetail() async {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          _isLoading = true;
+        });
+
+        try {
+          await FirebaseFirestore.instance
+              .collection('orders')
+              .doc(widget.orderData['orderId'])
+              .update({
+            'expedition': expedition,
+            'receipt': receipt,
+            'status': 'On Delivery',
+          });
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VendorMainScreen(
+                initialIndex: 3,
+              ),
+            ),
+          );
+        } catch (error) {
+          displayDialog(
+            context,
+            'Error submitting delivery order: $error',
+            Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 60,
+            ),
+          );
+
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -77,37 +124,7 @@ class InputDeliveryOrderView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
             onTap: () {
-              if (_formKey.currentState!.validate()) {
-                _isLoading = true;
-
-                FirebaseFirestore.instance
-                    .collection('orders')
-                    .doc(orderData['orderId'])
-                    .update({
-                  'expedition': expedition,
-                  'receipt': receipt,
-                  'status': 'On Delivery',
-                }).then((_) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VendorMainScreen(
-                          initialIndex: 3,
-                        ),
-                      ));
-                }).catchError((error) {
-                  displayDialog(
-                    context,
-                    'Error submitting delivery order: $error',
-                    Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 60,
-                    ),
-                  );
-                  _isLoading = false;
-                });
-              }
+              submitDeliveryOrderDetail();
             },
             child: ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT')),
       ),

@@ -66,6 +66,10 @@ class _RequestWarrantyOrderScreenState
     CollectionReference users = FirebaseFirestore.instance.collection('buyers');
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+    late String reason;
+
+    bool _isLoading = false;
+
     Future<void> _pickImageFromGallery() async {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedImage =
@@ -77,9 +81,60 @@ class _RequestWarrantyOrderScreenState
       }
     }
 
-    late String reason;
+    Future<void> submitWarrantyRequest() async {
+      if (_formKey.currentState!.validate()) {
+        if (_pickedImageFile == null) {
+          displayDialog(
+            context,
+            'Please select an image',
+            Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 60,
+            ),
+          );
+        } else {
+          setState(() {
+            _isLoading = true;
+          });
 
-    bool _isLoading = false;
+          try {
+            String orderId = widget.orderData['orderId'];
+
+            await FirebaseFirestore.instance
+                .collection('orders')
+                .doc(orderId)
+                .update({
+              'requestReason': reason,
+              'status': 'Request Warranty',
+            });
+
+            await uploadPaymentReceipt();
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainScreen(),
+              ),
+            );
+          } catch (error) {
+            displayDialog(
+              context,
+              'Error submitting warranty request: $error',
+              Icon(
+                Icons.error,
+                color: Colors.red,
+                size: 60,
+              ),
+            );
+          }
+
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
@@ -201,54 +256,7 @@ class _RequestWarrantyOrderScreenState
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_pickedImageFile == null) {
-                            displayDialog(
-                              context,
-                              'Please select an image',
-                              Icon(
-                                Icons.error,
-                                color: Colors.red,
-                                size: 60,
-                              ),
-                            );
-                          } else {
-                            setState(() {
-                              _isLoading = true;
-                            });
-
-                            FirebaseFirestore.instance
-                                .collection('orders')
-                                .doc(widget.orderData['orderId'])
-                                .update({
-                              'requestReason': reason,
-                              'status': 'Request Warranty',
-                            }).then((_) async {
-                              await uploadPaymentReceipt();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainScreen(),
-                                ),
-                              );
-                            }).catchError((error) {
-                              displayDialog(
-                                context,
-                                'Error submitting delivery order: $error',
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                  size: 60,
-                                ),
-                              );
-                              setState(() {
-                                _isLoading = false;
-                              });
-                            });
-                          }
-                        }
-                      },
+                      onTap: () => submitWarrantyRequest(),
                       child:
                           ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT'),
                     ),

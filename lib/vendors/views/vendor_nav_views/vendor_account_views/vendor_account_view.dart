@@ -7,6 +7,7 @@ import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/earnings_view.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_account_views/vendor_edit_account_view.dart';
 
@@ -118,11 +119,6 @@ class VendorAccountView extends StatelessWidget {
                     Divider(),
                     SizedBox(height: 10),
                     ProfileMenuWidget(
-                      title: 'Settings',
-                      icon: Icons.settings_outlined,
-                      onPress: () {},
-                    ),
-                    ProfileMenuWidget(
                       title: 'Earnings',
                       icon: CupertinoIcons.money_dollar,
                       onPress: () {
@@ -136,7 +132,13 @@ class VendorAccountView extends StatelessWidget {
                     ProfileMenuWidget(
                       title: 'Orders',
                       icon: Icons.shopping_cart,
-                      onPress: () {},
+                      onPress: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) {
+                            return VendorMainScreen(initialIndex: 3);
+                          },
+                        ));
+                      },
                     ),
                     Divider(),
                     ProfileMenuWidget(

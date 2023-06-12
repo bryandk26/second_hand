@@ -13,21 +13,71 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  const CheckoutScreen({Key? key}) : super(key: key);
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late CartProvider _cartProvider;
+  CollectionReference users = FirebaseFirestore.instance.collection('buyers');
+
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _cartProvider = Provider.of<CartProvider>(context, listen: false);
+  }
+
+  Future<void> submitOrderRequest() async {
+    EasyLoading.show(status: 'Placing Order');
+
+    final userSnapshot =
+        await users.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    final userData = userSnapshot.data() as Map<String, dynamic>;
+
+    for (final cartItem in _cartProvider.getCartItem.values) {
+      final orderId = Uuid().v4();
+
+      await _firestore.collection('orders').doc(orderId).set({
+        'orderId': orderId,
+        'vendorId': cartItem.vendorId,
+        'businessName': cartItem.businessName,
+        'email': userData['email'],
+        'phone': userData['phoneNumber'],
+        'address': userData['address'],
+        'postalCode': userData['postalCode'],
+        'buyerId': userData['buyerId'],
+        'fullName': userData['fullName'],
+        'buyerPhoto': userData['profileImage'],
+        'productName': cartItem.productName,
+        'productPrice': cartItem.price,
+        'productId': cartItem.productId,
+        'productImage': cartItem.imageUrl,
+        'productSize': cartItem.productSize,
+        'orderDate': DateTime.now(),
+        'accepted': false,
+      });
+    }
+
+    setState(() {
+      _cartProvider.getCartItem.clear();
+    });
+
+    EasyLoading.dismiss();
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return MainScreen();
+    }));
+
+    Provider.of<CartProvider>(context, listen: false).removeAllCartItem();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final CartProvider _cartProvider = Provider.of<CartProvider>(context);
-    CollectionReference users = FirebaseFirestore.instance.collection('buyers');
-
-    bool _isLoading = false;
-
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
       builder:
@@ -81,11 +131,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return EditProfileScreen(userData: data);
-                                  },
-                                ));
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return EditProfileScreen(userData: data);
+                                }));
                               },
                               child: Icon(CupertinoIcons.pencil),
                             )
@@ -112,53 +161,54 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                 ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _cartProvider.getCartItem.length,
-                    itemBuilder: (context, index) {
-                      final cartData =
-                          _cartProvider.getCartItem.values.toList()[index];
-                      return Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  shrinkWrap: true,
+                  itemCount: _cartProvider.getCartItem.length,
+                  itemBuilder: (context, index) {
+                    final cartData =
+                        _cartProvider.getCartItem.values.toList()[index];
+                    return Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                            ),
+                            child: Image.network(
+                              cartData.imageUrl[0],
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
-                        child: Row(children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                              ),
-                              child: Image.network(
-                                cartData.imageUrl[0],
-                                fit: BoxFit.contain,
-                              ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  cartData.productName,
+                                  style: titleText,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(cartData.price)}',
+                                  style: subTitle.apply(color: Colors.green),
+                                ),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cartData.productName,
-                                    style: titleText,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(cartData.price)}',
-                                    style: subTitle.apply(color: Colors.green),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ]),
-                      );
-                    }),
+                        ),
+                      ]),
+                    );
+                  },
+                ),
               ],
             ),
             bottomSheet: data['address'] == '' || data['postalCode'] == ''
@@ -168,59 +218,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return EditProfileScreen(
-                            userData: data,
-                          );
+                          return EditProfileScreen(userData: data);
                         })).whenComplete(() {
                           Navigator.pop(context);
                         });
                       },
                       child: ButtonGlobal(
-                          isLoading: _isLoading, text: 'Enter Billing Address'),
+                        isLoading: _isLoading,
+                        text: 'Enter Billing Address',
+                      ),
                     ),
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {
-                        EasyLoading.show(status: 'Placing Order');
-                        _cartProvider.getCartItem.forEach((key, item) {
-                          final orderId = Uuid().v4();
-                          _firestore.collection('orders').doc(orderId).set({
-                            'orderId': orderId,
-                            'vendorId': item.vendorId,
-                            'businessName': item.businessName,
-                            'email': data['email'],
-                            'phone': data['phoneNumber'],
-                            'address': data['address'],
-                            'postalCode': data['postalCode'],
-                            'buyerId': data['buyerId'],
-                            'fullName': data['fullName'],
-                            'buyerPhoto': data['profileImage'],
-                            'productName': item.productName,
-                            'productPrice': item.price,
-                            'productId': item.productId,
-                            'productImage': item.imageUrl,
-                            'productSize': item.productSize,
-                            'orderDate': DateTime.now(),
-                            'accepted': false,
-                          }).whenComplete(() {
-                            setState(() {
-                              _cartProvider.getCartItem.clear();
-                            });
-
-                            EasyLoading.dismiss();
-
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return MainScreen();
-                            }));
-
-                            Provider.of<CartProvider>(context, listen: false)
-                                .removeAllCartItem();
-                          });
-                        });
-                      },
+                      onTap: submitOrderRequest,
                       child: ButtonGlobal(
                         isLoading: _isLoading,
                         text: 'PLACE ORDER',

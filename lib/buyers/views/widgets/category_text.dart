@@ -4,12 +4,12 @@ import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/home_products.dart';
 import 'package:second_chance/buyers/views/widgets/main_products_widget.dart';
 
-class CategoryText extends StatefulWidget {
+class CategoryTextWidget extends StatefulWidget {
   @override
-  State<CategoryText> createState() => _CategoryTextState();
+  State<CategoryTextWidget> createState() => _CategoryTextWidgetState();
 }
 
-class _CategoryTextState extends State<CategoryText> {
+class _CategoryTextWidgetState extends State<CategoryTextWidget> {
   String? _selectedCategory;
 
   @override

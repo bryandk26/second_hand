@@ -117,11 +117,6 @@ class AccountScreen extends StatelessWidget {
                     Divider(),
                     SizedBox(height: 10),
                     ProfileMenuWidget(
-                      title: 'Settings',
-                      icon: Icons.settings_outlined,
-                      onPress: () {},
-                    ),
-                    ProfileMenuWidget(
                       title: 'Bargain Request',
                       icon: Icons.money,
                       onPress: () {

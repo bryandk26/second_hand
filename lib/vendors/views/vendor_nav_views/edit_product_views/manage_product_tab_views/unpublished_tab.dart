@@ -8,6 +8,17 @@ import 'package:second_chance/theme.dart';
 class UnpublishedTab extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> deleteProduct(String productId) async {
+    await _firestore.collection('products').doc(productId).delete();
+  }
+
+  Future<void> publishProduct(String productId) async {
+    await _firestore
+        .collection('products')
+        .doc(productId)
+        .update({'approved': true});
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -86,18 +97,13 @@ class UnpublishedTab extends StatelessWidget {
                     ),
                   ),
                   key: const ValueKey(0),
-
                   startActionPane: ActionPane(
                     motion: ScrollMotion(),
-
                     children: [
                       SlidableAction(
                         flex: 2,
                         onPressed: (context) async {
-                          await _firestore
-                              .collection('products')
-                              .doc(vendorProductsData['productId'])
-                              .update({'approved': true});
+                          await publishProduct(vendorProductsData['productId']);
                         },
                         backgroundColor: Color(0xFF21B7CA),
                         foregroundColor: Colors.white,
@@ -107,10 +113,7 @@ class UnpublishedTab extends StatelessWidget {
                       SlidableAction(
                         flex: 2,
                         onPressed: (context) async {
-                          await _firestore
-                              .collection('products')
-                              .doc(vendorProductsData['productId'])
-                              .delete();
+                          await deleteProduct(vendorProductsData['productId']);
                         },
                         backgroundColor: Color(0xFFFE4A49),
                         foregroundColor: Colors.white,

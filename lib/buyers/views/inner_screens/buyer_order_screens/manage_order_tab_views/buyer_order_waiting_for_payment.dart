@@ -16,6 +16,16 @@ class BuyerOrderWaitingPaymentTab extends StatelessWidget {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> cancelOrder(String orderId, String productId) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'status': 'Canceled',
+    });
+
+    await _firestore.collection('products').doc(productId).update({
+      'onPayment': false,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
@@ -136,19 +146,10 @@ class BuyerOrderWaitingPaymentTab extends StatelessWidget {
                 children: [
                   SlidableAction(
                     onPressed: (context) async {
-                      await _firestore
-                          .collection('orders')
-                          .doc(document['orderId'])
-                          .update({
-                        'status': 'Canceled',
-                      });
-
-                      await _firestore
-                          .collection('products')
-                          .doc(document['productId'])
-                          .update({
-                        'onPayment': false,
-                      });
+                      await cancelOrder(
+                        document['orderId'],
+                        document['productId'],
+                      );
                     },
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,

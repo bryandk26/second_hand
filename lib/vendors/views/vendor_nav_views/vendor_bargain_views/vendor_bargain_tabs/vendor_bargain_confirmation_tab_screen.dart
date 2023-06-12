@@ -23,6 +23,62 @@ class VendorBargainConfirmationTab extends StatelessWidget {
         .where('confirmed', isEqualTo: false)
         .snapshots();
 
+    Future<void> rejectBargainRequest(String bargainId) async {
+      await _firestore.collection('bargains').doc(bargainId).update({
+        'confirmed': true,
+      });
+    }
+
+    Future<void> acceptBargainRequest(
+      String bargainId,
+      String vendorId,
+      String businessName,
+      String email,
+      String phone,
+      String address,
+      String postalCode,
+      String buyerId,
+      String fullName,
+      String buyerPhoto,
+      String productName,
+      double bargainPrice,
+      String productId,
+      List<String> productImage,
+      String productSize,
+    ) async {
+      final orderId = Uuid().v4();
+
+      await _firestore.collection('bargains').doc(bargainId).update({
+        'confirmed': true,
+        'accepted': true,
+      });
+
+      await _firestore.collection('orders').doc(orderId).set({
+        'orderId': orderId,
+        'vendorId': vendorId,
+        'businessName': businessName,
+        'email': email,
+        'phone': phone,
+        'address': address,
+        'postalCode': postalCode,
+        'buyerId': buyerId,
+        'fullName': fullName,
+        'buyerPhoto': buyerPhoto,
+        'productName': productName,
+        'productPrice': bargainPrice,
+        'productId': productId,
+        'productImage': productImage,
+        'productSize': productSize,
+        'orderDate': DateTime.now(),
+        'accepted': true,
+        'status': 'Waiting For Payment',
+      });
+
+      await _firestore.collection('products').doc(productId).update({
+        'onPayment': true,
+      });
+    }
+
     return StreamBuilder<QuerySnapshot>(
       stream: _bargainStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -129,10 +185,7 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                   if (!document['accepted'])
                     SlidableAction(
                       onPressed: (context) async {
-                        await _firestore
-                            .collection('bargains')
-                            .doc(document['bargainId'])
-                            .update({'confirmed': true});
+                        await rejectBargainRequest(document['bargainId']);
                       },
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
@@ -141,43 +194,23 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                     ),
                   SlidableAction(
                     onPressed: (context) async {
-                      final orderId = Uuid().v4();
-
-                      await _firestore
-                          .collection('bargains')
-                          .doc(document['bargainId'])
-                          .update({
-                        'confirmed': true,
-                        'accepted': true,
-                      }).then((value) async {
-                        await _firestore.collection('orders').doc(orderId).set({
-                          'orderId': orderId,
-                          'vendorId': document['vendorId'],
-                          'businessName': document['businessName'],
-                          'email': document['email'],
-                          'phone': document['phone'],
-                          'address': document['address'],
-                          'postalCode': document['postalCode'],
-                          'buyerId': document['buyerId'],
-                          'fullName': document['fullName'],
-                          'buyerPhoto': document['buyerPhoto'],
-                          'productName': document['productName'],
-                          'productPrice': document['bargainPrice'],
-                          'productId': document['productId'],
-                          'productImage': document['productImage'],
-                          'productSize': document['productSize'],
-                          'orderDate': DateTime.now(),
-                          'accepted': true,
-                          'status': 'Waiting For Payment',
-                        });
-
-                        await FirebaseFirestore.instance
-                            .collection('products')
-                            .doc(document['productId'])
-                            .update({
-                          'onPayment': true,
-                        });
-                      });
+                      await acceptBargainRequest(
+                        document['bargainId'],
+                        document['vendorId'],
+                        document['businessName'],
+                        document['email'],
+                        document['phone'],
+                        document['address'],
+                        document['postalCode'],
+                        document['buyerId'],
+                        document['fullName'],
+                        document['buyerPhoto'],
+                        document['productName'],
+                        document['bargainPrice'],
+                        document['productId'],
+                        List<String>.from(document['productImage']),
+                        document['productSize'],
+                      );
                     },
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,

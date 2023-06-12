@@ -7,10 +7,15 @@ import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
 
-class InputWarrantyOrderView extends StatelessWidget {
+class InputWarrantyOrderView extends StatefulWidget {
   final dynamic orderData;
   const InputWarrantyOrderView({super.key, required this.orderData});
 
+  @override
+  State<InputWarrantyOrderView> createState() => _InputWarrantyOrderViewState();
+}
+
+class _InputWarrantyOrderViewState extends State<InputWarrantyOrderView> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -19,6 +24,45 @@ class InputWarrantyOrderView extends StatelessWidget {
     late String warrantyReceipt;
 
     bool _isLoading = false;
+
+    void submitWarrantyDeliveryDetail() {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          _isLoading = true;
+        });
+
+        FirebaseFirestore.instance
+            .collection('orders')
+            .doc(widget.orderData['orderId'])
+            .update({
+          'warrantyExpedition': warrantyExpedition,
+          'warrantyReceipt': warrantyReceipt,
+          'status': 'Waiting Vendor Payment',
+        }).then((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainScreen(
+                initialIndex: 5,
+              ),
+            ),
+          );
+        }).catchError((error) {
+          displayDialog(
+            context,
+            'Error submitting delivery warranty order: $error',
+            Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 60,
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -76,39 +120,7 @@ class InputWarrantyOrderView extends StatelessWidget {
       bottomSheet: Padding(
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
-            onTap: () {
-              if (_formKey.currentState!.validate()) {
-                _isLoading = true;
-
-                FirebaseFirestore.instance
-                    .collection('orders')
-                    .doc(orderData['orderId'])
-                    .update({
-                  'warrantyExpedition': warrantyExpedition,
-                  'warrantyReceipt': warrantyReceipt,
-                  'status': 'Waiting Vendor Payment',
-                }).then((_) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainScreen(
-                          initialIndex: 5,
-                        ),
-                      ));
-                }).catchError((error) {
-                  displayDialog(
-                    context,
-                    'Error submitting delivery warranty order: $error',
-                    Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 60,
-                    ),
-                  );
-                  _isLoading = false;
-                });
-              }
-            },
+            onTap: () => submitWarrantyDeliveryDetail(),
             child: ButtonGlobal(isLoading: _isLoading, text: 'SUBMIT')),
       ),
     );

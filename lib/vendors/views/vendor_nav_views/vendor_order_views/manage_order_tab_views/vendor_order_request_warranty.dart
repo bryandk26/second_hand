@@ -15,6 +15,19 @@ class VendorOrderWarrantyTab extends StatelessWidget {
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> rejectWarrantyRequest(String orderId) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'status': 'Rejected',
+    });
+  }
+
+  Future<void> acceptWarrantyRequest(String orderId) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'status': 'Waiting Delivery',
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
@@ -147,12 +160,7 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                       children: [
                         SlidableAction(
                           onPressed: (context) async {
-                            await _firestore
-                                .collection('orders')
-                                .doc(document['orderId'])
-                                .update({
-                              'status': 'Done',
-                            });
+                            await rejectWarrantyRequest(document['orderId']);
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
@@ -161,10 +169,7 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                         ),
                         SlidableAction(
                           onPressed: (context) async {
-                            await _firestore
-                                .collection('orders')
-                                .doc(document['orderId'])
-                                .update({'status': 'Waiting Delivery'});
+                            await acceptWarrantyRequest(document['orderId']);
                           },
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
