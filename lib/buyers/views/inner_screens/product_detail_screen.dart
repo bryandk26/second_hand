@@ -187,11 +187,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     SizedBox(height: 16),
                     Text(
                       widget.productData['productName'],
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
+                      style: titleText,
                     ),
                     SizedBox(height: 12),
                     Text(

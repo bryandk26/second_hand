@@ -101,11 +101,7 @@ class AllProductsScreen extends StatelessWidget {
                           children: [
                             Text(
                               productData['productName'],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 4,
-                              ),
+                              style: subTitle,
                             ),
                             SizedBox(
                               height: 10,

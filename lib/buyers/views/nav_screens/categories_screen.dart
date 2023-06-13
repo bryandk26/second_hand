@@ -126,11 +126,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           categoryData['categoryName'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                          ),
+                          style: titleText,
                         ),
                       ),
                     ],
