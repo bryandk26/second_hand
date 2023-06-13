@@ -59,7 +59,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
                 labelText: 'Product Name',
                 context: context,
                 onChanged: (value) {
-                  _product_provider.getFormData(productName: value);
+                  _product_provider.saveFormData(productName: value);
                   return null;
                 },
               ),
@@ -72,7 +72,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
                 labelText: 'Product Price',
                 context: context,
                 onChanged: (value) {
-                  _product_provider.getFormData(
+                  _product_provider.saveFormData(
                       productPrice: double.parse(value));
                   return null;
                 },
@@ -85,7 +85,8 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
                   labelText: 'Category',
                   onChanged: (value) {
                     setState(() {
-                      _product_provider.getFormData(category: value.toString());
+                      _product_provider.saveFormData(
+                          category: value.toString());
                     });
                     return null;
                   },
@@ -100,7 +101,7 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
                 labelText: 'Product Description',
                 context: context,
                 onChanged: (value) {
-                  _product_provider.getFormData(productDescription: value);
+                  _product_provider.saveFormData(productDescription: value);
                   return null;
                 },
                 maxLines: 6,

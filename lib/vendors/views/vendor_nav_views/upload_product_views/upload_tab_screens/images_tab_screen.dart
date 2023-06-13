@@ -50,7 +50,7 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
           _imageUrlLists.add(value);
         });
         Provider.of<ProductProvider>(context, listen: false)
-            .getFormData(imageUrlList: _imageUrlLists);
+            .saveFormData(imageUrlList: _imageUrlLists);
         EasyLoading.dismiss();
       });
     });

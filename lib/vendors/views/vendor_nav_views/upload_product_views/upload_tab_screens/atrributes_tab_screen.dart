@@ -33,7 +33,7 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
               labelText: 'Brand',
               context: context,
               onChanged: (value) {
-                _product_provider.getFormData(brandName: value);
+                _product_provider.saveFormData(brandName: value);
                 return null;
               },
             ),
@@ -47,7 +47,7 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
               labelText: 'Detail Size',
               context: context,
               onChanged: (value) {
-                _product_provider.getFormData(size: value);
+                _product_provider.saveFormData(size: value);
                 return null;
               },
               maxLines: 8,
