@@ -53,6 +53,9 @@ class _AttributesTabScreenState extends State<AttributesTabScreen>
               maxLines: 8,
               maxLength: 800,
             ),
+            SizedBox(
+              height: 60,
+            ),
           ],
         ),
       ),

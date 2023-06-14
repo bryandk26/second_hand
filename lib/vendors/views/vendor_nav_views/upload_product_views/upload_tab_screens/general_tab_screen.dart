@@ -107,6 +107,9 @@ class _GeneralTabScreenState extends State<GeneralTabScreen>
                 maxLines: 6,
                 maxLength: 800,
               ),
+              SizedBox(
+                height: 60,
+              ),
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/provider/product_provider.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/utils/show_dialog.dart';
@@ -78,6 +79,7 @@ class UploadProductsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProductProvider _product_provider =
         Provider.of<ProductProvider>(context);
+    bool _isLoading = false;
 
     return DefaultTabController(
       length: 3,
@@ -126,12 +128,11 @@ class UploadProductsView extends StatelessWidget {
           ),
           bottomSheet: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: blackColor),
-              onPressed: () {
+            child: InkWell(
+              onTap: () {
                 _saveProduct(context, _product_provider);
               },
-              child: Text('Save'),
+              child: ButtonGlobal(isLoading: _isLoading, text: 'Upload'),
             ),
           ),
         ),
