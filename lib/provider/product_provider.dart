@@ -42,4 +42,11 @@ class ProductProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void removeImageUrl(String imageUrl) {
+    if (productData['imageUrlList'] != null &&
+        productData['imageUrlList'].contains(imageUrl)) {
+      productData['imageUrlList'].remove(imageUrl);
+    }
+  }
 }

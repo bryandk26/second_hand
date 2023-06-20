@@ -56,6 +56,15 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
     });
   }
 
+  void _removeImage(int index) {
+    setState(() {
+      String removedImageUrl = _imageUrlLists.removeAt(index);
+      Provider.of<ProductProvider>(context, listen: false)
+          .removeImageUrl(removedImageUrl);
+      _image.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -98,7 +107,7 @@ class _ImagesTabScreenState extends State<ImagesTabScreen>
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  _image.removeAt(index - 1);
+                                  _removeImage(index - 1);
                                 });
                               },
                               child: Container(
