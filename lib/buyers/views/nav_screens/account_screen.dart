@@ -20,6 +20,46 @@ class AccountScreen extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('buyers');
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
+    void handleLogout(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure you want to logout?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Logout'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  EasyLoading.show(status: 'Logging out');
+                  Provider.of<CartProvider>(context, listen: false)
+                      .removeAllCartItem();
+
+                  await _auth.signOut().then((_) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AuthenticationWrapper(),
+                      ),
+                    );
+                  }).whenComplete(() {
+                    EasyLoading.dismiss();
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(_auth.currentUser!.uid).get(),
       builder:
@@ -155,25 +195,8 @@ class AccountScreen extends StatelessWidget {
                       icon: Icons.logout_rounded,
                       textColor: primaryColor,
                       endIcon: false,
-                      onPress: () async {
-                        EasyLoading.show(status: 'Logging out');
-                        Provider.of<CartProvider>(context, listen: false)
-                            .removeAllCartItem();
-
-                        await _auth.signOut().whenComplete(
-                          () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return AuthenticationWrapper();
-                                },
-                              ),
-                            );
-
-                            EasyLoading.dismiss();
-                          },
-                        );
+                      onPress: () {
+                        handleLogout(context);
                       },
                     ),
                   ],

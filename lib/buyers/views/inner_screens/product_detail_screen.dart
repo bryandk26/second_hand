@@ -40,17 +40,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         .where('vendorId', isEqualTo: widget.productData['vendorId'])
         .snapshots();
 
-    void updateViewedField() {
-      FirebaseFirestore.instance
-          .collection('products')
-          .doc(widget.productData['productId'])
-          .update({
-        'viewed': FieldValue.increment(1),
-      });
-    }
-
-    updateViewedField();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: whiteColor,
@@ -246,14 +235,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            widget.productData['size'],
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
+                          padding:
+                              const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              widget.productData['size'],
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
                             ),
-                            textAlign: TextAlign.justify,
                           ),
                         ),
                       ],
@@ -274,14 +266,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            widget.productData['productDescription'],
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
+                          padding:
+                              const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              widget.productData['productDescription'],
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
                             ),
-                            textAlign: TextAlign.justify,
                           ),
                         ),
                       ],

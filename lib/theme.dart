@@ -15,6 +15,8 @@ TextStyle titleText =
     TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w700);
 TextStyle subTitle =
     TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w600);
+TextStyle cardTitle =
+    TextStyle(color: blackColor, fontSize: 15, fontWeight: FontWeight.bold);
 TextStyle normalText =
     TextStyle(color: blackColor, fontSize: 18, fontWeight: FontWeight.w100);
 TextStyle textButton = TextStyle(

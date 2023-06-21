@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 import 'package:second_chance/vendors/views/vendor_nav_views/vendor_order_views/manage_order_tab_views/vendor_request_warranty_order_view/vendor_request_warranty_detail_view.dart';
 
 class VendorOrderWarrantyTab extends StatelessWidget {
@@ -12,20 +13,6 @@ class VendorOrderWarrantyTab extends StatelessWidget {
     final outPutDate = OutPutDateFormat.format(date);
 
     return outPutDate;
-  }
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> rejectWarrantyRequest(String orderId) async {
-    await _firestore.collection('orders').doc(orderId).update({
-      'status': 'Rejected',
-    });
-  }
-
-  Future<void> acceptWarrantyRequest(String orderId) async {
-    await _firestore.collection('orders').doc(orderId).update({
-      'status': 'Waiting Delivery',
-    });
   }
 
   @override
@@ -39,6 +26,84 @@ class VendorOrderWarrantyTab extends StatelessWidget {
       'Waiting Vendor Payment',
       'Warranty Taken',
     ]).snapshots();
+
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    Future<void> rejectWarrantyRequest(String orderId) async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure want to reject this warranty request?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  displayDialog(
+                    context,
+                    'Warranty has been Rejected',
+                    Icon(
+                      Icons.cancel,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                  );
+                  await _firestore.collection('orders').doc(orderId).update({
+                    'status': 'Rejected',
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Future<void> acceptWarrantyRequest(String orderId) async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure want to accept this warranty request?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  displayDialog(
+                    context,
+                    'Warranty request has been accepted',
+                    Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                  );
+                  await _firestore.collection('orders').doc(orderId).update({
+                    'status': 'Waiting Delivery',
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _orderStream,

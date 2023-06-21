@@ -77,7 +77,32 @@ class CartScreen extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          _cartProvider.removeItem(cartData.productId);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Confirmation'),
+                                content: Text(
+                                    'Are you sure want to remove this item?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Remove'),
+                                    onPressed: () {
+                                      _cartProvider
+                                          .removeItem(cartData.productId);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         icon: Icon(CupertinoIcons.delete),
                         color: Colors.grey,

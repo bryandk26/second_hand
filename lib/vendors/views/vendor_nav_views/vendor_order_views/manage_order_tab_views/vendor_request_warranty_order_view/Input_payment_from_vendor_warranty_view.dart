@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
 
 class InputPaymentFromVendorWarrantyView extends StatefulWidget {
@@ -70,6 +71,15 @@ class _InputPaymentFromVendorWarrantyViewState
                 );
               },
             ));
+            displayDialog(
+              context,
+              'Refund Warranty Receipt has been submitted',
+              Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 60,
+              ),
+            );
           });
         } catch (e) {
           EasyLoading.showError('Error uploading refund warranty receipt: $e');

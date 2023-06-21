@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/inner_screens/edit_profile_screen.dart';
-import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
@@ -29,7 +28,7 @@ class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
 
     bool _isLoading = false;
 
-    void submitBargainRequest() {
+    void submitBargainRequest() async {
       if (_formKey.currentState!.validate()) {
         setState(() {
           _isLoading = true;
@@ -37,14 +36,13 @@ class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
 
         final bargainId = Uuid().v4();
 
-        users
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .get()
-            .then((snapshot) {
+        try {
+          final snapshot =
+              await users.doc(FirebaseAuth.instance.currentUser!.uid).get();
           if (snapshot.exists) {
             Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
-            FirebaseFirestore.instance
+            await FirebaseFirestore.instance
                 .collection('bargains')
                 .doc(bargainId)
                 .set({
@@ -69,26 +67,17 @@ class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
               'accepted': false,
               'bargainRequestDate': DateTime.now(),
             }).then((_) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainScreen(),
-                ),
-              );
-            }).catchError((error) {
-              displayDialog(
-                context,
-                'Error submitting bargain request: $error',
-                Icon(
-                  Icons.error,
-                  color: Colors.red,
-                  size: 60,
-                ),
-              );
-              setState(() {
-                _isLoading = false;
-              });
+              Navigator.pop(context);
             });
+            return displayDialog(
+              context,
+              'You Added ${widget.productData['productName']} To Your Bargain List',
+              Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 60,
+              ),
+            );
           } else {
             displayDialog(
               context,
@@ -99,24 +88,22 @@ class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
                 size: 60,
               ),
             );
-            setState(() {
-              _isLoading = false;
-            });
           }
-        }).catchError((error) {
+        } catch (error) {
           displayDialog(
             context,
-            'Error retrieving user data: $error',
+            'Error submitting bargain request: $error',
             Icon(
               Icons.error,
               color: Colors.red,
               size: 60,
             ),
           );
+        } finally {
           setState(() {
             _isLoading = false;
           });
-        });
+        }
       }
     }
 

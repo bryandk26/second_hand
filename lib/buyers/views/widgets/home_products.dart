@@ -18,6 +18,7 @@ class HomeProductWidget extends StatelessWidget {
         .where('sold', isEqualTo: false)
         .where('onPayment', isEqualTo: false)
         .snapshots();
+
     return StreamBuilder<QuerySnapshot>(
       stream: _productStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -26,7 +27,11 @@ class HomeProductWidget extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading.....");
+          return Center(
+            child: LinearProgressIndicator(
+              color: blackColor,
+            ),
+          );
         }
 
         if (snapshot.data!.docs.isEmpty) {
@@ -43,13 +48,30 @@ class HomeProductWidget extends StatelessWidget {
         }
 
         return Container(
-          height: 260,
-          child: ListView.separated(
-              scrollDirection: Axis.horizontal,
+          height: MediaQuery.of(context).size.height * 0.54,
+          child: GridView.builder(
+              itemCount: snapshot.data!.size,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 200 / 300,
+              ),
               itemBuilder: (context, index) {
                 final productData = snapshot.data!.docs[index];
+
+                void updateViewedField() {
+                  FirebaseFirestore.instance
+                      .collection('products')
+                      .doc(productData['productId'])
+                      .update({
+                    'viewed': FieldValue.increment(1),
+                  });
+                }
+
                 return GestureDetector(
                   onTap: () {
+                    updateViewedField();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return ProductDetailScreen(
@@ -74,34 +96,27 @@ class HomeProductWidget extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            productData['productName'],
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                productData['productName'],
+                                style: cardTitle,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
+                                style: subTitle.apply(color: Colors.green),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
                 );
-              },
-              separatorBuilder: (context, _) => SizedBox(
-                    width: 15,
-                  ),
-              itemCount: snapshot.data!.docs.length),
+              }),
         );
       },
     );

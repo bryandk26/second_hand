@@ -117,6 +117,16 @@ class _RequestWarrantyOrderScreenState
                 builder: (context) => MainScreen(),
               ),
             );
+
+            displayDialog(
+              context,
+              'Your warranty request has been submitted',
+              Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 60,
+              ),
+            );
           } catch (error) {
             displayDialog(
               context,

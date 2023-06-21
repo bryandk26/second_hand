@@ -71,6 +71,16 @@ class UploadProductsView extends StatelessWidget {
             return VendorMainScreen();
           },
         ));
+
+        displayDialog(
+          context,
+          'Product has been uploaded successfully',
+          Icon(
+            Icons.check,
+            color: Colors.green,
+            size: 60,
+          ),
+        );
       });
     }
   }

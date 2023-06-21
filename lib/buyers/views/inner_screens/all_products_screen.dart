@@ -70,10 +70,21 @@ class AllProductsScreen extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               final productData = snapshot.data!.docs[index];
+
+              void updateViewedField() {
+                FirebaseFirestore.instance
+                    .collection('products')
+                    .doc(productData['productId'])
+                    .update({
+                  'viewed': FieldValue.increment(1),
+                });
+              }
+
               return GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
+                      updateViewedField();
                       return ProductDetailScreen(
                         productData: productData,
                       );
@@ -101,7 +112,7 @@ class AllProductsScreen extends StatelessWidget {
                           children: [
                             Text(
                               productData['productName'],
-                              style: subTitle,
+                              style: cardTitle,
                             ),
                             SizedBox(
                               height: 10,

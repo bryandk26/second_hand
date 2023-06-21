@@ -136,13 +136,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _isLoading = false;
         });
 
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => MainScreen(
                 initialIndex: 5,
               ),
             ));
+
+        displayDialog(
+          context,
+          'Your profile has been updated successfully',
+          Icon(
+            Icons.check,
+            color: Colors.green,
+            size: 60,
+          ),
+        );
       } catch (error) {
         setState(() {
           _isLoading = false;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 class VendorBargainConfirmationTab extends StatelessWidget {
@@ -24,9 +25,44 @@ class VendorBargainConfirmationTab extends StatelessWidget {
         .snapshots();
 
     Future<void> rejectBargainRequest(String bargainId) async {
-      await _firestore.collection('bargains').doc(bargainId).update({
-        'confirmed': true,
-      });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure want to reject this order?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  displayDialog(
+                    context,
+                    'Bargain Request has been Rejected',
+                    Icon(
+                      Icons.cancel,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                  );
+                  await _firestore
+                      .collection('bargains')
+                      .doc(bargainId)
+                      .update({
+                    'confirmed': true,
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
 
     Future<void> acceptBargainRequest(
@@ -48,35 +84,73 @@ class VendorBargainConfirmationTab extends StatelessWidget {
     ) async {
       final orderId = Uuid().v4();
 
-      await _firestore.collection('bargains').doc(bargainId).update({
-        'confirmed': true,
-        'accepted': true,
-      });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure want to accept this bargain request?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  displayDialog(
+                    context,
+                    'Bargain Request has been accepted',
+                    Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                  );
+                  await _firestore
+                      .collection('bargains')
+                      .doc(bargainId)
+                      .update({
+                    'confirmed': true,
+                    'accepted': true,
+                  });
 
-      await _firestore.collection('orders').doc(orderId).set({
-        'orderId': orderId,
-        'vendorId': vendorId,
-        'businessName': businessName,
-        'email': email,
-        'phone': phone,
-        'address': address,
-        'postalCode': postalCode,
-        'buyerId': buyerId,
-        'fullName': fullName,
-        'buyerPhoto': buyerPhoto,
-        'productName': productName,
-        'productPrice': bargainPrice,
-        'productId': productId,
-        'productImage': productImage,
-        'productSize': productSize,
-        'orderDate': DateTime.now(),
-        'accepted': true,
-        'status': 'Waiting For Payment',
-      });
+                  await _firestore.collection('orders').doc(orderId).set({
+                    'orderId': orderId,
+                    'vendorId': vendorId,
+                    'businessName': businessName,
+                    'email': email,
+                    'phone': phone,
+                    'address': address,
+                    'postalCode': postalCode,
+                    'buyerId': buyerId,
+                    'fullName': fullName,
+                    'buyerPhoto': buyerPhoto,
+                    'productName': productName,
+                    'productPrice': bargainPrice,
+                    'productId': productId,
+                    'productImage': productImage,
+                    'productSize': productSize,
+                    'orderDate': DateTime.now(),
+                    'accepted': true,
+                    'status': 'Waiting For Payment',
+                  });
 
-      await _firestore.collection('products').doc(productId).update({
-        'onPayment': true,
-      });
+                  await _firestore
+                      .collection('products')
+                      .doc(productId)
+                      .update({
+                    'onPayment': true,
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(

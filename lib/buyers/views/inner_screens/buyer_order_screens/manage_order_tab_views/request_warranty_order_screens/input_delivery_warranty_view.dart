@@ -47,6 +47,15 @@ class _InputWarrantyOrderViewState extends State<InputWarrantyOrderView> {
               ),
             ),
           );
+          displayDialog(
+            context,
+            'Your warranty receipt has been submitted',
+            Icon(
+              Icons.check,
+              color: Colors.green,
+              size: 60,
+            ),
+          );
         }).catchError((error) {
           displayDialog(
             context,

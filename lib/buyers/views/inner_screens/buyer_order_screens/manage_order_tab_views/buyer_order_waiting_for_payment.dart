@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/buyer_order_detail_screen.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class BuyerOrderWaitingPaymentTab extends StatelessWidget {
   String formatedDate(date) {
@@ -14,18 +15,6 @@ class BuyerOrderWaitingPaymentTab extends StatelessWidget {
     return outPutDate;
   }
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> cancelOrder(String orderId, String productId) async {
-    await _firestore.collection('orders').doc(orderId).update({
-      'status': 'Canceled',
-    });
-
-    await _firestore.collection('products').doc(productId).update({
-      'onPayment': false,
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _orderStream = FirebaseFirestore.instance
@@ -33,6 +22,52 @@ class BuyerOrderWaitingPaymentTab extends StatelessWidget {
         .where('buyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('status', isEqualTo: 'Waiting For Payment')
         .snapshots();
+
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    Future<void> cancelOrder(String orderId, String productId) async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure want to cancel this order?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  displayDialog(
+                    context,
+                    'Your order has been canceled',
+                    Icon(
+                      Icons.cancel,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                  );
+                  await _firestore.collection('orders').doc(orderId).update({
+                    'status': 'Canceled',
+                  });
+                  await _firestore
+                      .collection('products')
+                      .doc(productId)
+                      .update({
+                    'onPayment': false,
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _orderStream,

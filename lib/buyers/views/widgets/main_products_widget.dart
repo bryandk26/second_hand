@@ -23,7 +23,7 @@ class MainProductsWidget extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: LinearProgressIndicator(
-              color: Colors.yellow.shade900,
+              color: blackColor,
             ),
           );
         }
@@ -42,18 +42,30 @@ class MainProductsWidget extends StatelessWidget {
         }
 
         return Container(
-          height: 340,
+          height: MediaQuery.of(context).size.height * 0.54,
           child: GridView.builder(
               itemCount: snapshot.data!.size,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 200 / 300),
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 200 / 300,
+              ),
               itemBuilder: (context, index) {
                 final productData = snapshot.data!.docs[index];
+
+                void updateViewedField() {
+                  FirebaseFirestore.instance
+                      .collection('products')
+                      .doc(productData['productId'])
+                      .update({
+                    'viewed': FieldValue.increment(1),
+                  });
+                }
+
                 return GestureDetector(
                   onTap: () {
+                    updateViewedField();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return ProductDetailScreen(
@@ -78,23 +90,20 @@ class MainProductsWidget extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            productData['productName'],
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                productData['productName'],
+                                style: cardTitle,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
+                                style: subTitle.apply(color: Colors.green),
+                              ),
+                            ],
                           ),
                         ),
                       ],

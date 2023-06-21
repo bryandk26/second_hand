@@ -123,10 +123,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
             itemBuilder: (context, index) {
               final productData = sortedList[index];
               final productImage = productData['imageUrlList'][0];
+
+              void updateViewedField() {
+                FirebaseFirestore.instance
+                    .collection('products')
+                    .doc(productData['productId'])
+                    .update({
+                  'viewed': FieldValue.increment(1),
+                });
+              }
+
               return InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
+                      updateViewedField();
                       return ProductDetailScreen(
                         productData: productData,
                       );
@@ -149,20 +160,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              productData['productName'],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            Text(productData['productName'], style: cardTitle),
                             Text(
                               '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData['productPrice'])}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
+                              style: subTitle.apply(color: Colors.green),
                             ),
                           ],
                         ),

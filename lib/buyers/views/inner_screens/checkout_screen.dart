@@ -9,6 +9,7 @@ import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
@@ -74,6 +75,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }));
 
     Provider.of<CartProvider>(context, listen: false).removeAllCartItem();
+
+    displayDialog(
+      context,
+      'Your order has been created',
+      Icon(
+        Icons.check,
+        color: Colors.green,
+        size: 60,
+      ),
+    );
   }
 
   @override

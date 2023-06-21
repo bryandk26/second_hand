@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/buyers/views/widgets/text_form_global.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class EditProductDetailView extends StatefulWidget {
   final dynamic productData;
@@ -67,6 +68,16 @@ class _EditProductDetailViewState extends State<EditProductDetailView> {
 
     EasyLoading.dismiss();
     Navigator.pop(context);
+
+    displayDialog(
+      context,
+      'Product has been updated successfully',
+      Icon(
+        Icons.check,
+        color: Colors.green,
+        size: 60,
+      ),
+    );
   }
 
   @override

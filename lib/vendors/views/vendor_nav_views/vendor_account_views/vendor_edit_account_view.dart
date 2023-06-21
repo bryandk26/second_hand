@@ -136,13 +136,23 @@ class _VendorEditAccountViewState extends State<VendorEditAccountView> {
           _isLoading = false;
         });
 
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => VendorMainScreen(
                 initialIndex: 4,
               ),
             ));
+
+        displayDialog(
+          context,
+          'Your profile has been updated successfully',
+          Icon(
+            Icons.check,
+            color: Colors.green,
+            size: 60,
+          ),
+        );
       } catch (error) {
         setState(() {
           _isLoading = false;

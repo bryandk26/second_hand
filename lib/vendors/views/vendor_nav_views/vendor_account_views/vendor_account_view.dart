@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:second_chance/auth/authentication_wrapper.dart';
 import 'package:second_chance/buyers/views/widgets/profile_menu_widget.dart';
+import 'package:second_chance/provider/cart_provider.dart';
 import 'package:second_chance/role_view.dart';
 import 'package:second_chance/theme.dart';
 import 'package:second_chance/vendors/views/vendor_main_screen.dart';
@@ -19,6 +21,46 @@ class VendorAccountView extends StatelessWidget {
     CollectionReference users =
         FirebaseFirestore.instance.collection('vendors');
     final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    void handleLogout(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Are you sure you want to logout?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Logout'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  EasyLoading.show(status: 'Logging out');
+                  Provider.of<CartProvider>(context, listen: false)
+                      .removeAllCartItem();
+
+                  await _auth.signOut().then((_) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AuthenticationWrapper(),
+                      ),
+                    );
+                  }).whenComplete(() {
+                    EasyLoading.dismiss();
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(_auth.currentUser!.uid).get(),
@@ -157,23 +199,8 @@ class VendorAccountView extends StatelessWidget {
                       icon: Icons.logout_rounded,
                       textColor: primaryColor,
                       endIcon: false,
-                      onPress: () async {
-                        EasyLoading.show(status: 'Logging out');
-
-                        await _auth.signOut().whenComplete(
-                          () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return AuthenticationWrapper();
-                                },
-                              ),
-                            );
-
-                            EasyLoading.dismiss();
-                          },
-                        );
+                      onPress: () {
+                        handleLogout(context);
                       },
                     ),
                   ],

@@ -13,6 +13,7 @@ import 'package:second_chance/buyers/views/inner_screens/buyer_order_screens/man
 import 'package:second_chance/buyers/views/main_screen.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
 import 'package:second_chance/theme.dart';
+import 'package:second_chance/utils/show_dialog.dart';
 
 class BuyerOrderDetailScreen extends StatefulWidget {
   final dynamic orderData;
@@ -66,6 +67,15 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
           }).whenComplete(() {
             EasyLoading.dismiss();
             Navigator.pop(context);
+            displayDialog(
+              context,
+              'Your payment receipt has been submitted',
+              Icon(
+                Icons.check,
+                color: Colors.green,
+                size: 60,
+              ),
+            );
           });
         } catch (e) {
           EasyLoading.showError('Error uploading payment receipt: $e');
