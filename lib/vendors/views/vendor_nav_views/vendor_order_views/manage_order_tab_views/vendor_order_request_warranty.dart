@@ -49,7 +49,7 @@ class VendorOrderWarrantyTab extends StatelessWidget {
                   Navigator.of(context).pop();
                   displayDialog(
                     context,
-                    'Warranty has been Rejected',
+                    'Warranty has been rejected',
                     Icon(
                       Icons.cancel,
                       color: Colors.red,

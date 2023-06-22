@@ -45,7 +45,7 @@ class VendorOrderNotAcceptedTab extends StatelessWidget {
                   Navigator.of(context).pop();
                   displayDialog(
                     context,
-                    'Order has been Rejected',
+                    'Order has been rejected',
                     Icon(
                       Icons.cancel,
                       color: Colors.red,

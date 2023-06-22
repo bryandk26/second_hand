@@ -81,7 +81,7 @@ class _BargainRequestFormScreenState extends State<BargainRequestFormScreen> {
           } else {
             displayDialog(
               context,
-              'User data not found.',
+              'User data not found',
               Icon(
                 Icons.error,
                 color: Colors.red,

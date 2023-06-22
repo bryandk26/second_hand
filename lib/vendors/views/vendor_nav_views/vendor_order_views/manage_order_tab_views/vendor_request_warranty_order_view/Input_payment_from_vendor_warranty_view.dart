@@ -73,7 +73,7 @@ class _InputPaymentFromVendorWarrantyViewState
             ));
             displayDialog(
               context,
-              'Refund Warranty Receipt has been submitted',
+              'Refund warranty receipt has been submitted',
               Icon(
                 Icons.check,
                 color: Colors.green,

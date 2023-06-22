@@ -52,7 +52,7 @@ class _InputDeliveryOrderViewState extends State<InputDeliveryOrderView> {
 
           displayDialog(
             context,
-            'Order Delivery has been submitted',
+            'Order delivery has been submitted',
             Icon(
               Icons.check,
               color: Colors.green,

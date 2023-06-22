@@ -318,7 +318,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                         return displayDialog(
                           context,
-                          'You Added ${widget.productData['productName']} To Your Cart',
+                          'You added ${widget.productData['productName']} to your cart',
                           Icon(
                             Icons.check,
                             color: Colors.green,

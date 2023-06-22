@@ -44,7 +44,7 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                   Navigator.of(context).pop();
                   displayDialog(
                     context,
-                    'Bargain Request has been Rejected',
+                    'Bargain request has been rejected',
                     Icon(
                       Icons.cancel,
                       color: Colors.red,
@@ -103,7 +103,7 @@ class VendorBargainConfirmationTab extends StatelessWidget {
                   Navigator.of(context).pop();
                   displayDialog(
                     context,
-                    'Bargain Request has been accepted',
+                    'Bargain request has been accepted',
                     Icon(
                       Icons.check,
                       color: Colors.green,
