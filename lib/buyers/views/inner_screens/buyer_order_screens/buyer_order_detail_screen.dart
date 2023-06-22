@@ -130,6 +130,15 @@ class _BuyerOrderDetailScreenState extends State<BuyerOrderDetailScreen> {
                         builder: (context) => MainScreen(),
                       ),
                     );
+                    displayDialog(
+                      context,
+                      'Your order has been completed!',
+                      Icon(
+                        Icons.check,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                    );
                   });
                 },
               ),
