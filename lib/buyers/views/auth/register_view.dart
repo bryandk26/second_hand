@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:second_chance/buyers/views/auth/login_view.dart';
 import 'package:second_chance/buyers/views/widgets/button_global.dart';
@@ -18,28 +16,13 @@ class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   late String _email;
   late String _fullName;
   late String _phoneNumber;
   late String _password;
-  Uint8List? _image;
 
   bool _isLoading = false;
-
-  _uploadProfileImageToStorage(Uint8List? image) async {
-    Reference ref =
-        _storage.ref().child('profilePics').child(_auth.currentUser!.uid);
-
-    UploadTask uploadTask = ref.putData(image!);
-
-    TaskSnapshot snapshot = await uploadTask;
-
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-
-    return downloadUrl;
-  }
 
   _signUpUser() async {
     setState(() {
@@ -59,11 +42,6 @@ class _RegisterViewState extends State<RegisterView> {
             password: _password,
           );
 
-          String? profileImageUrl;
-          if (_image != null) {
-            profileImageUrl = await _uploadProfileImageToStorage(_image);
-          }
-
           await _firestore.collection('buyers').doc(cred.user!.uid).set(
             {
               'email': _email,
@@ -75,7 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
               'bankName': '',
               'bankAccountName': '',
               'bankAccountNumber': '',
-              'profileImage': profileImageUrl ?? '',
+              'profileImage': '',
               'registeredDate': DateTime.now(),
             },
           );
