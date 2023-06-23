@@ -114,9 +114,9 @@ class BuyerOrderPaidTab extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Name ' + document['fullName']),
-                                Text('Email' + document['email']),
-                                Text('Address' + document['address']),
+                                Text('Name: ' + document['fullName']),
+                                Text('Email: ' + document['email']),
+                                Text('Address: ' + document['address']),
                               ],
                             ),
                           )
